@@ -42,8 +42,8 @@
 #define PHP_GDEXTRA_WITH_MAGICK 0
 #endif
 
-#ifndef PHP_GDEXTRA_TESTING
-#define PHP_GDEXTRA_TESTING 0
+#ifndef PHP_GDEXTRA_EXPERIMENTAL
+#define PHP_GDEXTRA_EXPERIMENTAL 0
 #endif
 
 #include <math.h>
@@ -310,9 +310,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex);
 #if PHP_GDEXTRA_WITH_LQR
 GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex);
-#endif
-#if PHP_GDEXTRA_TESTING
-GDEXTRA_LOCAL PHP_FUNCTION(colorcorrectiontest);
 #endif
 
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb);

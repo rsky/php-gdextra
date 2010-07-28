@@ -29,10 +29,6 @@
 
 #include "gdex_wrappers.h"
 
-#ifndef GDEXTRA_WRAPPERS_DEBUG
-#define GDEXTRA_WRAPPERS_DEBUG 0
-#endif
-
 /* {{{ globals */
 
 static int le_fake_rsrc, le_gd;
@@ -88,29 +84,7 @@ _rsrc_to_fake(zval **rsrc TSRMLS_DC)
 {
 	zend_rsrc_list_entry *le;
 
-#if GDEXTRA_WRAPPERS_DEBUG
-	if (Z_TYPE_PP(rsrc) != IS_RESOURCE) {
-		zend_error(E_ERROR, "_rsrc_to_fake() accepts only resource value");
-		return;
-	}
-#endif
-
 	if (zend_hash_index_find(&EG(regular_list), (ulong)Z_LVAL_PP(rsrc), (void **)&le) == SUCCESS) {
-#if GDEXTRA_WRAPPERS_DEBUG
-		if (le->type != le_gd) {
-			const char *type_name = zend_rsrc_list_get_rsrc_type(le->type TSRMLS_CC);
-			zend_error(E_ERROR, "_rsrc_to_fake(): type of the reource"
-					" is not '%s' (#%d) but '%s' (#%d)",
-					zend_rsrc_list_get_rsrc_type(le_gd TSRMLS_CC), le_gd,
-					((type_name == NULL) ? "(null)" : type_name), le->type);
-			return;
-		}
-		if (le->refcount != 1) {
-			zend_error(E_ERROR, "_rsrc_to_fake(): reference count of the resource"
-					" is not 1 but %d", le->refcount);
-			return;
-		}
-#endif
 		le->ptr = NULL;
 		le->type = le_fake_rsrc;
 	}

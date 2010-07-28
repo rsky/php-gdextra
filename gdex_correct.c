@@ -764,49 +764,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorcorrect_ex)
 }
 /* }}} */
 
-#if PHP_GDEXTRA_TESTING
-/* {{{ proto array colorcorrectiontest(array params[, bool get_as_float])
- * Simulate color correction.
- */
-GDEXTRA_LOCAL PHP_FUNCTION(colorcorrectiontest)
-{
-	zval *zparams = NULL;
-	HashTable *params = NULL;
-	zend_bool get_as_float = 0;
-	int i = 0;
-	COLORCORRECT_DECLARE_COMMON();
-	COLORCORRECT_DECLARE(x, X);
-
-	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a|b",
-			&zparams, &get_as_float) == FAILURE)
-	{
-		return;
-	}
-	params = Z_ARRVAL_P(zparams);
-
-	/* get parameters */
-	COLORCORRECT_GETOPT_SP(X, params, RETURN_FALSE);
-	if (has_params == CORRECT_NOTHING) {
-		RETURN_FALSE;
-	}
-
-	/* simulate */
-	gdex_array_init_size(return_value, 256);
-	while (i < 256) {
-		x = (float)i / 255.0f;
-		COLORCORRECT_DO(x, X);
-		if (get_as_float) {
-			add_next_index_double(return_value, (double)x);
-		} else {
-			add_next_index_long(return_value, (long)_float2byte(x));
-		}
-		i++;
-	}
-}
-/* }}} */
-#endif
-
 /*
  * Local variables:
  * tab-width: 4

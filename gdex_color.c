@@ -281,9 +281,9 @@ _parse_css_color(const char *color, int length, int *r, int *g, int *b, double *
 		goto finish;
 	}
 
-#if PHP_GDEXTRA_TESTING
+#if PHP_GDEXTRA_EXPERIMENTAL
 	/*
-	 * HSV/HSLV color values (not CSS3 color)
+	 * HSV/HSVA color values (not CSS3 color)
 	 */
 	if (*ltcolor == 'h' && (
 		sscanf(ltcolor, "hsva(%lf,%lf%%,%lf%%,%lf)", &p1, &p2, &p3, &p4) == 4 ||
@@ -305,9 +305,9 @@ _parse_css_color(const char *color, int length, int *r, int *g, int *b, double *
 		}
 		goto finish;
 	}
-#endif /* TESTING - HSV */
+#endif /* EXPERIMENTAL - HSV */
 
-#if PHP_GDEXTRA_TESTING
+#if PHP_GDEXTRA_EXPERIMENTAL
 	/*
 	 * CMYK color values in percentage (not CSS3 color)
 	 */
@@ -328,7 +328,7 @@ _parse_css_color(const char *color, int length, int *r, int *g, int *b, double *
 		}
 		goto finish;
 	}
-#endif /* TESTING - CMYK */
+#endif /* EXPERIMENTAL - CMYK */
 
   finish:
 	efree(ltcolor);

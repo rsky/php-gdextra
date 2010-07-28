@@ -176,14 +176,6 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_imagecarve, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 
 ZEND_END_ARG_INFO()
 #endif /* PHP_GDEXTRA_WITH_LQR */
 
-#if PHP_GDEXTRA_TESTING
-ARG_INFO_STATIC
-ZEND_BEGIN_ARG_INFO_EX(arginfo_colorcorrectiontest, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
-	ZEND_ARG_ARRAY_INFO(0, params, 0)
-	ZEND_ARG_INFO(0, get_as_float)
-ZEND_END_ARG_INFO()
-#endif
-
 ARG_INFO_STATIC
 ZEND_BEGIN_ARG_INFO(arginfo_util_conv_from_cmyk, ZEND_SEND_BY_VAL)
 	ZEND_ARG_INFO(0, cyan)
@@ -265,9 +257,6 @@ static zend_function_entry gdextra_functions[] = {
 	PHP_FE(imagescale_ex,               arginfo_imagescale)
 #if PHP_GDEXTRA_WITH_LQR
 	PHP_FE(imagecarve_ex,               arginfo_imagecarve)
-#endif
-#if PHP_GDEXTRA_TESTING
-	PHP_FE(colorcorrectiontest,         arginfo_colorcorrectiontest)
 #endif
 	{ NULL, NULL, NULL }
 };
@@ -387,10 +376,6 @@ static PHP_MINIT_FUNCTION(gdextra)
 	GDEX_REGISTER_CONSTANT(SCALE_TILE);
 #if PHP_GDEXTRA_WITH_LQR
 	GDEX_REGISTER_CONSTANT(SCALE_CARVE);
-#endif
-
-#if PHP_GDEXTRA_TESTING
-	REGISTER_LONG_CONSTANT("IMAGE_EX_TESTING", 1, CONST_PERSISTENT | CONST_CS);
 #endif
 
 	/* register class ImageExUtil */
