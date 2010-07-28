@@ -131,35 +131,15 @@
 
 /* }}} */
 
-/* {{{ compatibility macros */
-
-#ifdef IS_UNICODE
-#define FS_CONV_C , ZEND_U_CONVERTER(UG(filesystem_encoding_conv))
-#define FS_CONV_M "&"
-#else
-#define FS_CONV_C
-#define FS_CONV_M
-#endif
-
-#ifdef IS_UNICODE
-#define _hash_find   zend_ascii_hash_find
-#define _hash_exists zend_ascii_hash_exists
-#else
-#define _hash_find   zend_hash_find
-#define _hash_exists zend_hash_exists
-#endif
-
-/* }}} */
-
 /* {{{ shorthand macros */
 
 #define MINMAX(_val, _min, _max) \
 	(((_val) < (_min)) ? (_min) : (((_val) > (_max)) ? (_max) : (_val)))
 
 #define hash_find(_ht, _key, _pp) \
-	_hash_find((_ht), (_key), sizeof((_key)), (void **)(_pp))
+	zend_hash_find((_ht), (_key), sizeof((_key)), (void **)(_pp))
 #define hash_exists(_ht, _key) \
-	_hash_exists((_ht), (_key), sizeof((_key)))
+	zend_hash_exists((_ht), (_key), sizeof((_key)))
 
 #define isValidTrueColor(c) (((unsigned long)(c) & 0x7fffffffUL) == (unsigned long)(c))
 #define getR gdTrueColorGetRed
@@ -196,16 +176,6 @@ typedef void (*gdex_4ch_to_rgb_func_t)(float w, float x, float y, float z, int *
  * Auto unicode (ascii) and size supported version of array_init()
  * and shorthand macros of add_assoc_{long,double}_ex().
  */
-#ifdef IS_UNICODE
-GDEXTRA_LOCAL int
-_gdex_array_init(zval *zv, uint size, zend_bool unicode);
-#define gdex_array_init(_zv) _gdex_array_init((_zv), 0, UG(unicode))
-#define gdex_array_init_size(_zv, _size) _gdex_array_init((_zv), (_size), UG(unicode))
-#define gdex_add_assoc_long(_arr, _key, _val) \
-	add_ascii_assoc_long_ex((_arr), (_key), sizeof((_key)), (_val))
-#define gdex_add_assoc_double(_arr, _key, _val) \
-	add_ascii_assoc_double_ex((_arr), (_key), sizeof((_key)), (_val))
-#else
 GDEXTRA_LOCAL int
 _gdex_array_init(zval *zv, uint size);
 #define gdex_array_init(_zv) _gdex_array_init((_zv), 0)
@@ -214,38 +184,6 @@ _gdex_array_init(zval *zv, uint size);
 	add_assoc_long_ex((_arr), (_key), sizeof((_key)), (_val))
 #define gdex_add_assoc_double(_arr, _key, _val) \
 	add_assoc_double_ex((_arr), (_key), sizeof((_key)), (_val))
-#endif
-
-#if 0
-#ifdef IS_UNICODE
-/*
- * Auto unicode (ascii) supported version of zend_get_hash_value().
- */
-GDEXTRA_LOCAL ulong
-_gdex_get_ascii_hash_value(const char *arKey, uint nKeyLength,
-                           zend_bool unicode ZEND_FILE_LINE_DC);
-
-/*
- * Auto unicode (ascii) supported version of zend_hash_quick_find().
- */
-GDEXTRA_LOCAL int
-_gdex_ascii_hash_quick_find(const HashTable *ht,
-                            const char *arKey, uint nKeyLength, ulong h, void **pData,
-                            zend_bool unicode);
-
-#define get_hash_value(_key) \
-	_gdex_get_ascii_hash_value((_key), sizeof(_key), UG(unicode) ZEND_FILE_LINE_CC)
-#define hash_quick_find(_ht, _key, _pp) \
-	_gdex_ascii_hash_quick_find((_ht), #_key, sizeof(#_key), _h_##_key,  \
-	                            (void **)(_pp), UG(unicode))
-#else
-#define get_hash_value(_key) \
-	zend_get_hash_value((_key), sizeof(_key))
-#define hash_quick_find(_ht, _key, _pp) \
-	zend_hash_quick_find((_ht), #_key, sizeof(#_key), _h_##_key, (void **)(_pp))
-#endif
-#define GDEX_SET_HASH_VALUE(_key) ((_h_##_key) = get_hash_value(#_key))
-#endif
 
 /*
  * Get a long integer.

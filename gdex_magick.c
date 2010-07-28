@@ -113,8 +113,8 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 	unsigned long width, height, x, y;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s" FS_CONV_M,
-			&input, &input_len FS_CONV_C) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+			&input, &input_len) == FAILURE)
 	{
 		return;
 	}

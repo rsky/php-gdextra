@@ -46,13 +46,7 @@ static zval _fn_imagecreate, _fn_imagecreatetruecolor,
 #define MAKE_FUNC_NAME(name) \
 	ZVAL_STRINGL(&_fn_##name, #name, sizeof(#name) - 1, 1)
 
-#ifdef IS_UNICODE
-#define MAKE_UNICODE_FUNC_NAME(name) \
-	ZVAL_UNICODEL(&_fn_##name, USTR_MAKE(#name), sizeof(#name) - 1, 0)
-#define FREE_FUNC_NAME(name) ezfree(Z_UNIVAL(_fn_##name))
-#else
 #define FREE_FUNC_NAME(name) efree(Z_STRVAL(_fn_##name))
-#endif
 
 #define COMMON_VARS(num_args) \
 	zval *argv[num_args], **argp[num_args], *retval = NULL; \
@@ -135,22 +129,11 @@ gdex_wrappers_init(int module_number TSRMLS_DC)
 	INIT_ZVAL(_fn_imagecolorresolvealpha);
 	INIT_ZVAL(_fn_imagecopy);
 	INIT_ZVAL(_fn_imagecopyresampled);
-#ifdef IS_UNICODE
-	if (UG(unicode)) {
-		MAKE_UNICODE_FUNC_NAME(imagecreate);
-		MAKE_UNICODE_FUNC_NAME(imagecreatetruecolor);
-		MAKE_UNICODE_FUNC_NAME(imagecolorresolvealpha);
-		MAKE_UNICODE_FUNC_NAME(imagecopy);
-		MAKE_UNICODE_FUNC_NAME(imagecopyresampled);
-	} else
-#endif
-	{
-		MAKE_FUNC_NAME(imagecreate);
-		MAKE_FUNC_NAME(imagecreatetruecolor);
-		MAKE_FUNC_NAME(imagecolorresolvealpha);
-		MAKE_FUNC_NAME(imagecopy);
-		MAKE_FUNC_NAME(imagecopyresampled);
-	}
+	MAKE_FUNC_NAME(imagecreate);
+	MAKE_FUNC_NAME(imagecreatetruecolor);
+	MAKE_FUNC_NAME(imagecolorresolvealpha);
+	MAKE_FUNC_NAME(imagecopy);
+	MAKE_FUNC_NAME(imagecopyresampled);
 
 	return le_fake_rsrc;
 }

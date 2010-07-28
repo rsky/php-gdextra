@@ -766,8 +766,8 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
 	zend_bool success = 0;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|s" FS_CONV_M,
-			&zim, &filename, &filename_len FS_CONV_C) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|s",
+			&zim, &filename, &filename_len) == FAILURE)
 	{
 		return;
 	}
@@ -818,8 +818,8 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
 	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z|s" FS_CONV_M,
-			&zim, &filename, &filename_len FS_CONV_C) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z|s",
+			&zim, &filename, &filename_len) == FAILURE)
 	{
 		return;
 	}

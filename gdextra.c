@@ -453,20 +453,6 @@ static PHP_MINFO_FUNCTION(gdextra)
 }
 /* }}} */
 
-#ifdef IS_UNICODE
-GDEXTRA_LOCAL int
-/* {{{ _gdex_array_init()
- * Unicode and size supported version of array_init().
- */
-_gdex_array_init(zval *zv, uint size, zend_bool unicode)
-{
-	ALLOC_HASHTABLE(Z_ARRVAL_P(zv));
-	zend_u_hash_init(Z_ARRVAL_P(zv), size, NULL, ZVAL_PTR_DTOR, 0, unicode);
-	Z_TYPE_P(zv) = IS_ARRAY;
-	return SUCCESS;
-}
-/* }}} */
-#else
 /* {{{ _gdex_array_init()
  * Size supported version of array_init().
  */
@@ -479,54 +465,6 @@ _gdex_array_init(zval *zv, uint size)
 	return SUCCESS;
 }
 /* }}} */
-#endif
-
-#if 0
-#ifdef IS_UNICODE
-/* {{{ _gdex_get_ascii_hash_value()
- * Auto unicode (ascii) supported version of zend_get_hash_value().
- */
-GDEXTRA_LOCAL ulong
-_gdex_get_ascii_hash_value(const char *arKey, uint nKeyLength,
-                           zend_bool unicode ZEND_FILE_LINE_DC)
-{
-	zstr zKey;
-	if (unicode) {
-		ulong hash;
-		zKey.u = zend_ascii_to_unicode(arKey, nKeyLength ZEND_FILE_LINE_RELAY_CC);
-		hash = zend_u_get_hash_value(IS_UNICODE, zKey, nKeyLength);
-		efree(zKey.u);
-		return hash;
-	} else {
-		zkey.s = (char *)arKey;
-		return zend_u_get_hash_value(IS_STRING, zKey, nKeyLength);
-	}
-}
-/* }}} */
-
-/* {{{ _gdex_ascii_hash_quick_find()
- * Auto unicode (ascii) supported version of zend_hash_quick_find().
- */
-GDEXTRA_LOCAL int
-_gdex_ascii_hash_quick_find(const HashTable *ht,
-                            const char *arKey, uint nKeyLength, ulong h, void **pData,
-                            zend_bool unicode)
-{
-	zstr zKey;
-	if (unicode) {
-		int found;
-		zKey.u = zend_ascii_to_unicode(arKey, nKeyLength ZEND_FILE_LINE_CC);
-		found = zend_u_hash_quick_find(ht, IS_UNICODE, zKey, nKeyLength, h, pData);
-		efree(zKey.u);
-		return found;
-	} else {
-		zkey.s = (char *)arKey;
-		zend_u_hash_quick_find(ht, IS_STRING, zKey, nKeyLength, h, pData);
-	}
-}
-/* }}} */
-#endif
-#endif
 
 /* {{{ gdex_get_lval()
  * Get a long integer.

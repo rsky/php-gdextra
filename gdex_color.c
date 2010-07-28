@@ -750,11 +750,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
 	HashPosition pos;
 	zval *color;
 	gdex_rgba_t *rgb;
-#ifdef IS_UNICODE
-	zstr key;
-#else
 	char *key;
-#endif
 	uint len;
 	ulong idx;
 
@@ -778,11 +774,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
 			gdex_add_assoc_long(color, "red",   rgb->r);
 			gdex_add_assoc_long(color, "green", rgb->g);
 			gdex_add_assoc_long(color, "blue",  rgb->b);
-#ifdef IS_UNICODE
-			add_ascii_assoc_zval_ex(return_value, key, len, color);
-#else
 			add_assoc_zval_ex(return_value, key, len, color);
-#endif
 		}
 		zend_hash_move_forward_ex(svg_colors, &pos);
 	}
