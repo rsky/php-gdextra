@@ -75,6 +75,12 @@ ZEND_END_ARG_INFO()
 #endif /* PHP_GDEXTRA_WITH_MAGICK */
 
 ARG_INFO_STATIC
+ZEND_BEGIN_ARG_INFO_EX(arginfo_imagehistgram, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
+	ZEND_ARG_INFO(0, im)
+	ZEND_ARG_INFO(0, colorspace)
+ZEND_END_ARG_INFO()
+
+ARG_INFO_STATIC
 ZEND_BEGIN_ARG_INFO_EX(arginfo_imagechannelextract, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
 	ZEND_ARG_INFO(0, im)
 	ZEND_ARG_INFO(0, colorspace)
@@ -237,6 +243,7 @@ static zend_function_entry gdextra_functions[] = {
 	PHP_FE(imagecreatefromstring_ex,    arginfo_imagecreatefromstring)
 #endif
 	PHP_FE(imageclone_ex,               arginfo_image)
+	PHP_FE(imagehistgram_ex,            arginfo_imagehistgram)
 	PHP_FE(imagechannelextract_ex,      arginfo_imagechannelextract)
 	PHP_FE(imagechannelmerge_ex,        arginfo_imagechannelmerge)
 	PHP_FE(imagealphamask_ex,           arginfo_imagealphamask)

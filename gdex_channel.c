@@ -137,7 +137,7 @@ _channel_extract_rgb(const gdImagePtr im,
                      gdImagePtr gch,
                      gdImagePtr bch,
                      gdImagePtr ach,
-                     int raw_alpha);
+                     zend_bool raw_alpha);
 
 static void
 _channel_extract_3ch(const gdImagePtr im,
@@ -146,7 +146,7 @@ _channel_extract_3ch(const gdImagePtr im,
                      gdImagePtr ch3,
                      gdImagePtr ach,
                      gdex_rgb_to_3ch_func_t cs_conv,
-                     int raw_alpha);
+                     zend_bool raw_alpha);
 
 static void
 _channel_extract_4ch(const gdImagePtr im,
@@ -156,7 +156,10 @@ _channel_extract_4ch(const gdImagePtr im,
                      gdImagePtr ch4,
                      gdImagePtr ach,
                      gdex_rgb_to_4ch_func_t cs_conv,
-                     int raw_alpha);
+                     zend_bool raw_alpha);
+
+static void
+_channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha);
 
 /* }}} */
 
@@ -811,7 +814,7 @@ _channel_extract_rgb(const gdImagePtr im,
                      gdImagePtr gch,
                      gdImagePtr bch,
                      gdImagePtr ach,
-                     int raw_alpha)
+                     zend_bool raw_alpha)
 {
 	int x, y, width, height;
 	int a;
@@ -866,7 +869,7 @@ _channel_extract_rgb(const gdImagePtr im,
 }
 /* }}} */
 
-/* {{{ _channel_merge_3ch()
+/* {{{ _channel_extract_3ch()
  * Extract 3+alpha channels.
  */
 static void
@@ -876,7 +879,7 @@ _channel_extract_3ch(const gdImagePtr im,
                      gdImagePtr ch3,
                      gdImagePtr ach,
                      gdex_rgb_to_3ch_func_t cs_conv,
-                     int raw_alpha)
+                     zend_bool raw_alpha)
 {
 	int x, y, width, height;
 	int a;
@@ -934,7 +937,7 @@ _channel_extract_3ch(const gdImagePtr im,
 }
 /* }}} */
 
-/* {{{ _channel_merge_4ch()
+/* {{{ _channel_extract_4ch()
  * Extract 4+alpha channels.
  */
 static void
@@ -945,7 +948,7 @@ _channel_extract_4ch(const gdImagePtr im,
                      gdImagePtr ch4,
                      gdImagePtr ach,
                      gdex_rgb_to_4ch_func_t cs_conv,
-                     int raw_alpha)
+                     zend_bool raw_alpha)
 {
 	int x, y, width, height;
 	int a;
@@ -1152,16 +1155,16 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 }
 /* }}} */
 
-/* {{{ proto array imagechannelextract_ex(resource im[, int colorspace[, bool raw_alpha]])
- *
+/* {{{ _channel_extract()
+ * Extract channels.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
+static void
+_channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 {
 	zval *zim, *zch;
 	gdImagePtr im, ch[MAX_CHANNELS];
 	long orig_colorspace = COLORSPACE_RGB;
 	int colorspace;
-	zend_bool raw_alpha = 0;
 	int use_alpha = 0;
 	int i, width, height;
 	int errid = -1;
@@ -1267,6 +1270,15 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
 	php_error_docref(NULL TSRMLS_CC, E_WARNING,
 			"Cannot create a channel image #%d", errid);
 	RETURN_FALSE;
+}
+/* }}} */
+
+/* {{{ proto array imagechannelextract_ex(resource im[, int colorspace[, bool raw_alpha]])
+ *
+ */
+GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
+{
+	_channel_extract(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }
 /* }}} */
 
@@ -1409,6 +1421,81 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	}
 
 	RETURN_TRUE;
+}
+/* }}} */
+
+/* {{{ proto array imagehistgram_ex(resource im[, int colorspace])
+ *
+ */
+GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
+{
+	zval *extracted, *tmp, **entry;
+	HashTable *channels;
+	HashPosition pos;
+	int le_gd = phpi_get_le_gd();
+
+	if (ZEND_NUM_ARGS() > 2) {
+		WRONG_PARAM_COUNT;
+	}
+
+	MAKE_STD_ZVAL(extracted);
+	tmp = return_value;
+	return_value = extracted;
+
+	_channel_extract(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
+
+	extracted = return_value;
+	return_value = tmp;
+
+	if (Z_TYPE_P(extracted) != IS_ARRAY) {
+		zval_ptr_dtor(&extracted);
+		RETURN_FALSE;
+	}
+
+	channels = Z_ARRVAL_P(extracted);
+	gdex_array_init_size(return_value, zend_hash_num_elements(channels));
+
+	zend_hash_internal_pointer_reset(channels);
+	while (zend_hash_get_current_data(channels, (void **)&entry) == SUCCESS) {
+		gdImagePtr im;
+		int x, y, width, height;
+		double pixels;
+		zval *ch;
+		unsigned int i, counts[256];
+
+		ZEND_FETCH_RESOURCE(im, gdImagePtr, entry, -1, "Image", le_gd);
+		if (im == NULL || im->trueColor || im->colorsTotal != 256) {
+			zval_ptr_dtor(&extracted);
+			zval_dtor(return_value);
+			php_error_docref(NULL TSRMLS_CC, E_ERROR,
+					"Failed to extract channels");
+			RETURN_FALSE;
+		}
+
+		width = gdImageSX(im);
+		height = gdImageSY(im);
+		pixels = (double)width * (double)height;
+
+		memset(counts, 0, sizeof(counts));
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				counts[unsafeGetPalettePixel(im, x, y)]++;
+			}
+		}
+
+		MAKE_STD_ZVAL(ch);
+		gdex_array_init_size(ch, 256);
+
+		for (i = 0; i < 256; i++) {
+			add_index_double(ch, (ulong)i, (double)counts[i] / pixels);
+		}
+
+		add_next_index_zval(return_value, ch);
+
+		zend_hash_move_forward(channels);
+	}
+
+	zval_ptr_dtor(&extracted);
 }
 /* }}} */
 

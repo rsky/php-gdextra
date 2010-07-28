@@ -295,6 +295,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecreatebymagick_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagecreatefromstring_ex);
 #endif
 GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex);
+GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex);
