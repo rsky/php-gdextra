@@ -225,6 +225,12 @@ ZEND_END_ARG_INFO()
 /* }}} */
 /* {{{ gdextra_functions[] */
 
+#if PHP_VERSION_ID >= 50300
+#define GDEX_NS_FALIAS(name, alias, arg_info) \
+	{ "gdextra\\" #name, ZEND_FN(alias), arg_info, \
+		(zend_uint) (sizeof(arg_info)/sizeof(struct _zend_arg_info)-1), 0 },
+#endif
+
 static zend_function_entry gdextra_functions[] = {
 #if PHP_GDEXTRA_WITH_MAGICK
 	PHP_FE(imagecreatebymagick_ex,      arginfo_imagecreatebymagick)
