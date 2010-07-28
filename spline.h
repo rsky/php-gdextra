@@ -21,11 +21,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     php_gdextra
+ * @package     php-gdextra
  * @author      Ryusuke SEKIYAMA <rsky0711@gmail.com>
  * @copyright   2009 Ryusuke SEKIYAMA
  * @license     http://www.opensource.org/licenses/mit-license.php  MIT License
- * @version     SVN: $Id$
  */
 
 #ifndef _SPLINE_H_
