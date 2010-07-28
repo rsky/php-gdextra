@@ -176,12 +176,18 @@ typedef void (*gdex_4ch_to_rgb_func_t)(float w, float x, float y, float z, int *
  * Auto unicode (ascii) and size supported version of array_init()
  * and shorthand macros of add_assoc_{long,double}_ex().
  */
+#if ZEND_EXTENSION_API_NO < 220090626
+
 GDEXTRA_LOCAL int
-_gdex_array_init(zval *zv, uint size);
-#define gdex_array_init(_zv) _gdex_array_init((_zv), 0)
-#define gdex_array_init_size(_zv, _size) _gdex_array_init((_zv), (_size))
+_gdex_array_init(argal *arg, uint size);
+
+#define array_init_size(_arg, _size) _gdex_array_init((_arg), (_size))
+
+#endif
+
 #define gdex_add_assoc_long(_arr, _key, _val) \
 	add_assoc_long_ex((_arr), (_key), sizeof((_key)), (_val))
+
 #define gdex_add_assoc_double(_arr, _key, _val) \
 	add_assoc_double_ex((_arr), (_key), sizeof((_key)), (_val))
 

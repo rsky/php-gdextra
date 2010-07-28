@@ -35,10 +35,8 @@ static void
 _tile_copy(gdImagePtr dst, gdImagePtr src, int position);
 
 /* }}} */
+/* {{{ proto void imageflip_ex(resource im, int mode) */
 
-/* {{{ proto void imageflip_ex(resource im, int mode)
- *
- */
 GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex)
 {
 	zval *zim = NULL;
@@ -113,12 +111,11 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex)
 		}
 	}
 }
-/* }}} */
 
+/* }}} */
 /* {{{ proto resource imagescale_ex(resource im, int width, int height
- *                                  [, int mode[, array options]])
- *
- */
+                                    [, int mode[, array options]]) */
+
 GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex)
 {
 	zval *zim = NULL;
@@ -320,9 +317,11 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex)
 	/* return a new image resource */
 	ZEND_REGISTER_RESOURCE(return_value, dst, le_gd);
 }
-/* }}} */
 
-/* {{{ _tile_copy()
+/* }}} */
+/* {{{ _tile_copy() */
+
+/*
  * Tile the destination image with the source image.
  */
 static void
@@ -370,6 +369,7 @@ _tile_copy(gdImagePtr dst, gdImagePtr src, int position)
 		y += src_h;
 	}
 }
+
 /* }}} */
 
 /*

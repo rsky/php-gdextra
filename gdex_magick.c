@@ -42,8 +42,9 @@ static void
 _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file);
 
 /* }}} */
+/* {{{ _pixelwand_to_gdtruecolor() */
 
-/* {{{ _pixelwand_to_gdtruecolor()
+/*
  * Convert from PixelWand to gdTrueColorAlpha value
  */
 static int
@@ -67,9 +68,11 @@ _pixelwand_to_gdtruecolor(const PixelWand *pixel)
 
 	return gdTrueColorAlpha(r, g, b, a);
 }
-/* }}} */
 
-/* {{{ _magickwand_error()
+/* }}} */
+/* {{{ _magickwand_error() */
+
+/*
  * Raise an error
  */
 static void
@@ -94,9 +97,11 @@ _magickwand_error(MagickWand *wand, int errcode, const char *errmsg TSRMLS_DC)
 		MagickClearException(wand);
 	}
 }
-/* }}} */
 
-/* {{{ _magickwand_to_gdimage()
+/* }}} */
+/* {{{ _magickwand_to_gdimage() */
+
+/*
  * Create a new image from file, URL or the image stream in the string
  */
 static void
@@ -193,24 +198,29 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 	(void)DestroyMagickWand(wand);
 	RETURN_FALSE;
 }
-/* }}} */
 
-/* {{{ proto resource imagecreatebymagick_ex(string filename)
+/* }}} */
+/* {{{ proto resource imagecreatebymagick_ex(string filename) */
+
+/*
  * Create a new image from file or URL.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecreatebymagick_ex)
 {
 	_magickwand_to_gdimage(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
 }
-/* }}} */
 
-/* {{{ proto resource imagecreatefromstring_ex(string data)
+/* }}} */
+/* {{{ proto resource imagecreatefromstring_ex(string data) */
+
+/*
  * Create a new image from the image stream in the string.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecreatefromstring_ex)
 {
 	_magickwand_to_gdimage(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }
+
 /* }}} */
 
 /*

@@ -39,7 +39,6 @@ static HashTable _svg_color_table;
 static zend_class_entry *ce_util = NULL;
 
 /* }}} */
-
 /* {{{ module function prototypes */
 
 static PHP_MINIT_FUNCTION(gdextra);
@@ -47,9 +46,7 @@ static PHP_MSHUTDOWN_FUNCTION(gdextra);
 static PHP_MINFO_FUNCTION(gdextra);
 
 /* }}} */
-
 /* {{{ argument informations */
-#if (PHP_MAJOR_VERSION >= 5)
 
 #if !defined(PHP_VERSION_ID) || PHP_VERSION_ID < 50300
 #define ARG_INFO_STATIC static
@@ -216,27 +213,9 @@ ZEND_BEGIN_ARG_INFO(arginfo_util_parsecsscolor, ZEND_SEND_BY_VAL)
 	ZEND_ARG_INFO(0, color)
 ZEND_END_ARG_INFO()
 
-#else /* PHP 4.x */
-#define arginfo_image NULL
-#define arginfo_imagecreatebymagick NULL
-#define arginfo_imagecreatefromstring NULL
-#define arginfo_imagechannelmerge NULL
-#define arginfo_imagechannelextract NULL
-#define arginfo_imagealphamask NULL
-#define arginfo_imagebmp NULL
-#define arginfo_imageicon NULL
-#define arginfo_imageiconarray NULL
-#define arginfo_imagecolorallocatecss NULL
-#define arginfo_imagecolorallocatehsv NULL
-#define arginfo_imagecolorcorrect NULL
-#define arginfo_imageflip NULL
-#define arginfo_imagescale NULL
-#define arginfo_imagecarve NULL
-#define arginfo_colorcorrectiontest NULL
-#endif
 /* }}} */
-
 /* {{{ gdextra_functions[] */
+
 static zend_function_entry gdextra_functions[] = {
 #if PHP_GDEXTRA_WITH_MAGICK
 	PHP_FE(imagecreatebymagick_ex,      arginfo_imagecreatebymagick)
@@ -267,11 +246,13 @@ static zend_function_entry gdextra_functions[] = {
 #endif
 	{ NULL, NULL, NULL }
 };
+
 /* }}} */
+/* {{{ gdextra_util_methods[] */
 
 #define GDEX_UTIL_ME(name, arginfo) \
 	PHP_ME(ImageExUtil, name, arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-/* {{{ gdextra_util_methods[] */
+
 static zend_function_entry gdextra_util_methods[] = {
 	GDEX_UTIL_ME(cmykToRgb,         arginfo_util_conv_from_cmyk)
 	GDEX_UTIL_ME(hslToRgb,          arginfo_util_conv_from_hsl)
@@ -283,28 +264,22 @@ static zend_function_entry gdextra_util_methods[] = {
 	GDEX_UTIL_ME(getSvgColorTable,  NULL)
 	{ NULL, NULL, NULL }
 };
-/* }}} */
 
+/* }}} */
 /* {{{ cross-extension dependencies */
 
-#if ZEND_EXTENSION_API_NO >= 220050617
 static zend_module_dep gdextra_deps[] = {
 	ZEND_MOD_REQUIRED("gd")
 	{NULL, NULL, NULL, 0}
 };
-#endif
-/* }}} */
 
-/* {{{ gdextra_module_entry
- */
+/* }}} */
+/* {{{ gdextra_module_entry */
+
 static zend_module_entry gdextra_module_entry = {
-#if ZEND_EXTENSION_API_NO >= 220050617
 	STANDARD_MODULE_HEADER_EX,
 	NULL,
 	gdextra_deps,
-#else
-	STANDARD_MODULE_HEADER,
-#endif
 	"gdextra",
 	gdextra_functions,
 	PHP_MINIT(gdextra),
@@ -315,6 +290,7 @@ static zend_module_entry gdextra_module_entry = {
 	PHP_GDEXTRA_MODULE_VERSION,
 	STANDARD_MODULE_PROPERTIES
 };
+
 /* }}} */
 
 #ifdef COMPILE_DL_GDEXTRA
@@ -325,6 +301,7 @@ ZEND_GET_MODULE(gdextra)
 	REGISTER_LONG_CONSTANT("IMAGE_EX_" #name, name, CONST_PERSISTENT | CONST_CS)
 
 /* {{{ PHP_MINIT_FUNCTION */
+
 static PHP_MINIT_FUNCTION(gdextra)
 {
 	zend_class_entry ce;
@@ -394,9 +371,10 @@ static PHP_MINIT_FUNCTION(gdextra)
 
 	return SUCCESS;
 }
-/* }}} */
 
+/* }}} */
 /* {{{ PHP_MSHUTDOWN_FUNCTION */
+
 static PHP_MSHUTDOWN_FUNCTION(gdextra)
 {
 	zend_hash_destroy(&_svg_color_table);
@@ -406,7 +384,9 @@ static PHP_MSHUTDOWN_FUNCTION(gdextra)
 	return SUCCESS;
 }
 
+/* }}} */
 /* {{{ PHP_MINFO_FUNCTION */
+
 static PHP_MINFO_FUNCTION(gdextra)
 {
 #if PHP_GDEXTRA_WITH_MAGICK
@@ -430,11 +410,14 @@ static PHP_MINFO_FUNCTION(gdextra)
 #endif
 	php_info_print_table_end();
 }
-/* }}} */
 
-/* {{{ _gdex_array_init()
+/* }}} */
+/* {{{ _gdex_array_init() */
+
+/*
  * Size supported version of array_init().
  */
+#if ZEND_EXTENSION_API_NO < 220090626
 GDEXTRA_LOCAL int
 _gdex_array_init(zval *zv, uint size)
 {
@@ -443,9 +426,12 @@ _gdex_array_init(zval *zv, uint size)
 	Z_TYPE_P(zv) = IS_ARRAY;
 	return SUCCESS;
 }
-/* }}} */
+#endif
 
-/* {{{ gdex_get_lval()
+/* }}} */
+/* {{{ gdex_get_lval() */
+
+/*
  * Get a long integer.
  */
 GDEXTRA_LOCAL long
@@ -475,9 +461,11 @@ gdex_get_lval(zval *zv)
 		return Z_LVAL(val);
 	}
 }
-/* }}} */
 
-/* {{{ gdex_get_dval()
+/* }}} */
+/* {{{ gdex_get_dval() */
+
+/*
  * Get a double precision number.
  */
 GDEXTRA_LOCAL double
@@ -497,9 +485,11 @@ gdex_get_dval(zval *zv)
 		return Z_DVAL(val);
 	}
 }
-/* }}} */
 
-/* {{{ gdex_get_strval()
+/* }}} */
+/* {{{ gdex_get_strval() */
+
+/*
  * Get a string value.
  */
 GDEXTRA_LOCAL char *
@@ -521,9 +511,11 @@ gdex_get_strval(zval *zv, int *length, zend_bool *is_copy)
 		return Z_STRVAL(val);
 	}
 }
-/* }}} */
 
-/* {{{ gdex_str_tolower_trim()
+/* }}} */
+/* {{{ gdex_str_tolower_trim() */
+
+/*
  * Get the lowercased and trimmed copy of the string.
  */
 GDEXTRA_LOCAL char *
@@ -538,9 +530,11 @@ gdex_str_tolower_trim(const char *str, int length, int *new_length)
 	*new_length = Z_STRLEN(trimmed);
 	return Z_STRVAL(trimmed);
 }
-/* }}} */
 
-/* {{{ gdex_get_svg_color_table()
+/* }}} */
+/* {{{ gdex_get_svg_color_table() */
+
+/*
  * Get the SVG color table.
  */
 GDEXTRA_LOCAL HashTable *
@@ -548,9 +542,11 @@ gdex_get_svg_color_table(void)
 {
 	return &_svg_color_table;
 }
-/* }}} */
 
-/* {{{ gdex_calc_offset()
+/* }}} */
+/* {{{ gdex_calc_offset() */
+
+/*
  * Calculate the offset to the target.
  */
 GDEXTRA_LOCAL int
@@ -568,9 +564,11 @@ gdex_calc_offset(int target, int length, int mode)
 			return 0;
 	}
 }
-/* }}} */
 
-/* {{{ gdex_get_colorspace_name()
+/* }}} */
+/* {{{ gdex_get_colorspace_name() */
+
+/*
  * Get the name of the color space.
  */
 GDEXTRA_LOCAL const char *
@@ -601,9 +599,11 @@ gdex_get_colorspace_name(int colorspace)
 	}
 	return "unknown";
 }
-/* }}} */
 
-/* {{{ proto resource imageclone_ex(resource im)
+/* }}} */
+/* {{{ proto resource imageclone_ex(resource im) */
+
+/*
  * Clone an image.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex)
@@ -638,6 +638,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex)
 	/* register the cloned image to the return value */
 	ZEND_REGISTER_RESOURCE(return_value, dst, le_gd);
 }
+
 /* }}} */
 
 /*

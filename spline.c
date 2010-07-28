@@ -55,7 +55,9 @@ struct _spline_t {
 #define SPLr(i) spl->v[(i)].r
 #define SPLs(i) spl->v[(i)].s
 
-/* {{{ spline_new()
+/* {{{ spline_new() */
+
+/*
  * Constructor.
  */
 SPLINE_PUBLIC spline_t *
@@ -77,9 +79,11 @@ spline_new(void)
 
 	return spl;
 }
-/* }}} */
 
-/* {{{ spline_add_point()
+/* }}} */
+/* {{{ spline_add_point() */
+
+/*
  * Add a point.
  * 'x' must be greater than the last added one.
  */
@@ -120,9 +124,11 @@ spline_add_point(spline_t *spl, double x, double y)
 
 	return 1;
 }
-/* }}} */
 
-/* {{{ spline_num_points()
+/* }}} */
+/* {{{ spline_num_points() */
+
+/*
  * Counter.
  */
 SPLINE_PUBLIC unsigned int
@@ -130,9 +136,11 @@ spline_num_points(const spline_t *spl)
 {
 	return spl->n;
 }
-/* }}} */
 
-/* {{{ spline_get_first_point()
+/* }}} */
+/* {{{ spline_get_first_point() */
+
+/*
  * Get the x and y coordinate of the first point.
  */
 SPLINE_PUBLIC int
@@ -146,9 +154,11 @@ spline_get_first_point(const spline_t *spl, double *x, double *y)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ spline_get_last_point()
+/* }}} */
+/* {{{ spline_get_last_point() */
+
+/*
  * Get the x and y coordinate of the last point.
  */
 SPLINE_PUBLIC int
@@ -162,9 +172,11 @@ spline_get_last_point(const spline_t *spl, double *x, double *y)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ spline_get_nth_point()
+/* }}} */
+/* {{{ spline_get_nth_point() */
+
+/*
  * Get the x and y coordinate of the specified point.
  */
 SPLINE_PUBLIC int
@@ -178,9 +190,11 @@ spline_get_nth_point(const spline_t *spl, unsigned int n, double *x, double *y)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ spline_is_closed()
+/* }}} */
+/* {{{ spline_is_closed() */
+
+/*
  * Determine whether the spline is closed.
  */
 SPLINE_PUBLIC int
@@ -188,9 +202,11 @@ spline_is_closed(const spline_t *spl)
 {
 	return spl->closed;
 }
-/* }}} */
 
-/* {{{ spline_close()
+/* }}} */
+/* {{{ spline_close() */
+
+/*
  * Finalizer.
  */
 SPLINE_PUBLIC int
@@ -275,9 +291,11 @@ spline_close(spline_t *spl)
 
 	return 1;
 }
-/* }}} */
 
-/* {{{ spline_reopen()
+/* }}} */
+/* {{{ spline_reopen() */
+
+/*
  * Reactivator.
  */
 SPLINE_PUBLIC void
@@ -285,9 +303,11 @@ spline_reopen(spline_t *spl)
 {
 	spl->closed = 0;
 }
-/* }}} */
 
-/* {{{ spline_interpolate()
+/* }}} */
+/* {{{ spline_interpolate() */
+
+/*
  * Get an interpolated value.
  * 'spl' must be closed by spline_close().
  */
@@ -321,9 +341,11 @@ spline_interpolate(const spline_t *spl, double x)
 	x -= xi;
 	return SPLy(i) + x * (SPLq(i) + x * (SPLr(i) + x * SPLs(i)));
 }
-/* }}} */
 
-/* {{{ spline_destroy()
+/* }}} */
+/* {{{ spline_destroy() */
+
+/*
  * Destructor.
  */
 void
@@ -334,6 +356,7 @@ spline_destroy(spline_t *spl)
 	}
 	spline_free(spl);
 }
+
 /* }}} */
 
 /*

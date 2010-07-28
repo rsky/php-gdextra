@@ -29,6 +29,8 @@
 
 #include "php_gdextra.h"
 
+/* {{{ macros */
+
 #define MAX_CHANNELS 5
 
 #define GET_INTENSITY_PARAMETERS const channel_t *ch, int x, int y
@@ -38,6 +40,7 @@
 
 #define MASK_ALPHA_PARAMETERS gdImagePtr im, const channel_t *ach, int x, int y, int z
 
+/* }}} */
 /* {{{ private type definitions */
 
 typedef enum _grayscale_type_t {
@@ -64,7 +67,6 @@ struct _channel_t {
 typedef void (*mask_alpha_func_t)(MASK_ALPHA_PARAMETERS);
 
 /* }}} */
-
 /* {{{ private function prototypes */
 
 static int
@@ -162,10 +164,10 @@ static void
 _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha);
 
 /* }}} */
-
 /* {{{ functions to get intensity */
+/* {{{ _get_intensity_truecolor() */
 
-/* {{{ _get_intensity_truecolor()
+/*
  * Get intensity from a true color image.
  */
 static int
@@ -179,9 +181,11 @@ _get_intensity_truecolor(GET_INTENSITY_PARAMETERS)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ _get_intensity_palette()
+/* }}} */
+/* {{{ _get_intensity_palette() */
+
+/*
  * Get intensity from an index color image.
  */
 static int
@@ -195,9 +199,11 @@ _get_intensity_palette(GET_INTENSITY_PARAMETERS)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ _get_intensity_grayscale()
+/* }}} */
+/* {{{ _get_intensity_grayscale() */
+
+/*
  * Get intensity from a gray scale image.
  */
 static int
@@ -210,9 +216,11 @@ _get_intensity_grayscale(GET_INTENSITY_PARAMETERS)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ _get_intensity_grayindex()
+/* }}} */
+/* {{{ _get_intensity_grayindex() */
+
+/*
  * Get intensity from a gray scale image (intensity == index).
  */
 static int
@@ -225,9 +233,11 @@ _get_intensity_grayindex(GET_INTENSITY_PARAMETERS)
 		return 0;
 	}
 }
-/* }}} */
 
-/* {{{ _get_alpha_truecolor()
+/* }}} */
+/* {{{ _get_alpha_truecolor() */
+
+/*
  * Get alpha channel value from a true color image.
  */
 static int
@@ -241,9 +251,11 @@ _get_alpha_truecolor(GET_INTENSITY_PARAMETERS)
 		return gdAlphaTransparent;
 	}
 }
-/* }}} */
 
-/* {{{ _get_alpha_palette()
+/* }}} */
+/* {{{ _get_alpha_palette() */
+
+/*
  * Get alpha channel value from an index color image.
  */
 static int
@@ -257,9 +269,11 @@ _get_alpha_palette(GET_INTENSITY_PARAMETERS)
 		return gdAlphaTransparent;
 	}
 }
-/* }}} */
 
-/* {{{ _get_alpha_grayscale()
+/* }}} */
+/* {{{ _get_alpha_grayscale() */
+
+/*
  * Get alpha channel value from a gray scale image.
  */
 static int
@@ -272,9 +286,11 @@ _get_alpha_grayscale(GET_INTENSITY_PARAMETERS)
 		return gdAlphaTransparent;
 	}
 }
-/* }}} */
 
-/* {{{ _get_alpha_grayindex()
+/* }}} */
+/* {{{ _get_alpha_grayindex() */
+
+/*
  * Get alpha channel value from a gray scale image (value == index).
  */
 static int
@@ -287,9 +303,11 @@ _get_alpha_grayindex(GET_INTENSITY_PARAMETERS)
 		return gdAlphaTransparent;
 	}
 }
-/* }}} */
 
-/* {{{ _get_raw_alpha_truecolor()
+/* }}} */
+/* {{{ _get_raw_alpha_truecolor() */
+
+/*
  * Get raw alpha channel value from a true color image.
  */
 static int
@@ -298,9 +316,11 @@ _get_raw_alpha_truecolor(GET_INTENSITY_PARAMETERS)
 	int a = _get_intensity_truecolor(ch, x, y);
 	return MINMAX(a, 0, gdAlphaMax);
 }
-/* }}} */
 
-/* {{{ _get_raw_alpha_palette()
+/* }}} */
+/* {{{ _get_raw_alpha_palette() */
+
+/*
  * Get raw alpha channel value from an index color image.
  */
 static int
@@ -309,9 +329,11 @@ _get_raw_alpha_palette(GET_INTENSITY_PARAMETERS)
 	int a = _get_intensity_palette(ch, x, y);
 	return MINMAX(a, 0, gdAlphaMax);
 }
-/* }}} */
 
-/* {{{ _get_raw_alpha_grayscale()
+/* }}} */
+/* {{{ _get_raw_alpha_grayscale() */
+
+/*
  * Get raw alpha channel value from a gray scale image.
  */
 static int
@@ -320,9 +342,11 @@ _get_raw_alpha_grayscale(GET_INTENSITY_PARAMETERS)
 	int a = _get_intensity_grayscale(ch, x, y);
 	return MINMAX(a, 0, gdAlphaMax);
 }
-/* }}} */
 
-/* {{{ _get_raw_alpha_grayindex()
+/* }}} */
+/* {{{ _get_raw_alpha_grayindex() */
+
+/*
  * Get raw alpha channel value from a gray scale image (value == index).
  */
 static int
@@ -331,9 +355,11 @@ _get_raw_alpha_grayindex(GET_INTENSITY_PARAMETERS)
 	int a = _get_intensity_grayindex(ch, x, y);
 	return MINMAX(a, 0, gdAlphaMax);
 }
-/* }}} */
 
-/* {{{ _get_intensity_zero()
+/* }}} */
+/* {{{ _get_intensity_zero() */
+
+/*
  * Always return 0.
  */
 static int
@@ -341,9 +367,11 @@ _get_intensity_zero(GET_INTENSITY_PARAMETERS)
 {
 	return 0;
 }
-/* }}} */
 
-/* {{{ _get_alpha_opaque()
+/* }}} */
+/* {{{ _get_alpha_opaque() */
+
+/*
  * Always return gdAlphaOpaque.
  */
 static int
@@ -351,13 +379,15 @@ _get_alpha_opaque(GET_INTENSITY_PARAMETERS)
 {
 	return gdAlphaOpaque;
 }
+
 /* }}} */
 
 #undef GET_INTENSITY_PARAMETERS
 
 /* }}} */
+/* {{{ _get_intensity_converter() */
 
-/* {{{ _get_intensity_converter()
+/*
  * Get a pixel to intensity conversion function.
  */
 static get_intensity_func_t
@@ -378,9 +408,11 @@ _get_intensity_converter(const gdImagePtr im)
 			return _get_intensity_grayscale;
 	}
 }
-/* }}} */
 
-/* {{{ _get_alpha_converter()
+/* }}} */
+/* {{{ _get_alpha_converter() */
+
+/*
  * Get a pixel to alpha channel value conversion function.
  */
 static get_intensity_func_t
@@ -415,8 +447,8 @@ _get_alpha_converter(const gdImagePtr im, int raw_alpha)
 		}
 	}
 }
-/* }}} */
 
+/* }}} */
 /* {{{ alpha mask functions for each line */
 
 #define SET_ALPHA(a) \
@@ -435,7 +467,9 @@ _alpha_screen(int a1, int a2)
 	return gdAlphaMax - ((gdAlphaMax - a1) + (gdAlphaMax - a2) * a1 / gdAlphaMax);
 }
 
-/* {{{ _mask_alpha_set()
+/* {{{ _mask_alpha_set() */
+
+/*
  * Set alpha channel.
  */
 static void
@@ -449,9 +483,11 @@ _mask_alpha_set(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_set_not()
+/* }}} */
+/* {{{ _mask_alpha_set_not() */
+
+/*
  * Set and negate alpha channel.
  */
 static void
@@ -465,9 +501,11 @@ _mask_alpha_set_not(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_merge()
+/* }}} */
+/* {{{ _mask_alpha_merge() */
+
+/*
  * Apply merge blending for alpha channel.
  */
 static void
@@ -481,9 +519,11 @@ _mask_alpha_merge(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_merge_not()
+/* }}} */
+/* {{{ _mask_alpha_merge_not() */
+
+/*
  * Apply merge blending and negate alpha channel.
  */
 static void
@@ -497,9 +537,11 @@ _mask_alpha_merge_not(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_screen()
+/* }}} */
+/* {{{ _mask_alpha_screen() */
+
+/*
  * Apply screen blending for alpha channel.
  */
 static void
@@ -513,9 +555,11 @@ _mask_alpha_screen(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_screen_not()
+/* }}} */
+/* {{{ _mask_alpha_screen_not() */
+
+/*
  * Apply screen blending and negate alpha channel.
  */
 static void
@@ -529,9 +573,11 @@ _mask_alpha_screen_not(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_and()
+/* }}} */
+/* {{{ _mask_alpha_and() */
+
+/*
  * AND operation for alpha channel.
  * GD's alpha channel value is in range [0..0x7f],
  * '0' means opaque and '0x7f' means transparent.
@@ -548,9 +594,11 @@ _mask_alpha_and(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_and_not()
+/* }}} */
+/* {{{ _mask_alpha_and_not() */
+
+/*
  * AND + NOT operation for alpha channel.
  */
 static void
@@ -564,9 +612,11 @@ _mask_alpha_and_not(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_or()
+/* }}} */
+/* {{{ _mask_alpha_or() */
+
+/*
  * OR operation for alpha channel.
  * GD's alpha channel value is in range [0..0x7f],
  * '0' means opaque and '0x7f' means transparent.
@@ -583,9 +633,11 @@ _mask_alpha_or(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_or_not()
+/* }}} */
+/* {{{ _mask_alpha_or_not() */
+
+/*
  * OR + NOT operation for alpha channel.
  */
 static void
@@ -599,9 +651,11 @@ _mask_alpha_or_not(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_xor()
+/* }}} */
+/* {{{ _mask_alpha_xor() */
+
+/*
  * XOR operation for alpha channel.
  */
 static void
@@ -615,9 +669,11 @@ _mask_alpha_xor(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
-/* }}} */
 
-/* {{{ _mask_alpha_xor_not()
+/* }}} */
+/* {{{ _mask_alpha_xor_not() */
+
+/*
  * XOR + NOT operation for alpha channel.
  */
 static void
@@ -631,14 +687,16 @@ _mask_alpha_xor_not(MASK_ALPHA_PARAMETERS)
 		x++;
 	}
 }
+
 /* }}} */
 
 #undef MASK_ALPHA_PARAMETERS
 #undef SET_ALPHA
 
 /* }}} */
+/* {{{ _is_grayscale() */
 
-/* {{{ _is_grayscale()
+/*
  * Check whether the image is an 8-bit gray scale image.
  */
 static grayscale_type_t
@@ -687,9 +745,11 @@ _is_grayscale(const gdImagePtr im)
 		return GRAYSCALE_NONE;
 	}
 }
-/* }}} */
 
-/* {{{ _create_grayscale_image()
+/* }}} */
+/* {{{ _create_grayscale_image() */
+
+/*
  * Create a blank gray scale image.
  */
 static gdImagePtr
@@ -714,9 +774,11 @@ _create_grayscale_image(int width, int height)
 
 	return im;
 }
-/* }}} */
 
-/* {{{ _channel_merge_rgb()
+/* }}} */
+/* {{{ _channel_merge_rgb() */
+
+/*
  * Merge RGB/RGBA channels.
  */
 static void
@@ -741,9 +803,11 @@ _channel_merge_rgb(gdImagePtr im,
 		}
 	}
 }
-/* }}} */
 
-/* {{{ _channel_merge_3ch()
+/* }}} */
+/* {{{ _channel_merge_3ch() */
+
+/*
  * Merge 3+alpha channels.
  */
 static void
@@ -771,9 +835,11 @@ _channel_merge_3ch(gdImagePtr im,
 		}
 	}
 }
-/* }}} */
 
-/* {{{ _channel_merge_4ch()
+/* }}} */
+/* {{{ _channel_merge_4ch() */
+
+/*
  * Merge 4+alpha channels.
  */
 static void
@@ -803,9 +869,11 @@ _channel_merge_4ch(gdImagePtr im,
 		}
 	}
 }
-/* }}} */
 
-/* {{{ _channel_extract_rgb()
+/* }}} */
+/* {{{ _channel_extract_rgb() */
+
+/*
  * Extract RGB/RGBA channels.
  */
 static void
@@ -867,9 +935,11 @@ _channel_extract_rgb(const gdImagePtr im,
 		}
 	}
 }
-/* }}} */
 
-/* {{{ _channel_extract_3ch()
+/* }}} */
+/* {{{ _channel_extract_3ch() */
+
+/*
  * Extract 3+alpha channels.
  */
 static void
@@ -935,9 +1005,11 @@ _channel_extract_3ch(const gdImagePtr im,
 		}
 	}
 }
-/* }}} */
 
-/* {{{ _channel_extract_4ch()
+/* }}} */
+/* {{{ _channel_extract_4ch() */
+
+/*
  * Extract 4+alpha channels.
  */
 static void
@@ -1006,12 +1078,11 @@ _channel_extract_4ch(const gdImagePtr im,
 		}
 	}
 }
-/* }}} */
 
+/* }}} */
 /* {{{ proto resource imagechannelmerge_ex(array channels [, int colorspace
- *                                         [, int position[, bool raw_alpha]]])
- *
- */
+                                           [, int position[, bool raw_alpha]]]) */
+
 GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 {
 	zval *zchannels = NULL;
@@ -1153,9 +1224,11 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	/* register the image to the return value */
 	ZEND_REGISTER_RESOURCE(return_value, im, le_gd);
 }
-/* }}} */
 
-/* {{{ _channel_extract()
+/* }}} */
+/* {{{ _channel_extract() */
+
+/*
  * Extract channels.
  */
 static void
@@ -1241,7 +1314,7 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 	}
 
 	/* return new image resources */
-	gdex_array_init_size(return_value, 4);
+	array_init_size(return_value, use_alpha ? 4 : 8);
 	for (i = 1; i <= 3; i++) {
 		MAKE_STD_ZVAL(zch);
 		ZEND_REGISTER_RESOURCE(zch, ch[i], le_gd);
@@ -1271,19 +1344,20 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 			"Cannot create a channel image #%d", errid);
 	RETURN_FALSE;
 }
-/* }}} */
 
-/* {{{ proto array imagechannelextract_ex(resource im[, int colorspace[, bool raw_alpha]])
- *
- */
+/* }}} */
+/* {{{ proto array imagechannelextract_ex(resource im[, int colorspace[, bool raw_alpha]]) */
+
 GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
 {
 	_channel_extract(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }
-/* }}} */
 
+/* }}} */
 /* {{{ proto bool imagealphamask_ex(resource im, resource mask[, int mode
- *                                  [, int position[, bool raw_alpha]]])
+                                    [, int position[, bool raw_alpha]]]) */
+
+/*
  * Apply the mask to the image's alpha channel.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
@@ -1422,11 +1496,10 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 
 	RETURN_TRUE;
 }
-/* }}} */
 
-/* {{{ proto array imagehistgram_ex(resource im[, int colorspace])
- *
- */
+/* }}} */
+/* {{{ proto array imagehistgram_ex(resource im[, int colorspace]) */
+
 GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 {
 	zval *extracted, *tmp, **entry;
@@ -1453,7 +1526,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 	}
 
 	channels = Z_ARRVAL_P(extracted);
-	gdex_array_init_size(return_value, zend_hash_num_elements(channels));
+	array_init_size(return_value, zend_hash_num_elements(channels));
 
 	zend_hash_internal_pointer_reset(channels);
 	while (zend_hash_get_current_data(channels, (void **)&entry) == SUCCESS) {
@@ -1484,7 +1557,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 		}
 
 		MAKE_STD_ZVAL(ch);
-		gdex_array_init_size(ch, 256);
+		array_init_size(ch, 256);
 
 		for (i = 0; i < 256; i++) {
 			add_index_double(ch, (ulong)i, (double)counts[i] / pixels);
@@ -1497,6 +1570,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 
 	zval_ptr_dtor(&extracted);
 }
+
 /* }}} */
 
 /*

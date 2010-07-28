@@ -71,7 +71,6 @@ _output_image(const char *filename, const byte_t *buffer, size_t buffer_size TSR
 	_output_image((filename), (buffer), (buffer_size) TSRMLS_CC)
 
 /* }}} */
-
 /* {{{ inline functions */
 
 /*static inline byte_t *
@@ -127,9 +126,11 @@ _write_uint32le(byte_t *ptr, uint32_t n)
 	*ptr++ = (byte_t)(0xffU & (n >> 24));
 	return ptr;
 }
-/* }}} */
 
-/* {{{ _verify_icon_size()
+/* }}} */
+/* {{{ _verify_icon_size() */
+
+/*
  * Check whether the image size is within 256x256 pixels
  */
 static int
@@ -147,9 +148,11 @@ _verify_icon_size(const gdImagePtr im)
 	}
 	return SUCCESS;
 }
-/* }}} */
 
-/* {{{ gdimages_to_icon()
+/* }}} */
+/* {{{ gdimages_to_icon() */
+
+/*
  * Create a Windows Icon image from an image resources
  */
 static byte_t *
@@ -281,9 +284,11 @@ _gdimages_to_icon(gdImagePtr *images, size_t num, size_t *result_size TSRMLS_DC)
 	*result_size = icon_size;
 	return icon;
 }
-/* _gdimages_to_icon */
 
-/* {{{ _write_bmp_header()
+/* }}} */
+/* {{{ _write_bmp_header() */
+
+/*
  * Write BITMAPFILEHEADER and BITMAPINFOHEADER
  */
 static byte_t *
@@ -314,9 +319,11 @@ _write_bmp_header(byte_t *ptr,
 
 	return ptr;
 }
-/* }}} */
 
-/* {{{ _write_bmp_palette()
+/* }}} */
+/* {{{ _write_bmp_palette() */
+
+/*
  * Write color pallete (RGBQUAD[])
  */
 static byte_t *
@@ -347,9 +354,11 @@ _write_bmp_palette(byte_t *ptr, const gdImagePtr im, int ncolors)
 
 	return ptr;
 }
-/* }}} */
 
-/* {{{ _gdimage_to_bmp1()
+/* }}} */
+/* {{{ _gdimage_to_bmp1() */
+
+/*
  * Create an 1-bit Windows Bitmap image from an image resource
  */
 static byte_t *
@@ -427,9 +436,11 @@ _gdimage_to_bmp1(const gdImagePtr im, size_t *size TSRMLS_DC)
 	}
 	return buffer;
 }
-/* }}} */
 
-/* {{{ _gdimage_to_bmp4()
+/* }}} */
+/* {{{ _gdimage_to_bmp4() */
+
+/*
  * Create an 4-bit Windows Bitmap image from an image resource
  */
 static byte_t *
@@ -503,9 +514,11 @@ _gdimage_to_bmp4(const gdImagePtr im, size_t *size, zend_bool fill_palette TSRML
 	}
 	return buffer;
 }
-/* }}} */
 
-/* {{{ _gdimage_to_bmp8()
+/* }}} */
+/* {{{ _gdimage_to_bmp8() */
+
+/*
  * Create an 8-bit Windows Bitmap image from an image resource
  */
 static byte_t *
@@ -574,9 +587,11 @@ _gdimage_to_bmp8(const gdImagePtr im, size_t *size, zend_bool fill_palette TSRML
 	}
 	return buffer;
 }
-/* }}} */
 
-/* {{{ _gdimage_to_bmp24()
+/* }}} */
+/* {{{ _gdimage_to_bmp24() */
+
+/*
  * Create a 24-bit Windows Bitmap image from an image resource
  */
 static byte_t *
@@ -635,9 +650,11 @@ _gdimage_to_bmp24(const gdImagePtr im, size_t *size TSRMLS_DC)
 	}
 	return buffer;
 }
-/* }}} */
 
-/* {{{ _gdimage_to_bmp32()
+/* }}} */
+/* {{{ _gdimage_to_bmp32() */
+
+/*
  * Create a 32-bit Windows Bitmap image from an image resource
  */
 static byte_t *
@@ -720,9 +737,11 @@ _gdimage_to_bmp32(const gdImagePtr im, size_t *size, zend_bool v5header TSRMLS_D
 	}
 	return buffer;
 }
-/* }}} */
 
-/* {{{ output_image()
+/* }}} */
+/* {{{ output_image() */
+
+/*
  * Output an image to either the output buffer or a file
  */
 static zend_bool
@@ -750,9 +769,11 @@ _output_image(const char *filename, const byte_t *buffer, size_t buffer_size TSR
 
 	return success;
 }
-/* }}} */
 
-/* {{{ proto bool imagebmp_ex(resource im[, string filename])
+/* }}} */
+/* {{{ proto bool imagebmp_ex(resource im[, string filename]) */
+
+/*
  * Output a BMP image to either the browser or a file
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
@@ -799,9 +820,11 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
 	efree(buffer);
 	RETURN_BOOL(success);
 }
-/* }}} */
 
-/* {{{ proto bool imageicon_ex(resource im[, string filename])
+/* }}} */
+/* {{{ proto bool imageicon_ex(resource im[, string filename]) */
+
+/*
  * Output an Icon image to either the browser or a file
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
@@ -888,6 +911,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
 	efree(icon);
 	RETURN_BOOL(success);
 }
+
 /* }}} */
 
 /*

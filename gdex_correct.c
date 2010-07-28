@@ -48,7 +48,6 @@ typedef enum _correct_result {
 } correct_result;
 
 /* }}} */
-
 /* {{{ private function prototypes */
 
 static int
@@ -79,8 +78,9 @@ _color_correct_cmyk(COLORCORRECT_PARAMETERS),
 _color_correct_alpha(COLORCORRECT_PARAMETERS);
 
 /* }}} */
+/* {{{ _get_levels() */
 
-/* {{{ _get_levels()
+/*
  * Get levels.
  */
 static int
@@ -166,9 +166,11 @@ _get_levels(zval *zv TSRMLS_DC, float *inclination,
 			"Invalid levels option given");
 	return FAILURE;
 }
-/* }}} */
 
-/* {{{ _get_rgamma()
+/* }}} */
+/* {{{ _get_rgamma() */
+
+/*
  * Get reciprocal gamma.
  */
 static float
@@ -187,9 +189,11 @@ _get_rgamma(zval *zv)
 
 	return 1.0f;
 }
-/* }}} */
 
-/* {{{ _get_rotation()
+/* }}} */
+/* {{{ _get_rotation() */
+
+/*
  * Get hue rotation.
  */
 static float
@@ -213,9 +217,11 @@ _get_rotation(zval *zv)
 	}
 	return rotation;
 }
-/* }}} */
 
-/* {{{ _get_tonecurve()
+/* }}} */
+/* {{{ _get_tonecurve() */
+
+/*
  * Get tone curve.
  */
 static spline_t *
@@ -290,9 +296,11 @@ _get_tonecurve(zval *zv, zend_bool no_edge TSRMLS_DC)
 			"Invalid tone curve option given");
 	return NULL;
 }
-/* }}} */
 
-/* {{{ _get_parameters()
+/* }}} */
+/* {{{ _get_parameters() */
+
+/*
  * Get color correction parameters.
  */
 static correct_result
@@ -349,8 +357,8 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 
 	return (nparams > 0) ? CORRECT_SUCCESS : CORRECT_NOTHING;
 }
-/* }}} */
 
+/* }}} */
 /* {{{ macros for declaration of variables */
 
 #define COLORCORRECT_DECLARE_COMMON() \
@@ -375,7 +383,6 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 	COLORCORRECT_DECLARE_EX(_Z)
 
 /* }}} */
-
 /* {{{ macros for fetching parameters */
 
 #define COLORCORRECT_GETOPT_SP(_Z, _ht, _on_failure) \
@@ -426,7 +433,6 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 	}
 
 /* }}} */
-
 /* {{{ macros for color correction */
 
 #define COLORCORRECT_TO_TRUECOLOR(_i) \
@@ -473,8 +479,9 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 }
 
 /* }}} */
+/* {{{ _color_correct_rgb() */
 
-/* {{{ _color_correct_rgb()
+/*
  * Correct color in RGB color space.
  */
 static correct_result
@@ -540,9 +547,11 @@ _color_correct_rgb(COLORCORRECT_PARAMETERS)
 
 	return CORRECT_SUCCESS;
 }
-/* }}} */
 
-/* {{{ _color_correct_hsv()
+/* }}} */
+/* {{{ _color_correct_hsv() */
+
+/*
  * Correct color in HSV/HSL color space.
  */
 static correct_result
@@ -608,9 +617,11 @@ _color_correct_hsv(COLORCORRECT_PARAMETERS, zend_bool is_hsl)
 
 	return CORRECT_SUCCESS;
 }
-/* }}} */
 
-/* {{{ _color_correct_cmyk()
+/* }}} */
+/* {{{ _color_correct_cmyk() */
+
+/*
  * Correct color in CMYK color space.
  */
 static correct_result
@@ -656,9 +667,11 @@ _color_correct_cmyk(COLORCORRECT_PARAMETERS)
 
 	return CORRECT_SUCCESS;
 }
-/* }}} */
 
-/* {{{ _color_correct_alpha()
+/* }}} */
+/* {{{ _color_correct_alpha() */
+
+/*
  * Correct alpha channel.
  */
 static correct_result
@@ -688,9 +701,11 @@ _color_correct_alpha(COLORCORRECT_PARAMETERS)
 
 	return CORRECT_SUCCESS;
 }
-/* }}} */
 
-/* {{{ proto bool imagecolorcorrect_ex(resource im, array params[, int colorspace])
+/* }}} */
+/* {{{ proto bool imagecolorcorrect_ex(resource im, array params[, int colorspace]) */
+
+/*
  * Correct color.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorcorrect_ex)
@@ -762,6 +777,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorcorrect_ex)
 
 	RETURN_BOOL(result == CORRECT_SUCCESS);
 }
+
 /* }}} */
 
 /*

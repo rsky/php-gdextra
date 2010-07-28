@@ -51,8 +51,9 @@ static void
 _color_convert(INTERNAL_FUNCTION_PARAMETERS, int c_from, int c_to);
 
 /* }}} */
+/* {{{ gdex_fetch_color() */
 
-/* {{{ gdex_fetch_color()
+/*
  * Fetch a color from zval.
  */
 GDEXTRA_LOCAL int
@@ -111,9 +112,11 @@ gdex_fetch_color(zval *zv, const gdImagePtr im)
 
 	return c;
 }
-/* }}} */
 
-/* {{{ gdex_parse_css_color()
+/* }}} */
+/* {{{ gdex_parse_css_color() */
+
+/*
  * Parse CSS3-style color strings.
  *
  * @see http://www.w3.org/TR/css3-color/
@@ -134,9 +137,11 @@ gdex_parse_css_color(const char *color, int length, int *r, int *g, int *b, int 
 		return FAILURE;
 	}
 }
-/* }}} */
 
-/* {{{ _parse_css_color()
+/* }}} */
+/* {{{ _parse_css_color() */
+
+/*
  * Parse CSS3-style color strings (and so on).
  *
  * @see http://www.w3.org/TR/css3-color/
@@ -334,9 +339,11 @@ _parse_css_color(const char *color, int length, int *r, int *g, int *b, double *
 	efree(ltcolor);
 	return result;
 }
-/* }}} */
 
-/* {{{ gdex_palette_to_truecolor()
+/* }}} */
+/* {{{ gdex_palette_to_truecolor() */
+
+/*
  * Convert a palette image to a true color image.
  */
 GDEXTRA_LOCAL int
@@ -389,9 +396,11 @@ gdex_palette_to_truecolor(gdImagePtr im TSRMLS_DC)
 
 	return SUCCESS;
 }
-/* }}} */
 
-/* {{{ _color_allocate()
+/* }}} */
+/* {{{ _color_allocate() */
+
+/*
  * Allocate a color from HSV/HSL/CMYK components.
  */
 static void
@@ -448,9 +457,11 @@ _color_allocate(INTERNAL_FUNCTION_PARAMETERS, int colorspace)
 			(int)(r * 255.5), (int)(g * 255.5), (int)(b * 255.5),
 			(int)MINMAX(alpha, 0, gdAlphaMax)));
 }
-/* }}} */
 
-/* {{{ proto bool imagepalettetotruecolor_ex(resource im)
+/* }}} */
+/* {{{ proto bool imagepalettetotruecolor_ex(resource im) */
+
+/*
  * Convert a palette image to a true color image
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
@@ -472,9 +483,11 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 		RETURN_FALSE;
 	}
 }
-/* }}} */
 
-/* {{{ proto int imagecolorallocatecss_ex(resource im, string color)
+/* }}} */
+/* {{{ proto int imagecolorallocatecss_ex(resource im, string color) */
+
+/*
  * Allocate a color from CSS3-style color strings.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex)
@@ -500,42 +513,50 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex)
 
 	RETURN_LONG(gdImageColorResolveAlpha(im, r, g, b, a));
 }
-/* }}} */
 
+/* }}} */
 /* {{{ proto int imagecolorallocatecmyk_ex(resource im,
- *                                         float cyan, float magenta, float yellow,
- *                                         float black[, int alpha])
+                                           float cyan, float magenta, float yellow,
+                                           float black[, int alpha])*/
+
+/*
  * Allocate a color from CMYK components.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecmyk_ex)
 {
 	_color_allocate(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_CMYK);
 }
-/* }}} */
 
+/* }}} */
 /* {{{ proto int imagecolorallocatehsl_ex(resource im,
- *                                        float hue, float saturation, float lightness
- *                                        [, int alpha])
+                                          float hue, float saturation, float lightness
+                                          [, int alpha])*/
+
+/*
  * Allocate a color from HSL/HSLA components.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsl_ex)
 {
 	_color_allocate(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSL);
 }
-/* }}} */
 
+/* }}} */
 /* {{{ proto int imagecolorallocatehsv_ex(resource im,
- *                                        float hue, float saturation, float value
- *                                        [, int alpha])
+                                          float hue, float saturation, float value
+                                          [, int alpha])*/
+
+/*
  * Allocate a color from HSV/HSVA components.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsv_ex)
 {
 	_color_allocate(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSV);
 }
-/* }}} */
 
-/* {{{ _color_convert()
+/* }}} */
+/* {{{ _color_convert() */
+
+/*
  * Convert color components from one to another.
  */
 static void
@@ -620,7 +641,7 @@ _color_convert(INTERNAL_FUNCTION_PARAMETERS, int c_from, int c_to)
 	}
 
 	/* set return value */
-	gdex_array_init_size(return_value, 8);
+	array_init_size(return_value, 8);
 	add_index_double(return_value, 0, d1);
 	add_index_double(return_value, 1, d2);
 	add_index_double(return_value, 2, d3);
@@ -649,63 +670,77 @@ _color_convert(INTERNAL_FUNCTION_PARAMETERS, int c_from, int c_to)
 			break;
 	}
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::cmykToRgb(float cyan, float magenta, float yellow, float black)
+/* }}} */
+/* {{{ proto array ImageExUtil::cmykToRgb(float cyan, float magenta, float yellow, float black) */
+
+/*
  * Convert CMYK color components to RGB color components.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_CMYK, COLORSPACE_RGB);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::hslToRgb(float hue, float saturation, float lightness)
+/* }}} */
+/* {{{ proto array ImageExUtil::hslToRgb(float hue, float saturation, float lightness) */
+
+/*
  * Convert HSL color components to RGB color components.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hslToRgb)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSL, COLORSPACE_RGB);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::hslToRgb(float hue, float saturation, float value)
+/* }}} */
+/* {{{ proto array ImageExUtil::hslToRgb(float hue, float saturation, float value) */
+
+/*
  * Convert HSV color components to RGB color components.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hsvToRgb)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSV, COLORSPACE_RGB);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::rgbToCmyk(float red, float green, float blue)
+/* }}} */
+/* {{{ proto array ImageExUtil::rgbToCmyk(float red, float green, float blue) */
+
+/*
  * Convert RGB color components to CMYK color components.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToCmyk)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_RGB, COLORSPACE_CMYK);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::rgbToHsl(float red, float green, float blue)
+/* }}} */
+/* {{{ proto array ImageExUtil::rgbToHsl(float red, float green, float blue) */
+
+/*
  * Convert RGB color components to HSL color components.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsl)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_RGB, COLORSPACE_HSL);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::rgbToHsv(float red, float green, float blue)
+/* }}} */
+/* {{{ proto array ImageExUtil::rgbToHsv(float red, float green, float blue) */
+
+/*
  * Convert RGB color components to HSV color components.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsv)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_RGB, COLORSPACE_HSV);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::getSvgColorTable(string color)
+/* }}} */
+/* {{{ proto array ImageExUtil::getSvgColorTable(string color) */
+
+/*
  * Get RGBA values of CSS3-style color strings.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor)
@@ -728,7 +763,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor)
 	}
 
 	/* set return value */
-	gdex_array_init_size(return_value, 8);
+	array_init_size(return_value, 8);
 	add_index_long(return_value,   0, r);
 	add_index_long(return_value,   1, g);
 	add_index_long(return_value,   2, b);
@@ -738,9 +773,11 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor)
 	gdex_add_assoc_long(return_value,   "blue",  b);
 	gdex_add_assoc_double(return_value, "alpha", a);
 }
-/* }}} */
 
-/* {{{ proto array ImageExUtil::getSvgColorTable(void)
+/* }}} */
+/* {{{ proto array ImageExUtil::getSvgColorTable(void) */
+
+/*
  * Get list of SVG color keywords and their RGB values.
  */
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
@@ -757,7 +794,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
 		WRONG_PARAM_COUNT;
 	}
 
-	gdex_array_init_size(return_value, SVG_COLOR_NUM);
+	array_init_size(return_value, SVG_COLOR_NUM);
 
 	svg_colors = gdex_get_svg_color_table();
 	zend_hash_internal_pointer_reset_ex(svg_colors, &pos);
@@ -766,7 +803,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
 		 		== HASH_KEY_IS_STRING)
 		{
 			MAKE_STD_ZVAL(color);
-			gdex_array_init_size(color, 6);
+			array_init_size(color, 6);
 			add_index_long(color, 0, rgb->r);
 			add_index_long(color, 1, rgb->g);
 			add_index_long(color, 2, rgb->b);
@@ -778,11 +815,12 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
 		zend_hash_move_forward_ex(svg_colors, &pos);
 	}
 }
+
 /* }}} */
-
 /* {{{ single precision versions of the color converters */
+/* {{{ gdex_hsl_to_rgb() */
 
-/* {{{ gdex_hsl_to_rgb()
+/*
  * Convert HSL color to RGB color. (float to integer)
  */
 GDEXTRA_LOCAL void
@@ -845,9 +883,11 @@ gdex_hsl_to_rgb(float h, float s, float l, int *r, int *g, int *b)
 		}
 	}
 }
-/* }}} */
 
-/* {{{ gdex_hsv_to_rgb()
+/* }}} */
+/* {{{ gdex_hsv_to_rgb() */
+
+/*
  * Convert HSV color to RGB color. (float to integer)
  */
 GDEXTRA_LOCAL void
@@ -911,9 +951,11 @@ gdex_hsv_to_rgb(float h, float s, float v, int *r, int *g, int *b)
 #undef _z
 	}
 }
-/* }}} */
 
-/* {{{ gdex_rgb_to_hsl()
+/* }}} */
+/* {{{ gdex_rgb_to_hsl() */
+
+/*
  * Convert RGB color to HSL color. (integer to float)
  */
 GDEXTRA_LOCAL void
@@ -970,9 +1012,11 @@ gdex_rgb_to_hsl(int r, int g, int b, float *h, float *s, float *l)
 		*h = (f < 0.0f) ? f + 1.0f : f;
 	}
 }
-/* }}} */
 
-/* {{{ gdex_rgb_to_hsv()
+/* }}} */
+/* {{{ gdex_rgb_to_hsv() */
+
+/*
  * Convert RGB color to HSV color. (integer to float)
  */
 GDEXTRA_LOCAL void
@@ -1025,9 +1069,11 @@ gdex_rgb_to_hsv(int r, int g, int b, float *h, float *s, float *v)
 		*h = (f < 0.0f) ? f + 1.0f : f;
 	}
 }
-/* }}} */
 
-/* {{{ gdex_rgb_to_cmyk()
+/* }}} */
+/* {{{ gdex_rgb_to_cmyk() */
+
+/*
  * Convert RGB color to CMYK color. (integer to float)
  */
 GDEXTRA_LOCAL void
@@ -1062,9 +1108,11 @@ gdex_rgb_to_cmyk(int r, int g, int b, float *c, float *m, float *y, float *k)
 		*k = (float)(255 - mx) / 255.0f;
 	}
 }
-/* }}} */
 
-/* {{{ gdex_cmyk_to_rgb()
+/* }}} */
+/* {{{ gdex_cmyk_to_rgb() */
+
+/*
  * Convert CMYK color to RGB color. (float to integer)
  */
 GDEXTRA_LOCAL void
@@ -1075,13 +1123,13 @@ gdex_cmyk_to_rgb(float c, float m, float y, float k, int *r, int *g, int *b)
 	*g = _float2byte(w - m * w);
 	*b = _float2byte(w - y * w);
 }
-/* }}} */
 
 /* }}} */
-
+/* }}} */
 /* {{{ double precision versions of the color converters */
+/* {{{ _hsl2rgb() */
 
-/* {{{ _hsl2rgb()
+/*
  * Convert HSL color to RGB color. (in double precision)
  */
 static void
@@ -1141,9 +1189,11 @@ _hsl2rgb(double h, double s, double l, double *r, double *g, double *b)
 		}
 	}
 }
-/* }}} */
 
-/* {{{ _hsv2rgb()
+/* }}} */
+/* {{{ _hsv2rgb() */
+
+/*
  * Convert HSV color to RGB color. (in double precision)
  */
 static void
@@ -1202,9 +1252,11 @@ _hsv2rgb(double h, double s, double v, double *r, double *g, double *b)
 #undef _z
 	}
 }
-/* }}} */
 
-/* {{{ _rgb2hsl()
+/* }}} */
+/* {{{ _rgb2hsl() */
+
+/*
  * Convert RGB color to HSL color. (in double precision)
  */
 static void
@@ -1261,9 +1313,11 @@ _rgb2hsl(double r, double g, double b, double *h, double *s, double *l)
 		*h = (f < 0.0) ? f + 1.0 : f;
 	}
 }
-/* }}} */
 
-/* {{{ _rgb2hsv()
+/* }}} */
+/* {{{ _rgb2hsv() */
+
+/*
  * Convert RGB color to HSV color. (in double precision)
  */
 static void
@@ -1316,9 +1370,11 @@ _rgb2hsv(double r, double g, double b, double *h, double *s, double *v)
 		*h = (f < 0.0) ? f + 1.0 : f;
 	}
 }
-/* }}} */
 
-/* {{{ _rgb2cmyk()
+/* }}} */
+/* {{{ _rgb2cmyk() */
+
+/*
  * Convert RGB color to CMYK color. (in double precision)
  */
 static void
@@ -1351,9 +1407,11 @@ _rgb2cmyk(double r, double g, double b, double *c, double *m, double *y, double 
 		*k = 1.0 - mx;
 	}
 }
-/* }}} */
 
-/* {{{ _cmyk2rgb()
+/* }}} */
+/* {{{ _cmyk2rgb() */
+
+/*
  * Convert CMYK color to RGB color. (in double precision)
  */
 static void
@@ -1380,8 +1438,8 @@ _cmyk2rgb(double c, double m, double y, double k, double *r, double *g, double *
 		*b = 1.0 - ky;
 	}
 }
-/* }}} */
 
+/* }}} */
 /* }}} */
 
 /*

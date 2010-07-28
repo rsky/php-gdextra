@@ -36,7 +36,6 @@ static zval _fn_imagecreate, _fn_imagecreatetruecolor,
             _fn_imagecolorresolvealpha, _fn_imagecopy, _fn_imagecopyresampled;
 
 /* }}} */
-
 /* {{{ macros */
 
 #define MAKE_FUNC_NAME(name) \
@@ -77,8 +76,8 @@ static zval _fn_imagecreate, _fn_imagecreatetruecolor,
 #define CALL_FUNCTION(name) CALL_FUNCTION_EX(&_fn_##name)
 
 /* }}} */
-
 /* {{{ _rsrc_to_fake() */
+
 static void
 _rsrc_to_fake(zval **rsrc TSRMLS_DC)
 {
@@ -89,9 +88,10 @@ _rsrc_to_fake(zval **rsrc TSRMLS_DC)
 		le->type = le_fake_rsrc;
 	}
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_wrappers_init() */
+
 GDEXTRA_LOCAL int
 gdex_wrappers_init(int module_number TSRMLS_DC)
 {
@@ -111,9 +111,10 @@ gdex_wrappers_init(int module_number TSRMLS_DC)
 
 	return le_fake_rsrc;
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_wrappers_shutdown() */
+
 GDEXTRA_LOCAL void
 gdex_wrappers_shutdown(TSRMLS_D)
 {
@@ -123,9 +124,10 @@ gdex_wrappers_shutdown(TSRMLS_D)
 	FREE_FUNC_NAME(imagecopy);
 	FREE_FUNC_NAME(imagecopyresampled);
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_gdImageCreate() */
+
 GDEXTRA_LOCAL gdImagePtr
 gdex_gdImageCreate(int sx, int sy, zend_bool truecolor)
 {
@@ -157,9 +159,10 @@ gdex_gdImageCreate(int sx, int sy, zend_bool truecolor)
 
 	return im;
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_gdImageDestroy() */
+
 GDEXTRA_LOCAL void
 gdex_gdImageDestroy(gdImagePtr im)
 {
@@ -170,9 +173,10 @@ gdex_gdImageDestroy(gdImagePtr im)
 	ZEND_REGISTER_RESOURCE(zim, im, le_gd);
 	zval_ptr_dtor(&zim);
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_gdImageColorResolveAlpha() */
+
 GDEXTRA_LOCAL int
 gdex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a)
 {
@@ -205,9 +209,10 @@ gdex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a)
 		return color;
 	}
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_gdImageCopy() */
+
 GDEXTRA_LOCAL void
 gdex_gdImageCopy(gdImagePtr dst, gdImagePtr src,
                  int dstX, int dstY, int srcX, int srcY, int w, int h)
@@ -235,9 +240,10 @@ gdex_gdImageCopy(gdImagePtr dst, gdImagePtr src,
 
 	FREE_ARGS();
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_gdImageCopyResampled() */
+
 GDEXTRA_LOCAL void
 gdex_gdImageCopyResampled(gdImagePtr dst, gdImagePtr src,
                           int dstX, int dstY, int srcX, int srcY,
@@ -268,14 +274,16 @@ gdex_gdImageCopyResampled(gdImagePtr dst, gdImagePtr src,
 
 	FREE_ARGS();
 }
-/* }}} */
 
+/* }}} */
 /* {{{ gdex_gdImageSaveAlpha() */
+
 GDEXTRA_LOCAL void
 gdex_gdImageSaveAlpha(gdImagePtr im, int saveAlphaArg)
 {
 	im->saveAlphaFlag = saveAlphaArg;
 }
+
 /* }}} */
 
 /*

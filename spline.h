@@ -68,7 +68,6 @@ extern "C" {
 typedef struct _spline_t spline_t;
 
 /* }}} */
-
 /* {{{ public function prototypes */
 
 /*

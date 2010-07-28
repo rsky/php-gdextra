@@ -46,8 +46,9 @@ static gdImagePtr
 _lqrcarver_to_gdimage(LqrCarver *carver);
 
 /* }}} */
+/* {{{ _lqrerrstr() */
 
-/* {{{ _lqrerrstr()
+/*
  * Lookup error codes
  */
 static const char *
@@ -66,9 +67,11 @@ _lqrerrstr(LqrRetVal ret)
 			return "unknown error";
 	}
 }
-/* }}} */
 
-/* {{{ _get_lqr_options
+/* }}} */
+/* {{{ _get_lqr_options */
+
+/*
  * Get liquid rescale options
  */
 static int
@@ -115,9 +118,11 @@ _get_lqr_options(HashTable *options, gint *max_step, gfloat *rigidity,
 
 	return SUCCESS;
 }
-/* }}} */
 
-/* {{{ _gdimage_to_lqrcaver()
+/* }}} */
+/* {{{ _gdimage_to_lqrcaver() */
+
+/*
  * Convert gdImage to LqrCarver
  */
 static LqrCarver *
@@ -199,9 +204,11 @@ _gdimage_to_lqrcaver(const gdImagePtr im, int save_alpha)
 	}
 	return carver;
 }
-/* }}} */
 
-/* {{{ _lqrcarver_to_gdimage()
+/* }}} */
+/* {{{ _lqrcarver_to_gdimage() */
+
+/*
  * Convert LqrCarver to gdImage
  */
 static gdImagePtr
@@ -231,9 +238,11 @@ _lqrcarver_to_gdimage(LqrCarver *carver)
 
 	return im;
 }
-/* }}} */
 
-/* {{{ gdex_liquid_rescale()
+/* }}} */
+/* {{{ gdex_liquid_rescale() */
+
+/*
  *  Do liquid rescaling.
  */
 GDEXTRA_LOCAL gdImagePtr
@@ -291,11 +300,10 @@ gdex_liquid_rescale(const gdImagePtr src, int width, int height,
 
 	return dst;
 }
-/* }}} */
 
-/* {{{ proto resource imagecarve_ex(resource src, int width, int height[, array options])
- *
- */
+/* }}} */
+/* {{{ proto resource imagecarve_ex(resource src, int width, int height[, array options]) */
+
 GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
 {
 	zval *zsrc;
@@ -329,6 +337,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
 	}
 	ZEND_REGISTER_RESOURCE(return_value, dst, le_gd);
 }
+
 /* }}} */
 
 /*
