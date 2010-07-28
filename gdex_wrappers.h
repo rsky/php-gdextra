@@ -43,9 +43,6 @@ gdex_fcall_info_init(const char *name, gdextra_fcall_info *info TSRMLS_DC);
 GDEXTRA_LOCAL void
 gdex_fcall_info_destroy(gdextra_fcall_info *info TSRMLS_DC);
 
-GDEXTRA_LOCAL void
-gdex_wrappers_shutdown(TSRMLS_D);
-
 GDEXTRA_LOCAL gdImagePtr
 _ex_gdImageCreate(int sx, int sy, zend_bool truecolor);
 

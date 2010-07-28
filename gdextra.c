@@ -391,9 +391,7 @@ static PHP_MINIT_FUNCTION(gdextra)
 static PHP_MSHUTDOWN_FUNCTION(gdextra)
 {
 	zend_hash_destroy(&_svg_color_table);
-#if GDEXTRA_USE_WRAPPERS
-	gdex_wrappers_shutdown(TSRMLS_C);
-#endif
+
 	return SUCCESS;
 }
 
