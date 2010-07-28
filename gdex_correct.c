@@ -30,6 +30,8 @@
 #include "php_gdextra.h"
 #include "spline.h"
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 #define GAMMA_MAX 1000.0
 #define GAMMA_MIN 0.001
 
@@ -725,7 +727,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorcorrect_ex)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", phpi_get_le_gd());
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 	params = Z_ARRVAL_P(zparams);
 
 	/* verify the color space */

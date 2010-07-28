@@ -29,6 +29,8 @@
 
 #include "php_gdextra.h"
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 /* {{{ private function prototypes */
 
 static void
@@ -48,7 +50,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &zim, &mode) == FAILURE) {
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", phpi_get_le_gd());
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	width = gdImageSX(im);
 	height = gdImageSY(im);
@@ -133,7 +135,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex)
 	int dst_x = 0, dst_y = 0, src_x = 0, src_y = 0;
 	double dst_r, src_r;
 	int restoreAlphaBlending;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rll|la!",
@@ -141,7 +142,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(src, gdImagePtr, &zim, -1, "Image", le_gd);
+	ZEND_FETCH_RESOURCE(src, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	if (zoptions != NULL && Z_TYPE_P(zoptions) == IS_ARRAY) {
 		options = Z_ARRVAL_P(zoptions);
@@ -315,7 +316,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex)
 #endif
 
 	/* return a new image resource */
-	ZEND_REGISTER_RESOURCE(return_value, dst, le_gd);
+	ZEND_REGISTER_RESOURCE(return_value, dst, GDEXG(le_gd));
 }
 
 /* }}} */

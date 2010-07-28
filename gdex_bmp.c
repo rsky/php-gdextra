@@ -30,6 +30,8 @@
 #include "php_gdextra.h"
 #include <stdint.h>
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 typedef unsigned char byte_t;
 
 /* {{{ private function prototypes */
@@ -792,7 +794,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", phpi_get_le_gd());
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	/* determine whether to be a truecolor image */
 	if (gdImageTrueColor(im)) {
@@ -838,7 +840,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
 	size_t num, icon_size = 0;
 	zend_bool is_multiple = 0;
 	zend_bool success = 0;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z|s",
@@ -877,7 +878,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
 
 		zend_hash_internal_pointer_reset_ex(imageh, &pos);
 		while (zend_hash_get_current_data_ex(imageh, (void **)&entry, &pos) == SUCCESS) {
-			ZEND_FETCH_RESOURCE_NO_RETURN(im, gdImagePtr, entry, -1, "Image", le_gd);
+			ZEND_FETCH_RESOURCE_NO_RETURN(im, gdImagePtr, entry, -1, "Image", GDEXG(le_gd));
 			if (im == NULL) {
 				php_error_docref(NULL TSRMLS_CC, E_WARNING,
 						"All entries of parameter 1 should be valid Image resources");
@@ -892,7 +893,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
 			zend_hash_move_forward_ex(imageh, &pos);
 		}
 	} else {
-		ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", le_gd);
+		ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 		if (_verify_icon_size(im) == FAILURE) {
 			RETURN_FALSE;
 		}

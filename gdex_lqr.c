@@ -30,6 +30,8 @@
 #include "php_gdextra.h"
 #include <lqr.h>
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 /* {{{ private function prototypes */
 
 static const char *
@@ -311,7 +313,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
 	long width, height;
 	zval *zoptions = NULL;
 	HashTable *options = NULL;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rll|a!",
@@ -319,7 +320,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(src, gdImagePtr, &zsrc, -1, "Image", le_gd);
+	ZEND_FETCH_RESOURCE(src, gdImagePtr, &zsrc, -1, "Image", GDEXG(le_gd));
 
 	if (width < 1L || height < 1L || width > INT_MAX || height > INT_MAX) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid image dimensions");
@@ -335,7 +336,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
 	if (dst == NULL) {
 		RETURN_FALSE;
 	}
-	ZEND_REGISTER_RESOURCE(return_value, dst, le_gd);
+	ZEND_REGISTER_RESOURCE(return_value, dst, GDEXG(le_gd));
 }
 
 /* }}} */

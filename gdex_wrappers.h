@@ -35,17 +35,43 @@
 BEGIN_EXTERN_C()
 
 GDEXTRA_LOCAL int
-gdex_wrappers_init(int module_number TSRMLS_DC);
+gdex_wrappers_init(INIT_FUNC_ARGS);
+
+GDEXTRA_LOCAL int
+gdex_fcall_info_init(const char *name, gdextra_fcall_info *info TSRMLS_DC);
+
+GDEXTRA_LOCAL void
+gdex_fcall_info_destroy(gdextra_fcall_info *info TSRMLS_DC);
 
 GDEXTRA_LOCAL void
 gdex_wrappers_shutdown(TSRMLS_D);
 
-GDEXTRA_LOCAL gdImagePtr gdex_gdImageCreate(int sx, int sy, zend_bool truecolor);
-GDEXTRA_LOCAL void gdex_gdImageDestroy(gdImagePtr im);
-GDEXTRA_LOCAL int gdex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a);
-GDEXTRA_LOCAL void gdex_gdImageCopy(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h);
-GDEXTRA_LOCAL void gdex_gdImageCopyResampled(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH);
-GDEXTRA_LOCAL void gdex_gdImageSaveAlpha(gdImagePtr im, int saveAlphaArg);
+GDEXTRA_LOCAL gdImagePtr
+_ex_gdImageCreate(int sx, int sy, zend_bool truecolor);
+
+GDEXTRA_LOCAL void
+_ex_gdImageDestroy(gdImagePtr im);
+
+GDEXTRA_LOCAL int
+_ex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a);
+
+GDEXTRA_LOCAL void
+_ex_gdImageCopy(gdImagePtr dst,
+                gdImagePtr src,
+                int dstX, int dstY,
+                int srcX, int srcY,
+                int w,    int h);
+
+GDEXTRA_LOCAL void
+_ex_gdImageCopyResampled(gdImagePtr dst,
+                         gdImagePtr src,
+                         int dstX, int dstY,
+                         int srcX, int srcY,
+                         int dstW, int dstH,
+                         int srcW, int srcH);
+
+GDEXTRA_LOCAL void
+_ex_gdImageSaveAlpha(gdImagePtr im, int saveAlphaArg);
 
 END_EXTERN_C()
 
@@ -59,13 +85,13 @@ END_EXTERN_C()
 #undef gdImageCopyResampled
 #undef gdImageSaveAlpha
 
-#define gdImageCreate(sx, sy) gdex_gdImageCreate((sx), (sy), 0)
-#define gdImageCreateTrueColor(sx, sy) gdex_gdImageCreate((sx), (sy), 1)
-#define gdImageDestroy gdex_gdImageDestroy
-#define gdImageColorResolveAlpha gdex_gdImageColorResolveAlpha
-#define gdImageCopy gdex_gdImageCopy
-#define gdImageCopyResampled gdex_gdImageCopyResampled
-#define gdImageSaveAlpha gdex_gdImageSaveAlpha
+#define gdImageCreate(sx, sy)           _ex_gdImageCreate((sx), (sy), 0)
+#define gdImageCreateTrueColor(sx, sy)  _ex_gdImageCreate((sx), (sy), 1)
+#define gdImageDestroy                  _ex_gdImageDestroy
+#define gdImageColorResolveAlpha        _ex_gdImageColorResolveAlpha
+#define gdImageCopy                     _ex_gdImageCopy
+#define gdImageCopyResampled            _ex_gdImageCopyResampled
+#define gdImageSaveAlpha                _ex_gdImageSaveAlpha
 
 #endif /* GDEXTRA_USE_WRAPPERS */
 

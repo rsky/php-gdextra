@@ -29,26 +29,35 @@
 
 #include "php_gdextra.h"
 
-#define PHP_GDEXTRA_MODULE_VERSION "0.3.0"
+#define PHP_GDEXTRA_MODULE_VERSION "0.4.0"
 
 /* {{{ globals */
 
 #include "svg_color.h"
+
 static HashTable _svg_color_table;
 
 static zend_class_entry *ce_util = NULL;
+
+/* }}} */
+/* {{{ module globals */
+
+GDEXTRA_LOCAL ZEND_DECLARE_MODULE_GLOBALS(gdextra)
 
 /* }}} */
 /* {{{ module function prototypes */
 
 static PHP_MINIT_FUNCTION(gdextra);
 static PHP_MSHUTDOWN_FUNCTION(gdextra);
+static PHP_RINIT_FUNCTION(gdextra);
+static PHP_RSHUTDOWN_FUNCTION(gdextra);
 static PHP_MINFO_FUNCTION(gdextra);
+static PHP_GINIT_FUNCTION(gdextra);
 
 /* }}} */
 /* {{{ argument informations */
 
-#if !defined(PHP_VERSION_ID) || PHP_VERSION_ID < 50300
+#if ZEND_EXTENSION_API_NO < 220090626
 #define ARG_INFO_STATIC static
 #else
 #define ARG_INFO_STATIC
@@ -284,11 +293,15 @@ static zend_module_entry gdextra_module_entry = {
 	gdextra_functions,
 	PHP_MINIT(gdextra),
 	PHP_MSHUTDOWN(gdextra),
-	NULL,
-	NULL,
+	PHP_RINIT(gdextra),
+	PHP_RSHUTDOWN(gdextra),
 	PHP_MINFO(gdextra),
 	PHP_GDEXTRA_MODULE_VERSION,
-	STANDARD_MODULE_PROPERTIES
+	PHP_MODULE_GLOBALS(gdextra),
+	PHP_GINIT(gdextra),
+	NULL,
+	NULL,
+	STANDARD_MODULE_PROPERTIES_EX
 };
 
 /* }}} */
@@ -318,7 +331,7 @@ static PHP_MINIT_FUNCTION(gdextra)
 	}
 
 #if GDEXTRA_USE_WRAPPERS
-	if (gdex_wrappers_init(module_number TSRMLS_CC) == FAILURE) {
+	if (gdex_wrappers_init(INIT_FUNC_ARGS_PASSTHRU) == FAILURE) {
 		return FAILURE;
 	}
 #endif
@@ -385,6 +398,49 @@ static PHP_MSHUTDOWN_FUNCTION(gdextra)
 }
 
 /* }}} */
+/* {{{ PHP_RINIT_FUNCTION */
+
+static PHP_RINIT_FUNCTION(gdextra)
+{
+#if GDEXTRA_USE_WRAPPERS
+#define GDEX_FCALL_INFO_INIT(name) \
+	if (gdex_fcall_info_init("image" #name, \
+			&GDEXG(func_##name) TSRMLS_CC) == FAILURE) { \
+		return FAILURE; \
+	}
+	GDEX_FCALL_INFO_INIT(create);
+	GDEX_FCALL_INFO_INIT(createtruecolor);
+/*	GDEX_FCALL_INFO_INIT(destroy);*/
+	GDEX_FCALL_INFO_INIT(colorresolvealpha);
+	GDEX_FCALL_INFO_INIT(copy);
+	GDEX_FCALL_INFO_INIT(copyresampled);
+/*	GDEX_FCALL_INFO_INIT(savealpha);*/
+#undef GDEX_FCALL_INFO_INIT
+#endif
+	return SUCCESS;
+}
+
+/* }}} */
+/* {{{ PHP_RSHUTDOWN_FUNCTION */
+
+static PHP_RSHUTDOWN_FUNCTION(gdextra)
+{
+#if GDEXTRA_USE_WRAPPERS
+#define GDEX_FCALL_INFO_DESTROY(name) \
+	gdex_fcall_info_destroy(&GDEXG(func_##name) TSRMLS_CC)
+	GDEX_FCALL_INFO_DESTROY(create);
+	GDEX_FCALL_INFO_DESTROY(createtruecolor);
+/*	GDEX_FCALL_INFO_DESTROY(destroy);*/
+	GDEX_FCALL_INFO_DESTROY(colorresolvealpha);
+	GDEX_FCALL_INFO_DESTROY(copy);
+	GDEX_FCALL_INFO_DESTROY(copyresampled);
+/*	GDEX_FCALL_INFO_DESTROY(savealpha);*/
+#undef GDEX_FCALL_INFO_DESTROY
+#endif
+	return SUCCESS;
+}
+
+/* }}} */
 /* {{{ PHP_MINFO_FUNCTION */
 
 static PHP_MINFO_FUNCTION(gdextra)
@@ -412,6 +468,15 @@ static PHP_MINFO_FUNCTION(gdextra)
 }
 
 /* }}} */
+/* {{{ PHP_GINIT_FUNCTION */
+
+static PHP_GINIT_FUNCTION(gdextra)
+{
+	gdextra_globals->le_gd = phpi_get_le_gd();
+}
+
+/* }}} */
+
 /* {{{ _gdex_array_init() */
 
 /*
@@ -611,13 +676,12 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex)
 	zval *zim = NULL;
 	gdImagePtr src, dst;
 	int width, height;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zim) == FAILURE) {
 		return;
 	}
-	ZEND_FETCH_RESOURCE(src, gdImagePtr, &zim, -1, "Image", le_gd);
+	ZEND_FETCH_RESOURCE(src, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	/* clone the image */
 	width = gdImageSX(src);
@@ -636,7 +700,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex)
 	gdImageCopy(dst, src, 0, 0, 0, 0, width, height);
 
 	/* register the cloned image to the return value */
-	ZEND_REGISTER_RESOURCE(return_value, dst, le_gd);
+	ZEND_REGISTER_RESOURCE(return_value, dst, GDEXG(le_gd));
 }
 
 /* }}} */

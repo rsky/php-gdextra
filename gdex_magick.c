@@ -30,6 +30,8 @@
 #include "php_gdextra.h"
 #include <wand/MagickWand.h>
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 /* {{{ private function prototypes */
 
 static int
@@ -183,7 +185,7 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 	(void)DestroyMagickWand(wand);
 
 	/* return a new image resource */
-	ZEND_REGISTER_RESOURCE(return_value, im, phpi_get_le_gd());
+	ZEND_REGISTER_RESOURCE(return_value, im, GDEXG(le_gd));
 	return;
 
 	/* on failure... */

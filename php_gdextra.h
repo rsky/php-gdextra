@@ -130,7 +130,6 @@
 #define SCALE_CARVE     7
 
 /* }}} */
-
 /* {{{ shorthand macros */
 
 #define MINMAX(_val, _min, _max) \
@@ -158,6 +157,39 @@
 
 BEGIN_EXTERN_C()
 
+/* {{{ type definitions for module globals */
+#if GDEXTRA_USE_WRAPPERS
+
+typedef struct _gdextra_fcall_info {
+	zval *name;
+	zend_fcall_info fci;
+	zend_fcall_info_cache fcc;
+} gdextra_fcall_info;
+
+#endif
+/* }}} */
+/* {{{ module globals */
+
+ZEND_BEGIN_MODULE_GLOBALS(gdextra)
+	int le_gd;
+#if GDEXTRA_USE_WRAPPERS
+	gdextra_fcall_info func_create;
+	gdextra_fcall_info func_createtruecolor;
+/*	gdextra_fcall_info func_destroy;*/
+	gdextra_fcall_info func_colorresolvealpha;
+	gdextra_fcall_info func_copy;
+	gdextra_fcall_info func_copyresampled;
+/*	gdextra_fcall_info func_savealpha; */
+#endif
+ZEND_END_MODULE_GLOBALS(gdextra)
+
+#ifdef ZTS
+#define GDEXG(v) TSRMG(gdextra_globals_id, zend_gdextra_globals *, v)
+#else
+#define GDEXG(v) (gdextra_globals.v)
+#endif
+
+/* }}} */
 /* {{{ funcptr type definitions */
 
 /*
@@ -169,7 +201,6 @@ typedef void (*gdex_rgb_to_4ch_func_t)(int r, int g, int b, float *w, float *x, 
 typedef void (*gdex_4ch_to_rgb_func_t)(float w, float x, float y, float z, int *r, int *g, int *b);
 
 /* }}} */
-
 /* {{{ utility function prototypes */
 
 /*
@@ -293,7 +324,6 @@ gdex_liquid_rescale(const gdImagePtr src, int width, int height,
 #endif
 
 /* }}} */
-
 /* {{{ PHP function prototypes */
 
 #if PHP_GDEXTRA_WITH_MAGICK

@@ -28,260 +28,297 @@
  */
 
 #include "gdex_wrappers.h"
+#include <stdarg.h>
 
 /* {{{ globals */
 
-static int le_fake_rsrc, le_gd;
-static zval _fn_imagecreate, _fn_imagecreatetruecolor,
-            _fn_imagecolorresolvealpha, _fn_imagecopy, _fn_imagecopyresampled;
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+static int le_fake;
 
 /* }}} */
-/* {{{ macros */
+/* {{{ internal function prototypes */
 
-#define MAKE_FUNC_NAME(name) \
-	ZVAL_STRINGL(&_fn_##name, #name, sizeof(#name) - 1, 1)
-
-#define FREE_FUNC_NAME(name) efree(Z_STRVAL(_fn_##name))
-
-#define COMMON_VARS(num_args) \
-	zval *argv[num_args], **argp[num_args], *retval = NULL; \
-	zend_uint argc = 0;
-
-#define MAKE_ARG_RSRC(im) \
-	MAKE_STD_ZVAL(argv[argc]); \
-	ZEND_REGISTER_RESOURCE(argv[argc], (im), le_gd); \
-	argp[argc] = &argv[argc]; \
-	argc++;
-
-#define MAKE_ARG_LONG(n) \
-	MAKE_STD_ZVAL(argv[argc]); \
-	ZVAL_LONG(argv[argc], (n)); \
-	argp[argc] = &argv[argc]; \
-	argc++;
-
-#define MAKE_ARG_BOOL(b) \
-	MAKE_STD_ZVAL(argv[argc]); \
-	ZVAL_BOOL(argv[argc], (b)); \
-	argp[argc] = &argv[argc]; \
-	argc++;
-
-#define FREE_ARGS() \
-	while (argc > 0) { \
-		zval_ptr_dtor(argp[--argc]); \
-	}
-
-#define CALL_FUNCTION_EX(name) \
-	call_user_function_ex(CG(function_table), NULL, (name), &retval, argc, argp, 0, NULL TSRMLS_CC)
-
-#define CALL_FUNCTION(name) CALL_FUNCTION_EX(&_fn_##name)
-
-/* }}} */
-/* {{{ _rsrc_to_fake() */
+static zval *
+_gdex_init_args(int argc TSRMLS_DC, ...);
 
 static void
-_rsrc_to_fake(zval **rsrc TSRMLS_DC)
-{
-	zend_rsrc_list_entry *le;
-
-	if (zend_hash_index_find(&EG(regular_list), (ulong)Z_LVAL_PP(rsrc), (void **)&le) == SUCCESS) {
-		le->ptr = NULL;
-		le->type = le_fake_rsrc;
-	}
-}
+_gdex_fake_resource(zval *rsrc TSRMLS_DC);
 
 /* }}} */
+
 /* {{{ gdex_wrappers_init() */
 
 GDEXTRA_LOCAL int
-gdex_wrappers_init(int module_number TSRMLS_DC)
+gdex_wrappers_init(INIT_FUNC_ARGS)
 {
-	le_fake_rsrc = zend_register_list_destructors(NULL, NULL, module_number);
-	le_gd = phpi_get_le_gd();
+	le_fake = zend_register_list_destructors(NULL, NULL, module_number);
 
-	INIT_ZVAL(_fn_imagecreate);
-	INIT_ZVAL(_fn_imagecreatetruecolor);
-	INIT_ZVAL(_fn_imagecolorresolvealpha);
-	INIT_ZVAL(_fn_imagecopy);
-	INIT_ZVAL(_fn_imagecopyresampled);
-	MAKE_FUNC_NAME(imagecreate);
-	MAKE_FUNC_NAME(imagecreatetruecolor);
-	MAKE_FUNC_NAME(imagecolorresolvealpha);
-	MAKE_FUNC_NAME(imagecopy);
-	MAKE_FUNC_NAME(imagecopyresampled);
-
-	return le_fake_rsrc;
+	return le_fake;
 }
 
 /* }}} */
-/* {{{ gdex_wrappers_shutdown() */
+/* {{{ gdex_fcall_info_init() */
+
+GDEXTRA_LOCAL int
+gdex_fcall_info_init(const char *name, gdextra_fcall_info *info TSRMLS_DC)
+{
+	MAKE_STD_ZVAL(info->name);
+	ZVAL_STRING(info->name, (char *)name, 1);
+
+#if ZEND_EXTENSION_API_NO >= 220090626
+	return zend_fcall_info_init(info->name, 0, &info->fci, &info->fcc, NULL, NULL TSRMLS_CC);
+#else
+	return zend_fcall_info_init(info->name, &info->fci, &info->fcc TSRMLS_CC);
+#endif
+}
+
+/* }}} */
+/* {{{ gdex_fcall_info_destroy() */
 
 GDEXTRA_LOCAL void
-gdex_wrappers_shutdown(TSRMLS_D)
+gdex_fcall_info_destroy(gdextra_fcall_info *info TSRMLS_DC)
 {
-	FREE_FUNC_NAME(imagecreate);
-	FREE_FUNC_NAME(imagecreatetruecolor);
-	FREE_FUNC_NAME(imagecolorresolvealpha);
-	FREE_FUNC_NAME(imagecopy);
-	FREE_FUNC_NAME(imagecopyresampled);
+	zval_ptr_dtor(&info->name);
 }
 
 /* }}} */
-/* {{{ gdex_gdImageCreate() */
+/* {{{ _ex_gdImageCreate() */
 
 GDEXTRA_LOCAL gdImagePtr
-gdex_gdImageCreate(int sx, int sy, zend_bool truecolor)
+_ex_gdImageCreate(int sx, int sy, zend_bool truecolor)
 {
-	COMMON_VARS(2);
-	gdImagePtr im = NULL;
-	zval *ctor;
 	TSRMLS_FETCH();
+	gdImagePtr im = NULL;
+	zval *retval = NULL, *args, *zsx, *zsy;
 
-	MAKE_ARG_LONG(sx);
-	MAKE_ARG_LONG(sy);
+	MAKE_STD_ZVAL(zsx);
+	MAKE_STD_ZVAL(zsy);
+	ZVAL_LONG(zsx, sx);
+	ZVAL_LONG(zsy, sy);
 
+	args = _gdex_init_args(2 TSRMLS_CC, zsx, zsy);
 	if (truecolor) {
-		ctor = &_fn_imagecreatetruecolor;
+		zend_fcall_info_call(&GDEXG(func_createtruecolor).fci,
+		                     &GDEXG(func_createtruecolor).fcc,
+		                     &retval, args TSRMLS_CC);
 	} else {
-		ctor = &_fn_imagecreate;
+		zend_fcall_info_call(&GDEXG(func_create).fci,
+		                     &GDEXG(func_create).fcc,
+		                     &retval, args TSRMLS_CC);
 	}
-
-	if (CALL_FUNCTION_EX(ctor) == SUCCESS) {
-		if (retval != NULL) {
-			if (Z_TYPE_P(retval) == IS_RESOURCE) {
-				ZEND_FETCH_RESOURCE_NO_RETURN(im, gdImagePtr, &retval, -1, "Image", le_gd);
-				_rsrc_to_fake(&retval TSRMLS_CC);
-			}
-			zval_ptr_dtor(&retval);
+	if (retval) {
+		if (Z_TYPE_P(retval) == IS_RESOURCE) {
+			ZEND_FETCH_RESOURCE_NO_RETURN(im, gdImagePtr, &retval, -1, "Image", GDEXG(le_gd));
+			_gdex_fake_resource(retval TSRMLS_CC);
 		}
+		zval_ptr_dtor(&retval);
 	}
-
-	FREE_ARGS();
+	zval_ptr_dtor(&args);
 
 	return im;
 }
 
 /* }}} */
-/* {{{ gdex_gdImageDestroy() */
+/* {{{ _ex_gdImageDestroy() */
 
 GDEXTRA_LOCAL void
-gdex_gdImageDestroy(gdImagePtr im)
+_ex_gdImageDestroy(gdImagePtr im)
 {
-	zval *zim;
 	TSRMLS_FETCH();
+	zval *zim;
 
 	MAKE_STD_ZVAL(zim);
-	ZEND_REGISTER_RESOURCE(zim, im, le_gd);
+	ZEND_REGISTER_RESOURCE(zim, im, GDEXG(le_gd));
 	zval_ptr_dtor(&zim);
 }
 
 /* }}} */
-/* {{{ gdex_gdImageColorResolveAlpha() */
+/* {{{ _ex_gdImageColorResolveAlpha() */
 
 GDEXTRA_LOCAL int
-gdex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a)
+_ex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a)
 {
 	if (gdImageTrueColor(im)) {
 		return gdTrueColorAlpha(r, g, b, a);
 	} else {
-		COMMON_VARS(5);
-		int color = -1;
 		TSRMLS_FETCH();
+		int color = -1;
+		zval *retval = NULL, *args, *zim, *zr, *zg, *zb, *za;
 
-		MAKE_ARG_RSRC(im);
-		MAKE_ARG_LONG(r);
-		MAKE_ARG_LONG(g);
-		MAKE_ARG_LONG(b);
-		MAKE_ARG_LONG(a);
+		MAKE_STD_ZVAL(zim);
+		MAKE_STD_ZVAL(zr);
+		MAKE_STD_ZVAL(zg);
+		MAKE_STD_ZVAL(zb);
+		MAKE_STD_ZVAL(za);
+		ZEND_REGISTER_RESOURCE(zim, im, GDEXG(le_gd));
+		ZVAL_LONG(zr, r);
+		ZVAL_LONG(zg, g);
+		ZVAL_LONG(zb, b);
+		ZVAL_LONG(za, a);
 
-		if (CALL_FUNCTION(imagecolorresolvealpha) == SUCCESS) {
-			if (retval != NULL) {
-				if (Z_TYPE_P(retval) == IS_LONG) {
-					color = (int)Z_LVAL_P(retval);
-				}
-				zval_ptr_dtor(&retval);
+		args = _gdex_init_args(5 TSRMLS_CC, zim, zr, zg, zb, za);
+		zend_fcall_info_call(&GDEXG(func_colorresolvealpha).fci,
+		                     &GDEXG(func_colorresolvealpha).fcc,
+		                     &retval, args TSRMLS_CC);
+		if (retval) {
+			if (Z_TYPE_P(retval) == IS_LONG) {
+				color = (int)Z_LVAL_P(retval);
 			}
+			zval_ptr_dtor(&retval);
 		}
-
-		_rsrc_to_fake(argp[0] TSRMLS_CC);
-
-		FREE_ARGS();
+		_gdex_fake_resource(zim TSRMLS_CC);
+		zval_ptr_dtor(&args);
 
 		return color;
 	}
 }
 
 /* }}} */
-/* {{{ gdex_gdImageCopy() */
+/* {{{ _ex_gdImageCopy() */
 
 GDEXTRA_LOCAL void
-gdex_gdImageCopy(gdImagePtr dst, gdImagePtr src,
-                 int dstX, int dstY, int srcX, int srcY, int w, int h)
+_ex_gdImageCopy(gdImagePtr dst,
+                gdImagePtr src,
+                int dstX, int dstY,
+                int srcX, int srcY,
+                int w,    int h)
 {
-	COMMON_VARS(8);
 	TSRMLS_FETCH();
+	zval *retval = NULL, *args, *zdst, *zsrc;
+	zval *zdstX, *zdstY, *zsrcX, *zsrcY, *zw, *zh;
 
-	MAKE_ARG_RSRC(dst);
-	MAKE_ARG_RSRC(src);
-	MAKE_ARG_LONG(dstX);
-	MAKE_ARG_LONG(dstY);
-	MAKE_ARG_LONG(srcX);
-	MAKE_ARG_LONG(srcY);
-	MAKE_ARG_LONG(w);
-	MAKE_ARG_LONG(h);
+	MAKE_STD_ZVAL(zdst);
+	MAKE_STD_ZVAL(zsrc);
+	MAKE_STD_ZVAL(zdstX);
+	MAKE_STD_ZVAL(zdstY);
+	MAKE_STD_ZVAL(zsrcX);
+	MAKE_STD_ZVAL(zsrcY);
+	MAKE_STD_ZVAL(zw);
+	MAKE_STD_ZVAL(zh);
+	ZEND_REGISTER_RESOURCE(zdst, dst, GDEXG(le_gd));
+	ZEND_REGISTER_RESOURCE(zsrc, src, GDEXG(le_gd));
+	ZVAL_LONG(zdstX, dstX);
+	ZVAL_LONG(zdstY, dstY);
+	ZVAL_LONG(zsrcX, srcX);
+	ZVAL_LONG(zsrcY, srcY);
+	ZVAL_LONG(zw, w);
+	ZVAL_LONG(zh, h);
 
-	if (CALL_FUNCTION(imagecopy) == SUCCESS) {
-		if (retval != NULL) {
-			zval_ptr_dtor(&retval);
-		}
+	args = _gdex_init_args(8 TSRMLS_CC, zdst, zsrc,
+	                       zdstX, zdstY, zsrcX, zsrcY, zw, zh);
+	zend_fcall_info_call(&GDEXG(func_copy).fci,
+	                     &GDEXG(func_copy).fcc,
+	                     &retval, args TSRMLS_CC);
+	if (retval) {
+		zval_ptr_dtor(&retval);
 	}
-
-	_rsrc_to_fake(argp[0] TSRMLS_CC);
-	_rsrc_to_fake(argp[1] TSRMLS_CC);
-
-	FREE_ARGS();
+	_gdex_fake_resource(zdst TSRMLS_CC);
+	_gdex_fake_resource(zsrc TSRMLS_CC);
+	zval_ptr_dtor(&args);
 }
 
 /* }}} */
-/* {{{ gdex_gdImageCopyResampled() */
+/* {{{ _ex_gdImageCopyResampled() */
 
 GDEXTRA_LOCAL void
-gdex_gdImageCopyResampled(gdImagePtr dst, gdImagePtr src,
-                          int dstX, int dstY, int srcX, int srcY,
-                          int dstW, int dstH, int srcW, int srcH)
+_ex_gdImageCopyResampled(gdImagePtr dst,
+                         gdImagePtr src,
+                         int dstX, int dstY,
+                         int srcX, int srcY,
+                         int dstW, int dstH,
+                         int srcW, int srcH)
 {
-	COMMON_VARS(10);
 	TSRMLS_FETCH();
+	zval *retval = NULL, *args, *zdst, *zsrc;
+	zval *zdstX, *zdstY, *zsrcX, *zsrcY;
+	zval *zdstW, *zdstH, *zsrcW, *zsrcH;
 
-	MAKE_ARG_RSRC(dst);
-	MAKE_ARG_RSRC(src);
-	MAKE_ARG_LONG(dstX);
-	MAKE_ARG_LONG(dstY);
-	MAKE_ARG_LONG(srcX);
-	MAKE_ARG_LONG(srcY);
-	MAKE_ARG_LONG(dstW);
-	MAKE_ARG_LONG(dstH);
-	MAKE_ARG_LONG(srcW);
-	MAKE_ARG_LONG(srcH);
+	MAKE_STD_ZVAL(zdst);
+	MAKE_STD_ZVAL(zsrc);
+	MAKE_STD_ZVAL(zdstX);
+	MAKE_STD_ZVAL(zdstY);
+	MAKE_STD_ZVAL(zsrcX);
+	MAKE_STD_ZVAL(zsrcY);
+	MAKE_STD_ZVAL(zdstW);
+	MAKE_STD_ZVAL(zdstH);
+	MAKE_STD_ZVAL(zsrcW);
+	MAKE_STD_ZVAL(zsrcH);
+	ZEND_REGISTER_RESOURCE(zdst, dst, GDEXG(le_gd));
+	ZEND_REGISTER_RESOURCE(zsrc, src, GDEXG(le_gd));
+	ZVAL_LONG(zdstX, dstX);
+	ZVAL_LONG(zdstY, dstY);
+	ZVAL_LONG(zsrcX, srcX);
+	ZVAL_LONG(zsrcY, srcY);
+	ZVAL_LONG(zdstW, dstW);
+	ZVAL_LONG(zdstH, dstH);
+	ZVAL_LONG(zsrcW, srcW);
+	ZVAL_LONG(zsrcH, srcH);
 
-	if (CALL_FUNCTION(imagecopyresampled) == SUCCESS) {
-		if (retval != NULL) {
-			zval_ptr_dtor(&retval);
-		}
+	args = _gdex_init_args(10 TSRMLS_CC, zdst, zsrc,
+	                       zdstX, zdstY, zsrcX, zsrcY,
+	                       zdstW, zdstH, zsrcW, zsrcH);
+	zend_fcall_info_call(&GDEXG(func_copyresampled).fci,
+	                     &GDEXG(func_copyresampled).fcc,
+	                     &retval, args TSRMLS_CC);
+	if (retval) {
+		zval_ptr_dtor(&retval);
 	}
-
-	_rsrc_to_fake(argp[0] TSRMLS_CC);
-	_rsrc_to_fake(argp[1] TSRMLS_CC);
-
-	FREE_ARGS();
+	_gdex_fake_resource(zdst TSRMLS_CC);
+	_gdex_fake_resource(zsrc TSRMLS_CC);
+	zval_ptr_dtor(&args);
 }
 
 /* }}} */
-/* {{{ gdex_gdImageSaveAlpha() */
+/* {{{ _ex_gdImageSaveAlpha() */
 
 GDEXTRA_LOCAL void
-gdex_gdImageSaveAlpha(gdImagePtr im, int saveAlphaArg)
+_ex_gdImageSaveAlpha(gdImagePtr im, int saveAlphaArg)
 {
 	im->saveAlphaFlag = saveAlphaArg;
+}
+
+/* }}} */
+/* {{{ _gdex_init_args() */
+
+static zval *
+_gdex_init_args(int argc TSRMLS_DC, ...)
+{
+	va_list ap;
+	zval *args;
+
+	if (argc < 0) {
+		return NULL;
+	}
+
+	MAKE_STD_ZVAL(args);
+	array_init(args);
+
+#ifdef ZTS
+	va_start(ap, TSRMLS_C);
+#else
+	va_start(ap, argc);
+#endif
+	while (argc > 0) {
+		add_next_index_zval(args, (zval *)va_arg(ap, zval *));
+		argc--;
+	}
+	va_end(ap);
+
+	return args;
+}
+
+/* }}} */
+/* {{{ _gdex_fake_resource() */
+
+static void
+_gdex_fake_resource(zval *rsrc TSRMLS_DC)
+{
+	zend_rsrc_list_entry *le;
+
+	if (zend_hash_index_find(&EG(regular_list), (ulong)Z_LVAL_P(rsrc), (void **)&le) == SUCCESS) {
+		le->ptr = NULL;
+		le->type = le_fake;
+	}
 }
 
 /* }}} */

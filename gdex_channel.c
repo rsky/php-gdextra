@@ -29,6 +29,8 @@
 
 #include "php_gdextra.h"
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 /* {{{ macros */
 
 #define MAX_CHANNELS 5
@@ -1099,7 +1101,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	int use_alpha = 0;
 	gdImagePtr im;
 	int width, height;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a|llb",
@@ -1144,7 +1145,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	if (use_alpha) {
 		zend_hash_internal_pointer_end_ex(channels_ht, &pos);
 		zend_hash_get_current_data_ex(channels_ht, (void **)&entry, &pos);
-		ZEND_FETCH_RESOURCE(ch[0].im, gdImagePtr, entry, -1, "Image", le_gd);
+		ZEND_FETCH_RESOURCE(ch[0].im, gdImagePtr, entry, -1, "Image", GDEXG(le_gd));
 		n--;
 	} else {
 		ch[0].im = NULL;
@@ -1152,7 +1153,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	zend_hash_internal_pointer_reset_ex(channels_ht, &pos);
 	for (i = 0; i < n; i++) {
 		zend_hash_get_current_data_ex(channels_ht, (void **)&entry, &pos);
-		ZEND_FETCH_RESOURCE(ch[i + 1].im, gdImagePtr, entry, -1, "Image", le_gd);
+		ZEND_FETCH_RESOURCE(ch[i + 1].im, gdImagePtr, entry, -1, "Image", GDEXG(le_gd));
 		zend_hash_move_forward_ex(channels_ht, &pos);
 	}
 
@@ -1222,7 +1223,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	}
 
 	/* register the image to the return value */
-	ZEND_REGISTER_RESOURCE(return_value, im, le_gd);
+	ZEND_REGISTER_RESOURCE(return_value, im, GDEXG(le_gd));
 }
 
 /* }}} */
@@ -1241,7 +1242,6 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 	int use_alpha = 0;
 	int i, width, height;
 	int errid = -1;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|lb",
@@ -1249,7 +1249,7 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", le_gd);
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	/* verify the color space */
 	if (orig_colorspace & COLORSPACE_ALPHA) {
@@ -1317,17 +1317,17 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 	array_init_size(return_value, use_alpha ? 4 : 8);
 	for (i = 1; i <= 3; i++) {
 		MAKE_STD_ZVAL(zch);
-		ZEND_REGISTER_RESOURCE(zch, ch[i], le_gd);
+		ZEND_REGISTER_RESOURCE(zch, ch[i], GDEXG(le_gd));
 		add_next_index_zval(return_value, zch);
 	}
 	if (ch[4] != NULL) {
 		MAKE_STD_ZVAL(zch);
-		ZEND_REGISTER_RESOURCE(zch, ch[4], le_gd);
+		ZEND_REGISTER_RESOURCE(zch, ch[4], GDEXG(le_gd));
 		add_next_index_zval(return_value, zch);
 	}
 	if (ch[0] != NULL) {
 		MAKE_STD_ZVAL(zch);
-		ZEND_REGISTER_RESOURCE(zch, ch[0], le_gd);
+		ZEND_REGISTER_RESOURCE(zch, ch[0], GDEXG(le_gd));
 		add_next_index_zval(return_value, zch);
 	}
 	return;
@@ -1371,7 +1371,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	int mode, notm, tile;
 	mask_alpha_func_t mask_alpha;
 	channel_t ach;
-	int le_gd = phpi_get_le_gd();
 
 	/* parse the arguments */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rr|llb",
@@ -1379,8 +1378,8 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", le_gd);
-	ZEND_FETCH_RESOURCE(mask, gdImagePtr, &zmask, -1, "Image", le_gd);
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
+	ZEND_FETCH_RESOURCE(mask, gdImagePtr, &zmask, -1, "Image", GDEXG(le_gd));
 
 	/* verify the mask mode */
 	notm = (orig_mode & MASK_NOT)  ? 1 : 0;
@@ -1505,7 +1504,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 	zval *extracted, *tmp, **entry;
 	HashTable *channels;
 	HashPosition pos;
-	int le_gd = phpi_get_le_gd();
 
 	if (ZEND_NUM_ARGS() > 2) {
 		WRONG_PARAM_COUNT;
@@ -1536,7 +1534,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 		zval *ch;
 		unsigned int i, counts[256];
 
-		ZEND_FETCH_RESOURCE(im, gdImagePtr, entry, -1, "Image", le_gd);
+		ZEND_FETCH_RESOURCE(im, gdImagePtr, entry, -1, "Image", GDEXG(le_gd));
 		if (im == NULL || im->trueColor || im->colorsTotal != 256) {
 			zval_ptr_dtor(&extracted);
 			zval_dtor(return_value);

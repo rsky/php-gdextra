@@ -31,6 +31,8 @@
 #define GDEXTRA_SVG_COLORS_DECLARE_ONLY 1
 #include "svg_color.h"
 
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
 /* {{{ private function prototypes */
 
 static void
@@ -426,7 +428,7 @@ _color_allocate(INTERNAL_FUNCTION_PARAMETERS, int colorspace)
 			return;
 		}
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", phpi_get_le_gd());
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	if (!(zend_finite(p1) && zend_finite(p2) && zend_finite(p3) && zend_finite(p4))) {
 		RETURN_FALSE;
@@ -473,7 +475,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zim) == FAILURE) {
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", phpi_get_le_gd());
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	if (gdImageTrueColor(im)) {
 		RETURN_TRUE;
@@ -504,7 +506,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex)
 	{
 		return;
 	}
-	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", phpi_get_le_gd());
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
 	/* parse the color */
 	if (gdex_parse_css_color(color, color_len, &r, &g, &b, &a) == FAILURE) {
