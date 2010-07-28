@@ -535,7 +535,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsv_ex)
 }
 /* }}} */
 
-#ifdef ZEND_ENGINE_2
 /* {{{ _color_convert()
  * Convert color components from one to another.
  */
@@ -780,7 +779,6 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
 	}
 }
 /* }}} */
-#endif /* ZEND_ENGINE_2 */
 
 /* {{{ single precision versions of the color converters */
 

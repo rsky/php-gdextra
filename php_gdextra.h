@@ -286,14 +286,6 @@ gdex_liquid_rescale(const gdImagePtr src, int width, int height,
                     HashTable *options TSRMLS_DC);
 #endif
 
-#if 0
-/*
- * Initializers.
- */
-GDEXTRA_LOCAL void
-gdex_correct_init(TSRMLS_D);
-#endif
-
 /* }}} */
 
 /* {{{ PHP function prototypes */
@@ -323,7 +315,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(colorcorrectiontest);
 #endif
 
-#ifdef ZEND_ENGINE_2
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb);
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hslToRgb);
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hsvToRgb);
@@ -332,7 +323,6 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsl);
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsv);
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor);
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable);
-#endif
 
 /* }}} */
 

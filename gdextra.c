@@ -36,9 +36,7 @@
 #include "svg_color.h"
 static HashTable _svg_color_table;
 
-#ifdef ZEND_ENGINE_2
 static zend_class_entry *ce_util = NULL;
-#endif;
 
 /* }}} */
 
@@ -275,7 +273,6 @@ static zend_function_entry gdextra_functions[] = {
 };
 /* }}} */
 
-#ifdef ZEND_ENGINE_2
 #define GDEX_UTIL_ME(name, arginfo) \
 	PHP_ME(ImageExUtil, name, arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
 /* {{{ gdextra_util_methods[] */
@@ -291,7 +288,6 @@ static zend_function_entry gdextra_util_methods[] = {
 	{ NULL, NULL, NULL }
 };
 /* }}} */
-#endif
 
 /* {{{ cross-extension dependencies */
 
@@ -335,9 +331,7 @@ ZEND_GET_MODULE(gdextra)
 /* {{{ PHP_MINIT_FUNCTION */
 static PHP_MINIT_FUNCTION(gdextra)
 {
-#ifdef ZEND_ENGINE_2
 	zend_class_entry ce;
-#endif
 	int i;
 
 	/* initialize SVG color table */
@@ -354,11 +348,6 @@ static PHP_MINIT_FUNCTION(gdextra)
 	if (gdex_wrappers_init(module_number TSRMLS_CC) == FAILURE) {
 		return FAILURE;
 	}
-#endif
-
-#if 0
-	/* initialize hash values and so on */
-	gdex_correct_init(TSRMLS_C);
 #endif
 
 	/* register constants */
@@ -404,14 +393,12 @@ static PHP_MINIT_FUNCTION(gdextra)
 	REGISTER_LONG_CONSTANT("IMAGE_EX_TESTING", 1, CONST_PERSISTENT | CONST_CS);
 #endif
 
-#ifdef ZEND_ENGINE_2
 	/* register class ImageExUtil */
 	memset(&ce, 0, sizeof(zend_class_entry));
 	INIT_CLASS_ENTRY(ce, "ImageExUtil", gdextra_util_methods);
 	if ((ce_util = zend_register_internal_class(&ce TSRMLS_CC)) == NULL) {
 		return FAILURE;
 	}
-#endif
 
 	return SUCCESS;
 }

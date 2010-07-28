@@ -107,11 +107,6 @@ _is_grayscale(const gdImagePtr im);
 static gdImagePtr
 _create_grayscale_image(int width, int height);
 
-#if 0
-static gdImagePtr
-_create_grayscaled_copy(const gdImagePtr im, get_intensity_func_t get_i);
-#endif
-
 static void
 _channel_merge_rgb(gdImagePtr im,
                    const channel_t *rch,
@@ -717,42 +712,6 @@ _create_grayscale_image(int width, int height)
 	return im;
 }
 /* }}} */
-
-#if 0
-/* {{{ _create_grayscaled_copy()
- * Create a gray scaled copy of the image.
- */
-static gdImagePtr
-_create_grayscaled_copy(const gdImagePtr im, get_intensity_func_t get_i)
-{
-	gdImagePtr gray;
-	channel_t ch;
-	int x, y, width, height;
-
-	width = gdImageSX(im);
-	height = gdImageSY(im);
-	gray = _create_grayscale_image(width, height);
-	if (gray == NULL) {
-		return NULL;
-	}
-
-	ch.im = (gdImagePtr)im;
-	ch.width = width;
-	ch.height = height;
-	ch.xOffset = 0;
-	ch.yOffset = 0;
-	ch.get = get_i;
-
-	for (y = 0; y < height; y++) {
-		for (x = 0; x < width; x++) {
-			unsafeSetPalettePixel(gray, x, y, get_i(&ch, x, y));
-		}
-	}
-
-	return gray;
-}
-/* }}} */
-#endif
 
 /* {{{ _channel_merge_rgb()
  * Merge RGB/RGBA channels.

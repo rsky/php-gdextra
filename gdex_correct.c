@@ -49,16 +49,6 @@ typedef enum _correct_result {
 
 /* }}} */
 
-/* {{{ globals */
-
-#if 0
-static ulong
-_h_r, _h_g, _h_b, _h_a, _h_h, _h_s, _h_v, _h_l, _h_c, _h_m, _h_y, _h_k,
-_h_levels, _h_gamma, _h_tonecurve, _h_tonecurve2, _h_negate;
-#endif
-
-/* }}} */
-
 /* {{{ private function prototypes */
 
 static int
@@ -89,34 +79,6 @@ _color_correct_cmyk(COLORCORRECT_PARAMETERS),
 _color_correct_alpha(COLORCORRECT_PARAMETERS);
 
 /* }}} */
-
-#if 0
-/* {{{ gdex_correct_init()
- * Initializer.
- */
-GDEXTRA_LOCAL void
-gdex_correct_init(TSRMLS_D)
-{
-	GDEX_SET_HASH_VALUE(r);
-	GDEX_SET_HASH_VALUE(g);
-	GDEX_SET_HASH_VALUE(b);
-	GDEX_SET_HASH_VALUE(a);
-	GDEX_SET_HASH_VALUE(h);
-	GDEX_SET_HASH_VALUE(s);
-	GDEX_SET_HASH_VALUE(v);
-	GDEX_SET_HASH_VALUE(l);
-	GDEX_SET_HASH_VALUE(c);
-	GDEX_SET_HASH_VALUE(m);
-	GDEX_SET_HASH_VALUE(y);
-	GDEX_SET_HASH_VALUE(k);
-	GDEX_SET_HASH_VALUE(levels);
-	GDEX_SET_HASH_VALUE(gamma);
-	GDEX_SET_HASH_VALUE(tonecurve);
-	GDEX_SET_HASH_VALUE(tonecurve2);
-	GDEX_SET_HASH_VALUE(negate);
-}
-/* }}} */
-#endif
 
 /* {{{ _get_levels()
  * Get levels.
