@@ -1,0 +1,5 @@
+ &reference.gdextra.functions.imagebmp-ex;
+ &reference.gdextra.functions.imagecreatebymagick_ex;
+ &reference.gdextra.functions.imagecreatefromstring-ex;
+ &reference.gdextra.functions.imageicon-ex;
+ &reference.gdextra.functions.imageiconarray-ex;

@@ -1,0 +1,8 @@
+// $ Id: $
+// vim:ft=javascript
+
+ARG_ENABLE('gdextra' , 'Extra image functions', 'no');
+if (PHP_GDEXTRA == "yes") {
+  EXTENSION("gdextra", "gdextra.c");
+  AC_DEFINE("HAVE_GDEXTRA", 1, "gdextra support");
+}
