@@ -54,8 +54,8 @@ typedef enum _correct_result {
 
 static int
 _get_levels(zval *zv TSRMLS_DC, float *inclination,
-            float *min_in,  float *max_in,  float *in_range,
-            float *min_out, float *max_out, float *out_range);
+            float *in_black,  float *in_white,  float *in_range,
+            float *out_black, float *out_white, float *out_range);
 
 static float
 _get_rgamma(zval *zv);
@@ -69,8 +69,8 @@ _get_tonecurve(zval *zv, zend_bool no_edge TSRMLS_DC);
 static correct_result
 _get_parameters(HashTable *ht TSRMLS_DC,
                 int *levels, float *inclination,
-                float *min_in,  float *max_in,  float *in_range,
-                float *min_out, float *max_out, float *out_range,
+                float *in_black,  float *in_white,  float *in_range,
+                float *out_black, float *out_white, float *out_range,
                 float *r_gamma, spline_t **tonecurve, int *negate);
 
 static correct_result
@@ -87,10 +87,10 @@ _color_correct_alpha(COLORCORRECT_PARAMETERS);
  */
 static int
 _get_levels(zval *zv TSRMLS_DC, float *inclination,
-            float *min_in,  float *max_in,  float *in_range,
-            float *min_out, float *max_out, float *out_range)
+            float *in_black,  float *in_white,  float *in_range,
+            float *out_black, float *out_white, float *out_range)
 {
-	long mni = 0L, mxi = 255L, mno = 0L, mxo = 255L;
+	long ibk = 0L, iwt = 255L, obk = 0L, owt = 255L;
 	float irn, orn;
 	HashTable *levels;
 	zval **entry;
@@ -106,58 +106,58 @@ _get_levels(zval *zv TSRMLS_DC, float *inclination,
 		goto invalid_levels;
 	}
 
-	/* get the minimum input value from index 0 */
+	/* get the input black point value from index 0 */
 	if (zend_hash_index_find(levels, 0, (void**)&entry) == FAILURE) {
 		goto invalid_levels;
 	}
-	mni = gdex_get_lval(*entry);
+	ibk = gdex_get_lval(*entry);
 
-	/* get the maximum input value from index 1 */
+	/* get the input white point value from index 1 */
 	if (zend_hash_index_find(levels, 1, (void**)&entry) == FAILURE) {
 		goto invalid_levels;
 	}
-	mxi = gdex_get_lval(*entry);
+	iwt = gdex_get_lval(*entry);
 
 	/* get the output values */
 	if (n == 4) {
-		/* get the minimum output value from index 2 */
+		/* get the output black point value from index 2 */
 		if (zend_hash_index_find(levels, 2, (void**)&entry) == FAILURE) {
 			goto invalid_levels;
 		}
-		mno = gdex_get_lval(*entry);
+		obk = gdex_get_lval(*entry);
 
-		/* get the maximum output value from index 3 */
+		/* get the output white point value from index 3 */
 		if (zend_hash_index_find(levels, 3, (void**)&entry) == FAILURE) {
 			goto invalid_levels;
 		}
-		mxo = gdex_get_lval(*entry);
+		owt = gdex_get_lval(*entry);
 	}
 
 	/* verify */
-	if (mni < 0L) {
-		mni = 0L;
+	if (ibk < 0L) {
+		ibk = 0L;
 	}
-	if (mxi > 255L) {
-		mxi = 255L;
+	if (iwt > 255L) {
+		iwt = 255L;
 	}
-	if (mno < 0L) {
-		mno = 0L;
+	if (obk < 0L) {
+		obk = 0L;
 	}
-	if (mxo > 255L) {
-		mxo = 255L;
+	if (owt > 255L) {
+		owt = 255L;
 	}
-	if (mni >= mxi || mno >= mxo) {
+	if (ibk >= iwt || obk >= owt) {
 		goto invalid_levels;
 	}
 
-	irn = (float)(mxi - mni);
-	orn = (float)(mxo - mno);
+	irn = (float)(iwt - ibk);
+	orn = (float)(owt - obk);
 
-	*min_in = (float)mni / 255.0f;
-	*max_in = (float)mxi / 255.0f;
+	*in_black = (float)ibk / 255.0f;
+	*in_white = (float)iwt / 255.0f;
 	*in_range = irn / 255.0f;
-	*min_out = (float)mno / 255.0f;
-	*max_out = (float)mxo / 255.0f;
+	*out_black = (float)obk / 255.0f;
+	*out_white = (float)owt / 255.0f;
 	*out_range = orn / 255.0f;
 	*inclination = orn / irn;
 
@@ -308,8 +308,8 @@ _get_tonecurve(zval *zv, zend_bool no_edge TSRMLS_DC)
 static correct_result
 _get_parameters(HashTable *ht TSRMLS_DC,
                 int *levels, float *inclination,
-                float *min_in,  float *max_in,  float *in_range,
-                float *min_out, float *max_out, float *out_range,
+                float *in_black,  float *in_white,  float *in_range,
+                float *out_black, float *out_white, float *out_range,
                 float *r_gamma, spline_t **tonecurve, int *negate)
 {
 	zval **entry = NULL;
@@ -319,8 +319,8 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 	/* get levels */
 	if (hash_find(ht, "levels", &entry) == SUCCESS) {
 		if (_get_levels(*entry TSRMLS_CC, inclination,
-		                min_in,  max_in,  in_range,
-		                min_out, max_out, out_range) == FAILURE)
+		                in_black,  in_white,  in_range,
+		                out_black, out_white, out_range) == FAILURE)
 		{
 			return CORRECT_ERROR;
 		}
@@ -368,17 +368,17 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 	correct_result has_params = CORRECT_NOTHING;
 
 #define COLORCORRECT_DECLARE_EX(_Z) \
-	    float mni##_Z = 0.0f; /* minimum input   [0..1] */ \
-	    float mxi##_Z = 1.0f; /* maximum input   [0..1] */ \
-	    float irn##_Z = 1.0f; /* input range     [0..1] */ \
-	    float mno##_Z = 0.0f; /* minimum output  [0..1] */ \
-	    float mxo##_Z = 1.0f; /* maximum output  [0..1] */ \
-	    float orn##_Z = 1.0f; /* output range    [0..1] */ \
-	    float icl##_Z = 1.0f; /* inclination (orn/irn)  */ \
-	    float rgm##_Z = 1.0f; /* reciprocal gamma (> 0) */ \
-	      int lvl##_Z = 0;    /* levels (bool)          */ \
-	      int ngt##_Z = 0;    /* negate (bool)          */ \
-	spline_t *tcv##_Z = NULL; /* tone curve (3D spline) */
+	    float ibk##_Z = 0.0f; /* input black point   [0..1] */ \
+	    float iwt##_Z = 1.0f; /* input white point   [0..1] */ \
+	    float irn##_Z = 1.0f; /* input range         [0..1] */ \
+	    float obk##_Z = 0.0f; /* output black point  [0..1] */ \
+	    float owt##_Z = 1.0f; /* output white point  [0..1] */ \
+	    float orn##_Z = 1.0f; /* output range        [0..1] */ \
+	    float icl##_Z = 1.0f; /* inclination (orn/irn)      */ \
+	    float rgm##_Z = 1.0f; /* reciprocal gamma (> 0)     */ \
+	      int lvl##_Z = 0;    /* levels (bool)              */ \
+	      int ngt##_Z = 0;    /* negate (bool)              */ \
+	spline_t *tcv##_Z = NULL; /* tone curve (3D spline)     */
 
 #define COLORCORRECT_DECLARE(_z, _Z) \
 	float _z = 0.0f; /* channel value   [0..1] */ \
@@ -390,8 +390,8 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 #define COLORCORRECT_GETOPT_SP(_Z, _ht, _on_failure) \
 	has_params = _get_parameters((_ht) TSRMLS_CC, \
 			&lvl##_Z, &icl##_Z, \
-			&mni##_Z, &mxi##_Z, &irn##_Z, \
-			&mno##_Z, &mxo##_Z, &orn##_Z, \
+			&ibk##_Z, &iwt##_Z, &irn##_Z, \
+			&obk##_Z, &owt##_Z, &orn##_Z, \
 			&rgm##_Z, &tcv##_Z, &ngt##_Z); \
 	if (has_params == CORRECT_ERROR) { \
 		_on_failure; \
@@ -409,11 +409,11 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 	}
 
 #define COLORCORRECT_SET_LEVELS(_X, _Y) \
-	mni##_X = mni##_Y; \
-	mxi##_X = mxi##_Y; \
+	ibk##_X = ibk##_Y; \
+	iwt##_X = iwt##_Y; \
 	irn##_X = irn##_Y; \
-	mno##_X = mno##_Y; \
-	mxo##_X = mxo##_Y; \
+	obk##_X = obk##_Y; \
+	owt##_X = owt##_Y; \
 	orn##_X = orn##_Y; \
 	icl##_X = icl##_Y; \
 	lvl##_X = lvl##_Y;
@@ -460,14 +460,14 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 
 #define COLORCORRECT_DO(_z, _Z) { \
 	if (lvl##_Z) { \
-		if (_z <= mni##_Z) { \
-			_z = mno##_Z; \
-		} else if (_z >= mxi##_Z) { \
-			_z = mxo##_Z; \
+		if (_z <= ibk##_Z) { \
+			_z = obk##_Z; \
+		} else if (_z >= iwt##_Z) { \
+			_z = owt##_Z; \
 		} else if (rgm##_Z != 1.0f) { \
-			_z = mno##_Z + orn##_Z * powf((_z - mni##_Z) / irn##_Z, rgm##_Z); \
+			_z = obk##_Z + orn##_Z * powf((_z - ibk##_Z) / irn##_Z, rgm##_Z); \
 		} else { \
-			_z = mno##_Z + icl##_Z * (_z - mni##_Z); \
+			_z = obk##_Z + icl##_Z * (_z - ibk##_Z); \
 		} \
 	} else if (rgm##_Z != 1.0f) { \
 		_z = powf(_z, rgm##_Z); \
