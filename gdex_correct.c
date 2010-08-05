@@ -368,17 +368,17 @@ _get_parameters(HashTable *ht TSRMLS_DC,
 	correct_result has_params = CORRECT_NOTHING;
 
 #define COLORCORRECT_DECLARE_EX(_Z) \
-	    float ibk##_Z = 0.0f; /* input black point   [0..1] */ \
-	    float iwt##_Z = 1.0f; /* input white point   [0..1] */ \
-	    float irn##_Z = 1.0f; /* input range         [0..1] */ \
-	    float obk##_Z = 0.0f; /* output black point  [0..1] */ \
-	    float owt##_Z = 1.0f; /* output white point  [0..1] */ \
-	    float orn##_Z = 1.0f; /* output range        [0..1] */ \
-	    float icl##_Z = 1.0f; /* inclination (orn/irn)      */ \
-	    float rgm##_Z = 1.0f; /* reciprocal gamma (> 0)     */ \
-	      int lvl##_Z = 0;    /* levels (bool)              */ \
-	      int ngt##_Z = 0;    /* negate (bool)              */ \
-	spline_t *tcv##_Z = NULL; /* tone curve (3D spline)     */
+	    float ibk##_Z = 0.0f; /* input black point [0..1]  */ \
+	    float iwt##_Z = 1.0f; /* input white point [0..1]  */ \
+	    float irn##_Z = 1.0f; /* input range [0..1]        */ \
+	    float obk##_Z = 0.0f; /* output black point [0..1] */ \
+	    float owt##_Z = 1.0f; /* output white point [0..1] */ \
+	    float orn##_Z = 1.0f; /* output range [0..1]       */ \
+	    float icl##_Z = 1.0f; /* inclination (orn/irn)     */ \
+	    float rgm##_Z = 1.0f; /* reciprocal gamma (> 0)    */ \
+	      int lvl##_Z = 0;    /* levels (bool)             */ \
+	      int ngt##_Z = 0;    /* negate (bool)             */ \
+	spline_t *tcv##_Z = NULL; /* tone curve (3D spline)    */
 
 #define COLORCORRECT_DECLARE(_z, _Z) \
 	float _z = 0.0f; /* channel value   [0..1] */ \
