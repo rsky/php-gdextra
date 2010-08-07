@@ -1221,6 +1221,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 			_channel_merge_4ch(im, &ch[1], &ch[2], &ch[3], &ch[4], &ch[0], gdex_cmyk_to_rgb);
 			break;
 	}
+	if (use_alpha) {
+		gdImageSaveAlpha(im, 1);
+	}
 
 	/* register the image to the return value */
 	ZEND_REGISTER_RESOURCE(return_value, im, GDEXG(le_gd));
