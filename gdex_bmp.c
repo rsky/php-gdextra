@@ -773,7 +773,7 @@ _output_image(const char *filename, const byte_t *buffer, size_t buffer_size TSR
 }
 
 /* }}} */
-/* {{{ proto bool imagebmp_ex(resource im[, string filename]) */
+/* {{{ bool imagebmp_ex(resource im[, string filename]) */
 
 /*
  * Output a BMP image to either the browser or a file
@@ -824,7 +824,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
 }
 
 /* }}} */
-/* {{{ proto bool imageicon_ex(resource im[, string filename]) */
+/* {{{ bool imageicon_ex(resource im[, string filename]) */
 
 /*
  * Output an Icon image to either the browser or a file

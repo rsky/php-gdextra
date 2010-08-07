@@ -202,7 +202,7 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 }
 
 /* }}} */
-/* {{{ proto resource imagecreatebymagick_ex(string filename) */
+/* {{{ resource imagecreatebymagick_ex(string filename) */
 
 /*
  * Create a new image from file or URL.
@@ -213,7 +213,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecreatebymagick_ex)
 }
 
 /* }}} */
-/* {{{ proto resource imagecreatefromstring_ex(string data) */
+/* {{{ resource imagecreatefromstring_ex(string data) */
 
 /*
  * Create a new image from the image stream in the string.

@@ -461,7 +461,7 @@ _color_allocate(INTERNAL_FUNCTION_PARAMETERS, int colorspace)
 }
 
 /* }}} */
-/* {{{ proto bool imagepalettetotruecolor_ex(resource im) */
+/* {{{ bool imagepalettetotruecolor_ex(resource im) */
 
 /*
  * Convert a palette image to a true color image
@@ -487,7 +487,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 }
 
 /* }}} */
-/* {{{ proto int imagecolorallocatecss_ex(resource im, string color) */
+/* {{{ int imagecolorallocatecss_ex(resource im, string color) */
 
 /*
  * Allocate a color from CSS3-style color strings.
@@ -517,9 +517,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex)
 }
 
 /* }}} */
-/* {{{ proto int imagecolorallocatecmyk_ex(resource im,
-                                           float cyan, float magenta, float yellow,
-                                           float black[, int alpha])*/
+/* {{{ int imagecolorallocatecmyk_ex(resource im,
+                                     float cyan, float magenta, float yellow,
+                                     float black[, int alpha])*/
 
 /*
  * Allocate a color from CMYK components.
@@ -530,9 +530,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecmyk_ex)
 }
 
 /* }}} */
-/* {{{ proto int imagecolorallocatehsl_ex(resource im,
-                                          float hue, float saturation, float lightness
-                                          [, int alpha])*/
+/* {{{ int imagecolorallocatehsl_ex(resource im,
+                                    float hue, float saturation, float lightness
+                                    [, int alpha])*/
 
 /*
  * Allocate a color from HSL/HSLA components.
@@ -543,9 +543,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsl_ex)
 }
 
 /* }}} */
-/* {{{ proto int imagecolorallocatehsv_ex(resource im,
-                                          float hue, float saturation, float value
-                                          [, int alpha])*/
+/* {{{ int imagecolorallocatehsv_ex(resource im,
+                                    float hue, float saturation, float value
+                                    [, int alpha])*/
 
 /*
  * Allocate a color from HSV/HSVA components.
@@ -674,7 +674,7 @@ _color_convert(INTERNAL_FUNCTION_PARAMETERS, int c_from, int c_to)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::cmykToRgb(float cyan, float magenta, float yellow, float black) */
+/* {{{ array ImageExUtil::cmykToRgb(float cyan, float magenta, float yellow, float black) */
 
 /*
  * Convert CMYK color components to RGB color components.
@@ -685,7 +685,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::hslToRgb(float hue, float saturation, float lightness) */
+/* {{{ array ImageExUtil::hslToRgb(float hue, float saturation, float lightness) */
 
 /*
  * Convert HSL color components to RGB color components.
@@ -696,7 +696,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hslToRgb)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::hslToRgb(float hue, float saturation, float value) */
+/* {{{ array ImageExUtil::hslToRgb(float hue, float saturation, float value) */
 
 /*
  * Convert HSV color components to RGB color components.
@@ -707,7 +707,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hsvToRgb)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::rgbToCmyk(float red, float green, float blue) */
+/* {{{ array ImageExUtil::rgbToCmyk(float red, float green, float blue) */
 
 /*
  * Convert RGB color components to CMYK color components.
@@ -718,7 +718,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToCmyk)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::rgbToHsl(float red, float green, float blue) */
+/* {{{ array ImageExUtil::rgbToHsl(float red, float green, float blue) */
 
 /*
  * Convert RGB color components to HSL color components.
@@ -729,7 +729,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsl)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::rgbToHsv(float red, float green, float blue) */
+/* {{{ array ImageExUtil::rgbToHsv(float red, float green, float blue) */
 
 /*
  * Convert RGB color components to HSV color components.
@@ -740,7 +740,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsv)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::getSvgColorTable(string color) */
+/* {{{ array ImageExUtil::getSvgColorTable(string color) */
 
 /*
  * Get RGBA values of CSS3-style color strings.
@@ -777,7 +777,7 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor)
 }
 
 /* }}} */
-/* {{{ proto array ImageExUtil::getSvgColorTable(void) */
+/* {{{ array ImageExUtil::getSvgColorTable(void) */
 
 /*
  * Get list of SVG color keywords and their RGB values.

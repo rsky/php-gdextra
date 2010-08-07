@@ -304,7 +304,7 @@ gdex_liquid_rescale(const gdImagePtr src, int width, int height,
 }
 
 /* }}} */
-/* {{{ proto resource imagecarve_ex(resource src, int width, int height[, array options]) */
+/* {{{ resource imagecarve_ex(resource src, int width, int height[, array options]) */
 
 GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
 {

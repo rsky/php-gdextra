@@ -668,7 +668,7 @@ gdex_get_colorspace_name(int colorspace)
 }
 
 /* }}} */
-/* {{{ proto resource imageclone_ex(resource im) */
+/* {{{ resource imageclone_ex(resource im) */
 
 /*
  * Clone an image.

@@ -705,7 +705,7 @@ _color_correct_alpha(COLORCORRECT_PARAMETERS)
 }
 
 /* }}} */
-/* {{{ proto bool imagecolorcorrect_ex(resource im, array params[, int colorspace]) */
+/* {{{ bool imagecolorcorrect_ex(resource im, array params[, int colorspace]) */
 
 /*
  * Correct color.
