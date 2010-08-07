@@ -1252,9 +1252,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
 	/* verify the color space */
 	if (orig_colorspace & COLORSPACE_ALPHA) {
 		use_alpha = 1;
-		/*if (orig_colorspace & COLORSPACE_RAW) {
+		if (orig_colorspace & COLORSPACE_RAW) {
 			raw_alpha = 1;
-		}*/
+		}
 	}
 	colorspace = (int)(orig_colorspace ^ COLORSPACE_RAW_ALPHA);
 	if (colorspace != COLORSPACE_RGB &&
@@ -1375,7 +1375,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	notm = (orig_mode & MASK_NOT)  ? 1 : 0;
 	tile = (orig_mode & MASK_TILE) ? 1 : 0;
 	mode = (int)(orig_mode & ~(MASK_NOT | MASK_TILE | COLORSPACE_RAW_ALPHA));
-	raw_alpha = (orig_mode & COLORSPACE_RAW_ALPHA) ? 1 : 0;
+	raw_alpha = (orig_mode & COLORSPACE_RAW) ? 1 : 0;
 	switch (mode) {
 		case MASK_SET:
 			mask_alpha = (notm) ? _mask_alpha_set_not : _mask_alpha_set;
