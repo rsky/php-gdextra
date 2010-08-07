@@ -1113,7 +1113,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 			raw_alpha = 1;
 		}
 	}
-	colorspace = (int)(orig_colorspace ^ COLORSPACE_RAW_ALPHA);
+	colorspace = (int)(orig_colorspace & ~COLORSPACE_RAW_ALPHA);
 	if (colorspace != COLORSPACE_RGB &&
 		colorspace != COLORSPACE_HSV &&
 		colorspace != COLORSPACE_HSL &&
@@ -1256,7 +1256,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
 			raw_alpha = 1;
 		}
 	}
-	colorspace = (int)(orig_colorspace ^ COLORSPACE_RAW_ALPHA);
+	colorspace = (int)(orig_colorspace & ~COLORSPACE_RAW_ALPHA);
 	if (colorspace != COLORSPACE_RGB &&
 		colorspace != COLORSPACE_HSV &&
 		colorspace != COLORSPACE_HSL &&
