@@ -141,7 +141,7 @@ _channel_extract_rgb(const gdImagePtr im,
                      gdImagePtr gch,
                      gdImagePtr bch,
                      gdImagePtr ach,
-                     zend_bool raw_alpha);
+                     int raw_alpha);
 
 static void
 _channel_extract_3ch(const gdImagePtr im,
@@ -150,7 +150,7 @@ _channel_extract_3ch(const gdImagePtr im,
                      gdImagePtr ch3,
                      gdImagePtr ach,
                      gdex_rgb_to_3ch_func_t cs_conv,
-                     zend_bool raw_alpha);
+                     int raw_alpha);
 
 static void
 _channel_extract_4ch(const gdImagePtr im,
@@ -160,10 +160,7 @@ _channel_extract_4ch(const gdImagePtr im,
                      gdImagePtr ch4,
                      gdImagePtr ach,
                      gdex_rgb_to_4ch_func_t cs_conv,
-                     zend_bool raw_alpha);
-
-static void
-_channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha);
+                     int raw_alpha);
 
 /* }}} */
 /* {{{ functions to get intensity */
@@ -884,7 +881,7 @@ _channel_extract_rgb(const gdImagePtr im,
                      gdImagePtr gch,
                      gdImagePtr bch,
                      gdImagePtr ach,
-                     zend_bool raw_alpha)
+                     int raw_alpha)
 {
 	int x, y, width, height;
 	int a;
@@ -951,7 +948,7 @@ _channel_extract_3ch(const gdImagePtr im,
                      gdImagePtr ch3,
                      gdImagePtr ach,
                      gdex_rgb_to_3ch_func_t cs_conv,
-                     zend_bool raw_alpha)
+                     int raw_alpha)
 {
 	int x, y, width, height;
 	int a;
@@ -1022,7 +1019,7 @@ _channel_extract_4ch(const gdImagePtr im,
                      gdImagePtr ch4,
                      gdImagePtr ach,
                      gdex_rgb_to_4ch_func_t cs_conv,
-                     zend_bool raw_alpha)
+                     int raw_alpha)
 {
 	int x, y, width, height;
 	int a;
@@ -1082,8 +1079,8 @@ _channel_extract_4ch(const gdImagePtr im,
 }
 
 /* }}} */
-/* {{{ proto resource imagechannelmerge_ex(array channels [, int colorspace
-                                           [, int position[, bool raw_alpha]]]) */
+/* {{{ resource imagechannelmerge_ex(array channels
+                                     [, int colorspace[, int position]]) */
 
 GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 {
@@ -1097,14 +1094,14 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	int colorspace;
 	long position = POSITION_DEFAULT;
 	int crop = 0;
-	zend_bool raw_alpha = 0;
 	int use_alpha = 0;
+	int raw_alpha = 0;
 	gdImagePtr im;
 	int width, height;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a|llb",
-			&zchannels, &orig_colorspace, &position, &raw_alpha) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a|ll",
+			&zchannels, &orig_colorspace, &position) == FAILURE)
 	{
 		return;
 	}
@@ -1112,10 +1109,11 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 	/* verify the color space */
 	if (orig_colorspace & COLORSPACE_ALPHA) {
 		use_alpha = 1;
-		colorspace = (int)(orig_colorspace ^ COLORSPACE_ALPHA);
-	} else {
-		colorspace = (int)orig_colorspace;
+		if (orig_colorspace & COLORSPACE_RAW) {
+			raw_alpha = 1;
+		}
 	}
+	colorspace = (int)(orig_colorspace ^ COLORSPACE_RAW_ALPHA);
 	if (colorspace != COLORSPACE_RGB &&
 		colorspace != COLORSPACE_HSV &&
 		colorspace != COLORSPACE_HSL &&
@@ -1230,25 +1228,22 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 }
 
 /* }}} */
-/* {{{ _channel_extract() */
+/* {{{ array imagechannelextract_ex(resource im[, int colorspace]) */
 
-/*
- * Extract channels.
- */
-static void
-_channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
+GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
 {
 	zval *zim, *zch;
 	gdImagePtr im, ch[MAX_CHANNELS];
 	long orig_colorspace = COLORSPACE_RGB;
 	int colorspace;
 	int use_alpha = 0;
+	int raw_alpha = 0;
 	int i, width, height;
 	int errid = -1;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|lb",
-			&zim, &orig_colorspace, &raw_alpha) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|l",
+			&zim, &orig_colorspace) == FAILURE)
 	{
 		return;
 	}
@@ -1257,10 +1252,11 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 	/* verify the color space */
 	if (orig_colorspace & COLORSPACE_ALPHA) {
 		use_alpha = 1;
-		colorspace = (int)(orig_colorspace ^ COLORSPACE_ALPHA);
-	} else {
-		colorspace = (int)orig_colorspace;
+		/*if (orig_colorspace & COLORSPACE_RAW) {
+			raw_alpha = 1;
+		}*/
 	}
+	colorspace = (int)(orig_colorspace ^ COLORSPACE_RAW_ALPHA);
 	if (colorspace != COLORSPACE_RGB &&
 		colorspace != COLORSPACE_HSV &&
 		colorspace != COLORSPACE_HSL &&
@@ -1349,16 +1345,8 @@ _channel_extract(INTERNAL_FUNCTION_PARAMETERS, zend_bool raw_alpha)
 }
 
 /* }}} */
-/* {{{ proto array imagechannelextract_ex(resource im[, int colorspace[, bool raw_alpha]]) */
-
-GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
-{
-	_channel_extract(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
-}
-
-/* }}} */
-/* {{{ proto bool imagealphamask_ex(resource im, resource mask[, int mode
-                                    [, int position[, bool raw_alpha]]]) */
+/* {{{ bool imagealphamask_ex(resource im, resource mask
+                              [, int mode[, int position]]) */
 
 /*
  * Apply the mask to the image's alpha channel.
@@ -1369,15 +1357,14 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	gdImagePtr im, mask;
 	long orig_mode = MASK_SET;
 	long position = POSITION_DEFAULT;
-	zend_bool raw_alpha = 0;
 	int x, y, width, height;
-	int mode, notm, tile;
+	int mode, notm, tile, raw_alpha;
 	mask_alpha_func_t mask_alpha;
 	channel_t ach;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rr|llb",
-			&zim, &zmask, &orig_mode, &position, &raw_alpha) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rr|ll",
+			&zim, &zmask, &orig_mode, &position) == FAILURE)
 	{
 		return;
 	}
@@ -1387,7 +1374,8 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	/* verify the mask mode */
 	notm = (orig_mode & MASK_NOT)  ? 1 : 0;
 	tile = (orig_mode & MASK_TILE) ? 1 : 0;
-	mode = (int)(orig_mode & ~(MASK_NOT | MASK_TILE));
+	mode = (int)(orig_mode & ~(MASK_NOT | MASK_TILE | COLORSPACE_RAW_ALPHA));
+	raw_alpha = (orig_mode & COLORSPACE_RAW_ALPHA) ? 1 : 0;
 	switch (mode) {
 		case MASK_SET:
 			mask_alpha = (notm) ? _mask_alpha_set_not : _mask_alpha_set;
@@ -1500,7 +1488,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 }
 
 /* }}} */
-/* {{{ proto array imagehistgram_ex(resource im[, int colorspace]) */
+/* {{{ array imagehistgram_ex(resource im[, int colorspace]) */
 
 GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 {
@@ -1516,7 +1504,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 	tmp = return_value;
 	return_value = extracted;
 
-	_channel_extract(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
+	PHP_FN(imagechannelextract_ex)(INTERNAL_FUNCTION_PARAM_PASSTHRU);
 
 	extracted = return_value;
 	return_value = tmp;
