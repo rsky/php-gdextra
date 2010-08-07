@@ -35,7 +35,7 @@ ZEND_EXTERN_MODULE_GLOBALS(gdextra);
 
 #define MAX_CHANNELS 5
 
-#define GET_INTENSITY_PARAMETERS const channel_t *ch, int x, int y
+#define GET_INTENSITY_PARAMETERS const channel_t *ch, int x, int y, int oob
 #define GET_INTENSITY_PARAMS_ADJUST() \
 	x -= ch->xOffset; \
 	y -= ch->yOffset;
@@ -180,7 +180,7 @@ _get_intensity_truecolor(GET_INTENSITY_PARAMETERS)
 		int c = unsafeGetTrueColorPixel(ch->im, x, y);
 		return _rgb2gray(getR(c), getG(c), getB(c));
 	} else {
-		return 0;
+		return oob;
 	}
 }
 
@@ -198,7 +198,7 @@ _get_intensity_palette(GET_INTENSITY_PARAMETERS)
 		unsigned char i = unsafeGetPalettePixel(ch->im, x, y);
 		return _rgb2gray(paletteR(ch->im, i), paletteG(ch->im, i), paletteB(ch->im, i));
 	} else {
-		return 0;
+		return oob;
 	}
 }
 
@@ -215,7 +215,7 @@ _get_intensity_grayscale(GET_INTENSITY_PARAMETERS)
 	if (gdImageBoundsSafe(ch->im, x, y)) {
 		return paletteG(ch->im, unsafeGetPalettePixel(ch->im, x, y));
 	} else {
-		return 0;
+		return oob;
 	}
 }
 
@@ -232,7 +232,7 @@ _get_intensity_grayindex(GET_INTENSITY_PARAMETERS)
 	if (gdImageBoundsSafe(ch->im, x, y)) {
 		return unsafeGetPalettePixel(ch->im, x, y);
 	} else {
-		return 0;
+		return oob;
 	}
 }
 
@@ -250,7 +250,7 @@ _get_alpha_truecolor(GET_INTENSITY_PARAMETERS)
 		int c = unsafeGetTrueColorPixel(ch->im, x, y);
 		return _rgb2alpha(getR(c), getG(c), getB(c));
 	} else {
-		return gdAlphaTransparent;
+		return oob;
 	}
 }
 
@@ -268,7 +268,7 @@ _get_alpha_palette(GET_INTENSITY_PARAMETERS)
 		unsigned char i = unsafeGetPalettePixel(ch->im, x, y);
 		return _rgb2alpha(paletteR(ch->im, i), paletteG(ch->im, i), paletteB(ch->im, i));
 	} else {
-		return gdAlphaTransparent;
+		return oob;
 	}
 }
 
@@ -285,7 +285,7 @@ _get_alpha_grayscale(GET_INTENSITY_PARAMETERS)
 	if (gdImageBoundsSafe(ch->im, x, y)) {
 		return _gray2alpha(paletteG(ch->im, unsafeGetPalettePixel(ch->im, x, y)));
 	} else {
-		return gdAlphaTransparent;
+		return oob;
 	}
 }
 
@@ -302,7 +302,7 @@ _get_alpha_grayindex(GET_INTENSITY_PARAMETERS)
 	if (gdImageBoundsSafe(ch->im, x, y)) {
 		return _gray2alpha(unsafeGetPalettePixel(ch->im, x, y));
 	} else {
-		return gdAlphaTransparent;
+		return oob;
 	}
 }
 
@@ -315,7 +315,7 @@ _get_alpha_grayindex(GET_INTENSITY_PARAMETERS)
 static int
 _get_raw_alpha_truecolor(GET_INTENSITY_PARAMETERS)
 {
-	int a = _get_intensity_truecolor(ch, x, y);
+	int a = _get_intensity_truecolor(ch, x, y, oob);
 	return MINMAX(a, 0, gdAlphaMax);
 }
 
@@ -328,7 +328,7 @@ _get_raw_alpha_truecolor(GET_INTENSITY_PARAMETERS)
 static int
 _get_raw_alpha_palette(GET_INTENSITY_PARAMETERS)
 {
-	int a = _get_intensity_palette(ch, x, y);
+	int a = _get_intensity_palette(ch, x, y, oob);
 	return MINMAX(a, 0, gdAlphaMax);
 }
 
@@ -341,7 +341,7 @@ _get_raw_alpha_palette(GET_INTENSITY_PARAMETERS)
 static int
 _get_raw_alpha_grayscale(GET_INTENSITY_PARAMETERS)
 {
-	int a = _get_intensity_grayscale(ch, x, y);
+	int a = _get_intensity_grayscale(ch, x, y, oob);
 	return MINMAX(a, 0, gdAlphaMax);
 }
 
@@ -354,7 +354,7 @@ _get_raw_alpha_grayscale(GET_INTENSITY_PARAMETERS)
 static int
 _get_raw_alpha_grayindex(GET_INTENSITY_PARAMETERS)
 {
-	int a = _get_intensity_grayindex(ch, x, y);
+	int a = _get_intensity_grayindex(ch, x, y, oob);
 	return MINMAX(a, 0, gdAlphaMax);
 }
 
@@ -481,7 +481,7 @@ _mask_alpha_set(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(ach->get(ach, x, y));
+		SET_ALPHA(ach->get(ach, x, y, gdAlphaTransparent));
 		x++;
 	}
 }
@@ -499,7 +499,7 @@ _mask_alpha_set_not(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(gdAlphaMax & ~ach->get(ach, x, y));
+		SET_ALPHA(gdAlphaMax & ~ach->get(ach, x, y, gdAlphaTransparent));
 		x++;
 	}
 }
@@ -517,7 +517,7 @@ _mask_alpha_merge(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(_alpha_merge(ach->get(ach, x, y), getA(c)));
+		SET_ALPHA(_alpha_merge(ach->get(ach, x, y, gdAlphaTransparent), getA(c)));
 		x++;
 	}
 }
@@ -535,7 +535,7 @@ _mask_alpha_merge_not(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(gdAlphaMax & ~_alpha_merge(ach->get(ach, x, y), getA(c)));
+		SET_ALPHA(gdAlphaMax & ~_alpha_merge(ach->get(ach, x, y, gdAlphaTransparent), getA(c)));
 		x++;
 	}
 }
@@ -553,7 +553,7 @@ _mask_alpha_screen(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(_alpha_screen(ach->get(ach, x, y), getA(c)));
+		SET_ALPHA(_alpha_screen(ach->get(ach, x, y, gdAlphaTransparent), getA(c)));
 		x++;
 	}
 }
@@ -571,7 +571,7 @@ _mask_alpha_screen_not(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(gdAlphaMax & ~_alpha_screen(ach->get(ach, x, y), getA(c)));
+		SET_ALPHA(gdAlphaMax & ~_alpha_screen(ach->get(ach, x, y, gdAlphaTransparent), getA(c)));
 		x++;
 	}
 }
@@ -592,7 +592,7 @@ _mask_alpha_and(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(getA(c) | ach->get(ach, x, y));
+		SET_ALPHA(getA(c) | ach->get(ach, x, y, gdAlphaTransparent));
 		x++;
 	}
 }
@@ -610,7 +610,7 @@ _mask_alpha_and_not(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(gdAlphaMax & ~(getA(c) | ach->get(ach, x, y)));
+		SET_ALPHA(gdAlphaMax & ~(getA(c) | ach->get(ach, x, y, gdAlphaTransparent)));
 		x++;
 	}
 }
@@ -631,7 +631,7 @@ _mask_alpha_or(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(getA(c) & ach->get(ach, x, y));
+		SET_ALPHA(getA(c) & ach->get(ach, x, y, gdAlphaTransparent));
 		x++;
 	}
 }
@@ -649,7 +649,7 @@ _mask_alpha_or_not(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(gdAlphaMax & ~(getA(c) & ach->get(ach, x, y)));
+		SET_ALPHA(gdAlphaMax & ~(getA(c) & ach->get(ach, x, y, gdAlphaTransparent)));
 		x++;
 	}
 }
@@ -667,7 +667,7 @@ _mask_alpha_xor(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(getA(c) ^ ach->get(ach, x, y));
+		SET_ALPHA(getA(c) ^ ach->get(ach, x, y, gdAlphaTransparent));
 		x++;
 	}
 }
@@ -685,7 +685,7 @@ _mask_alpha_xor_not(MASK_ALPHA_PARAMETERS)
 
 	while (x < z) {
 		c = unsafeGetTrueColorPixel(im, x, y);
-		SET_ALPHA(gdAlphaMax & ~(getA(c) ^ ach->get(ach, x, y)));
+		SET_ALPHA(gdAlphaMax & ~(getA(c) ^ ach->get(ach, x, y, gdAlphaTransparent)));
 		x++;
 	}
 }
@@ -798,10 +798,10 @@ _channel_merge_rgb(gdImagePtr im,
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			unsafeSetTrueColorPixel(im, x, y, gdTrueColorAlpha(
-					rch->get(rch, x, y),
-					gch->get(gch, x, y),
-					bch->get(bch, x, y),
-					ach->get(ach, x, y)));
+					rch->get(rch, x, y, 0),
+					gch->get(gch, x, y, 0),
+					bch->get(bch, x, y, 0),
+					ach->get(ach, x, y, gdAlphaTransparent)));
 		}
 	}
 }
@@ -828,12 +828,12 @@ _channel_merge_3ch(gdImagePtr im,
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
-			cs_conv((float)ch1->get(ch1, x, y) / 255.0f,
-					(float)ch2->get(ch2, x, y) / 255.0f,
-					(float)ch3->get(ch3, x, y) / 255.0f,
+			cs_conv((float)ch1->get(ch1, x, y, 0) / 255.0f,
+					(float)ch2->get(ch2, x, y, 0) / 255.0f,
+					(float)ch3->get(ch3, x, y, 0) / 255.0f,
 					&r, &g, &b);
 			unsafeSetTrueColorPixel(im, x, y, gdTrueColorAlpha(
-					r, g, b, ach->get(ach, x, y)));
+					r, g, b, ach->get(ach, x, y, gdAlphaTransparent)));
 		}
 	}
 }
@@ -861,13 +861,13 @@ _channel_merge_4ch(gdImagePtr im,
 
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
-			cs_conv((float)ch1->get(ch1, x, y) / 255.0f,
-					(float)ch2->get(ch2, x, y) / 255.0f,
-					(float)ch3->get(ch3, x, y) / 255.0f,
-					(float)ch4->get(ch4, x, y) / 255.0f,
+			cs_conv((float)ch1->get(ch1, x, y, 0) / 255.0f,
+					(float)ch2->get(ch2, x, y, 0) / 255.0f,
+					(float)ch3->get(ch3, x, y, 0) / 255.0f,
+					(float)ch4->get(ch4, x, y, 0) / 255.0f,
 					&r, &g, &b);
 			unsafeSetTrueColorPixel(im, x, y, gdTrueColorAlpha(
-					r, g, b, ach->get(ach, x, y)));
+					r, g, b, ach->get(ach, x, y, gdAlphaTransparent)));
 		}
 	}
 }
