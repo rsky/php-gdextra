@@ -333,6 +333,8 @@ static PHP_MINIT_FUNCTION(gdextra)
 				(void *)&(_svg_colors[i].value), sizeof(gdex_rgba_t), NULL);
 	}
 
+	gdex_mask_alpha_funcs_init();
+
 #if GDEXTRA_USE_WRAPPERS
 	if (gdex_wrappers_init(INIT_FUNC_ARGS_PASSTHRU) == FAILURE) {
 		return FAILURE;

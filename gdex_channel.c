@@ -69,6 +69,11 @@ struct _channel_t {
 typedef void (*mask_alpha_func_t)(MASK_ALPHA_PARAMETERS);
 
 /* }}} */
+/* {{{ globals */
+
+static mask_alpha_func_t _mask_alpha_funcs[MASK_NUM_MODES] = { NULL }; 
+
+/* }}} */
 /* {{{ private function prototypes */
 
 static int
@@ -161,6 +166,29 @@ _channel_extract_4ch(const gdImagePtr im,
                      gdImagePtr ach,
                      gdex_rgb_to_4ch_func_t cs_conv,
                      int raw_alpha);
+
+/* }}} */
+/* {{{ gdex_mask_alpha_funcs_init() */
+
+/*
+ * Initialize callback functions for imagealphamask_ex().
+ */
+GDEXTRA_LOCAL void
+gdex_mask_alpha_funcs_init(void)
+{
+	_mask_alpha_funcs[MASK_SET]    = _mask_alpha_set;
+	_mask_alpha_funcs[MASK_MERGE]  = _mask_alpha_merge;
+	_mask_alpha_funcs[MASK_SCREEN] = _mask_alpha_screen;
+	_mask_alpha_funcs[MASK_AND]    = _mask_alpha_and;
+	_mask_alpha_funcs[MASK_OR]     = _mask_alpha_or;
+	_mask_alpha_funcs[MASK_XOR]    = _mask_alpha_xor;
+	_mask_alpha_funcs[MASK_OFFSET_NOT + MASK_SET]    = _mask_alpha_set_not;
+	_mask_alpha_funcs[MASK_OFFSET_NOT + MASK_MERGE]  = _mask_alpha_merge_not;
+	_mask_alpha_funcs[MASK_OFFSET_NOT + MASK_SCREEN] = _mask_alpha_screen_not;
+	_mask_alpha_funcs[MASK_OFFSET_NOT + MASK_AND]    = _mask_alpha_and_not;
+	_mask_alpha_funcs[MASK_OFFSET_NOT + MASK_OR]     = _mask_alpha_or_not;
+	_mask_alpha_funcs[MASK_OFFSET_NOT + MASK_XOR]    = _mask_alpha_xor_not;
+}
 
 /* }}} */
 /* {{{ functions to get intensity */
@@ -1358,7 +1386,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	long orig_mode = MASK_SET;
 	long position = POSITION_DEFAULT;
 	int x, y, width, height;
-	int mode, notm, tile, raw_alpha;
+	int mode, raw_alpha, index = -1;
 	mask_alpha_func_t mask_alpha;
 	channel_t ach;
 
@@ -1372,34 +1400,27 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	ZEND_FETCH_RESOURCE(mask, gdImagePtr, &zmask, -1, "Image", GDEXG(le_gd));
 
 	/* verify the mask mode */
-	notm = (orig_mode & MASK_NOT)  ? 1 : 0;
-	tile = (orig_mode & MASK_TILE) ? 1 : 0;
 	mode = (int)(orig_mode & ~(MASK_NOT | MASK_TILE | COLORSPACE_RAW_ALPHA));
 	raw_alpha = (orig_mode & COLORSPACE_RAW) ? 1 : 0;
 	switch (mode) {
 		case MASK_SET:
-			mask_alpha = (notm) ? _mask_alpha_set_not : _mask_alpha_set;
-			break;
 		case MASK_MERGE:
-			mask_alpha = (notm) ? _mask_alpha_merge_not : _mask_alpha_merge;
-			break;
 		case MASK_SCREEN:
-			mask_alpha = (notm) ? _mask_alpha_screen_not : _mask_alpha_screen;
-			break;
 		case MASK_AND:
-			mask_alpha = (notm) ? _mask_alpha_and_not : _mask_alpha_and;
-			break;
 		case MASK_OR:
-			mask_alpha = (notm) ? _mask_alpha_or_not : _mask_alpha_or;
-			break;
 		case MASK_XOR:
-			mask_alpha = (notm) ? _mask_alpha_xor_not : _mask_alpha_xor;
+			index = mode;
+			if (orig_mode & MASK_NOT) {
+				index += MASK_OFFSET_NOT;
+			}
 			break;
-		default:
-			php_error_docref(NULL TSRMLS_CC, E_WARNING,
-					"Unsupported mask mode given (%ld)", orig_mode);
-			RETURN_FALSE;
 	}
+	if (index < 0 || index >= MASK_NUM_MODES) {
+		php_error_docref(NULL TSRMLS_CC, E_WARNING,
+				"Unsupported mask mode given (%ld)", orig_mode);
+		RETURN_FALSE;
+	}
+	mask_alpha = _mask_alpha_funcs[index];
 
 	/* convert to true color */
 	if (gdex_palette_to_truecolor(im TSRMLS_CC) == FAILURE) {
@@ -1418,7 +1439,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 	ach.yOffset = calc_y_offset(height, ach.height, position);
 
 	/* apply the mask */
-	if (tile) {
+	if (orig_mode & MASK_TILE) {
 		int x0, x1, x2, y0, y1, y2;
 
 		if (width > ach.width) {

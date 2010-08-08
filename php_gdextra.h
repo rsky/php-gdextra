@@ -89,6 +89,9 @@
 #define MASK_NOT        8
 #define MASK_TILE      16
 
+#define MASK_OFFSET_NOT 6
+#define MASK_NUM_MODES 12
+
 #define POSITION_LEFT   0
 #define POSITION_CENTER 1
 #define POSITION_RIGHT  2
@@ -315,6 +318,12 @@ gdex_rgb_to_cmyk(int r, int g, int b, float *c, float *m, float *y, float *k);
  */
 GDEXTRA_LOCAL int
 gdex_palette_to_truecolor(gdImagePtr im TSRMLS_DC);
+
+/*
+ * Initialize callback functions for imagealphamask_ex().
+ */
+GDEXTRA_LOCAL void
+gdex_mask_alpha_funcs_init(void);
 
 #if PHP_GDEXTRA_WITH_LQR
 /*
