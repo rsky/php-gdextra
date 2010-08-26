@@ -133,6 +133,43 @@ _ex_gdImageDestroy(gdImagePtr im)
 }
 
 /* }}} */
+/* {{{ _ex_gdImageColorClosestAlpha() */
+
+GDEXTRA_LOCAL int
+_ex_gdImageColorClosestAlpha(gdImagePtr im, int r, int g, int b, int a)
+{
+	TSRMLS_FETCH();
+	int index = -1;
+	zval *retval = NULL, *args, *zim, *zr, *zg, *zb, *za;
+
+	MAKE_STD_ZVAL(zim);
+	MAKE_STD_ZVAL(zr);
+	MAKE_STD_ZVAL(zg);
+	MAKE_STD_ZVAL(zb);
+	MAKE_STD_ZVAL(za);
+	ZEND_REGISTER_RESOURCE(zim, im, GDEXG(le_gd));
+	ZVAL_LONG(zr, r);
+	ZVAL_LONG(zg, g);
+	ZVAL_LONG(zb, b);
+	ZVAL_LONG(za, a);
+
+	args = _gdex_init_args(5 TSRMLS_CC, zim, zr, zg, zb, za);
+	zend_fcall_info_call(&GDEXG(func_colorclosestalpha).fci,
+	                     &GDEXG(func_colorclosestalpha).fcc,
+	                     &retval, args TSRMLS_CC);
+	if (retval) {
+		if (Z_TYPE_P(retval) == IS_LONG) {
+			index = (int)Z_LVAL_P(retval);
+		}
+		zval_ptr_dtor(&retval);
+	}
+	_gdex_fake_resource(zim TSRMLS_CC);
+	zval_ptr_dtor(&args);
+
+	return index;
+}
+
+/* }}} */
 /* {{{ _ex_gdImageColorResolveAlpha() */
 
 GDEXTRA_LOCAL int

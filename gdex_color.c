@@ -400,6 +400,89 @@ gdex_palette_to_truecolor(gdImagePtr im TSRMLS_DC)
 }
 
 /* }}} */
+/* {{{ gdex_image_to_web216() */
+
+/*
+ * Convert an image to the web-safe palette.
+ */
+GDEXTRA_LOCAL int
+gdex_image_to_web216(gdImagePtr im TSRMLS_DC)
+{
+	gdImagePtr ws;
+	gdImage tmp;
+	int x, y, width, height;
+	int c, i, r, g, b, a, transparent;
+
+	/* create a new image */
+	width = gdImageSX(im);
+	height = gdImageSY(im);
+	ws = gdImageCreate(width, height);
+	if (ws == NULL) {
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Cannot create an image");
+		return FAILURE;
+	}
+
+	/* make web-safe 216 color palette */
+	i = 0;
+	for (b = 0; b <= 0xff; b += 0x33) {
+		for (g = 0; g <= 0xff; g += 0x33) {
+			for (r = 0; r <= 0xff; r += 0x33) {
+				ws->red[i] = r;
+				ws->green[i] = g;
+				ws->blue[i] = b;
+				ws->alpha[i] = gdAlphaOpaque;
+				ws->open[i] = 0;
+				i++;
+			}
+		}
+	}
+	ws->colorsTotal = i;
+	while (i < gdMaxColors) {
+		ws->red[i] = 0;
+		ws->green[i] = 0;
+		ws->blue[i] = 0;
+		ws->alpha[i] = gdAlphaOpaque;
+		ws->open[i] = 1;
+		i++;
+	}
+
+	/* copy pixels */
+	if (gdImageTrueColor(im)) {
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				c = unsafeGetTrueColorPixel(im, x, y);
+				i = gdImageColorClosestAlpha(ws, getR(c), getG(c), getB(c), getA(c));
+				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
+			}
+		}
+	} else {
+		/* get the transparent color index */
+		transparent = gdImageGetTransparent(im);
+
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				c = (int)unsafeGetPalettePixel(im, x, y);
+				a = (c == transparent) ? gdAlphaTransparent : paletteA(im, c);
+				i = gdImageColorClosestAlpha(ws,
+				                             paletteR(im, c),
+				                             paletteG(im, c),
+				                             paletteB(im, c),
+				                             a);
+				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
+			}
+		}
+	}
+
+	/* swap and cleanup */
+	memcpy(&tmp, ws, sizeof(gdImage));
+	memcpy(ws,   im, sizeof(gdImage));
+	memcpy(im, &tmp, sizeof(gdImage));
+	gdImageDestroy(ws);
+
+	return SUCCESS;
+}
+
+/* }}} */
 /* {{{ _color_allocate() */
 
 /*
@@ -464,7 +547,7 @@ _color_allocate(INTERNAL_FUNCTION_PARAMETERS, int colorspace)
 /* {{{ bool imagepalettetotruecolor_ex(resource im) */
 
 /*
- * Convert a palette image to a true color image
+ * Convert a palette image to a true color image.
  */
 GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 {
@@ -480,6 +563,30 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 	if (gdImageTrueColor(im)) {
 		RETURN_TRUE;
 	} else if (gdex_palette_to_truecolor(im TSRMLS_CC) == SUCCESS) {
+		RETURN_TRUE;
+	} else {
+		RETURN_FALSE;
+	}
+}
+
+/* }}} */
+/* {{{ bool imagetowebsafepalette_ex(resource im) */
+
+/*
+ * Convert an image to the web-safe palette.
+ */
+GDEXTRA_LOCAL PHP_FUNCTION(imagetowebsafepalette_ex)
+{
+	zval *zim = NULL;
+	gdImagePtr im = NULL;
+
+	/* parse the arguments */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zim) == FAILURE) {
+		return;
+	}
+	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
+
+	if (gdex_image_to_web216(im TSRMLS_CC) == SUCCESS) {
 		RETURN_TRUE;
 	} else {
 		RETURN_FALSE;

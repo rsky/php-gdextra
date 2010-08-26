@@ -50,6 +50,9 @@ GDEXTRA_LOCAL void
 _ex_gdImageDestroy(gdImagePtr im);
 
 GDEXTRA_LOCAL int
+_ex_gdImageColorClosestAlpha(gdImagePtr im, int r, int g, int b, int a);
+
+GDEXTRA_LOCAL int
 _ex_gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a);
 
 GDEXTRA_LOCAL void
@@ -77,6 +80,7 @@ END_EXTERN_C()
 #undef gdImageCreate
 #undef gdImageCreateTrueColor
 #undef gdImageDestroy
+#undef gdImageColorClosestAlpha
 #undef gdImageColorResolveAlpha
 #undef gdImageCopy
 #undef gdImageCopyResampled
@@ -85,6 +89,7 @@ END_EXTERN_C()
 #define gdImageCreate(sx, sy)           _ex_gdImageCreate((sx), (sy), 0)
 #define gdImageCreateTrueColor(sx, sy)  _ex_gdImageCreate((sx), (sy), 1)
 #define gdImageDestroy                  _ex_gdImageDestroy
+#define gdImageColorClosestAlpha        _ex_gdImageColorClosestAlpha
 #define gdImageColorResolveAlpha        _ex_gdImageColorResolveAlpha
 #define gdImageCopy                     _ex_gdImageCopy
 #define gdImageCopyResampled            _ex_gdImageCopyResampled

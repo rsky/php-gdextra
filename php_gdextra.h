@@ -181,6 +181,7 @@ ZEND_BEGIN_MODULE_GLOBALS(gdextra)
 	gdextra_fcall_info func_create;
 	gdextra_fcall_info func_createtruecolor;
 /*	gdextra_fcall_info func_destroy;*/
+	gdextra_fcall_info func_colorclosestalpha;
 	gdextra_fcall_info func_colorresolvealpha;
 	gdextra_fcall_info func_copy;
 	gdextra_fcall_info func_copyresampled;
@@ -320,6 +321,12 @@ GDEXTRA_LOCAL int
 gdex_palette_to_truecolor(gdImagePtr im TSRMLS_DC);
 
 /*
+ * Convert an image to the web-safe palette.
+ */
+GDEXTRA_LOCAL int
+gdex_image_to_web216(gdImagePtr im TSRMLS_DC);
+
+/*
  * Initialize callback functions for imagealphamask_ex().
  */
 GDEXTRA_LOCAL void
@@ -349,6 +356,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex);
+GDEXTRA_LOCAL PHP_FUNCTION(imagetowebsafepalette_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecmyk_ex);
 GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsl_ex);
