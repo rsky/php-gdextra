@@ -31,15 +31,48 @@
 #define GDEXTRA_SVG_COLORS_DECLARE_ONLY 1
 #include "svg_color.h"
 
-ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+#ifndef GDEXTRA_USE_SSE
+#define GDEXTRA_USE_SSE 0
+#endif
 
+#if GDEXTRA_USE_SSE
+#ifdef __GNUC__
+#include <xmmintrin.h>
+typedef float vfloat_t __attribute__ ((__vector_size__(16)));
+#else /* not gcc */
+#include <xmmintrin.h>
+typedef __m128 vfloat_t;
+#endif /* __GNUC__ */
+
+#ifdef __GNUC__
+#define ALIGNED16 __attribute__((aligned(16)))
+#elif defined(WIN32) || defined(WIN64)
+#define ALIGNED16 __declspec(align(16))
+#else /* other compiler */
+#define ALIGNED16
+#endif /* __GNUC__ */
+
+#else /* without SSE */
+#define ALIGNED16
+#endif /* GDEXTRA_USE_SSE */
+
+/* {{{ private type definitions */
 
 typedef struct _fs_rgb_t {
 	float r;
 	float g;
 	float b;
-} fs_rgb_t;
+#if GDEXTRA_USE_SSE
+	float a; /* not used */
+#endif
+} fs_rgb_t ALIGNED16;
 
+/* }}} */
+/* {{{ globals */
+
+ZEND_EXTERN_MODULE_GLOBALS(gdextra);
+
+/* }}} */
 /* {{{ private function prototypes */
 
 static void
@@ -455,17 +488,40 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 
 	/* decrease colors with Floyd-Steinberg dithering */
 	if (dither) {
+#if GDEXTRA_USE_SSE
+		vfloat_t vp, vf, ve, vd, vd1, vd2, vd3, vd4;
+#else
 		static const float d1 = 5.0 / 16.0,
 		                   d2 = 3.0 / 16.0,
 		                   d3 = 5.0 / 16.0,
 		                   d4 = 3.0 / 16.0;
 		float fr, fg, fb, er, eg, eb;
+#endif
 		int eox, eoy;
 		fs_rgb_t *fs, *ptr;
 		size_t n;
 
+#if GDEXTRA_USE_SSE
+		{
+			vfloat_t vtmp1, vtmp2, vtmp3;
+
+			vtmp1 = _mm_set_ps1(5.0);
+			vtmp2 = _mm_set_ps1(3.0);
+			vtmp3 = _mm_set_ps1(16.0);
+			vd1 = _mm_div_ps(vtmp1, vtmp3);
+			vd2 = _mm_div_ps(vtmp2, vtmp3);
+			vd3 = _mm_div_ps(vtmp1, vtmp3);
+			vd4 = _mm_div_ps(vtmp2, vtmp3);
+		}
+#endif
+
 		n = (size_t)width * (size_t)height;
+#if GDEXTRA_USE_SSE
+		fs = (fs_rgb_t *)_mm_malloc(n, sizeof(fs_rgb_t));
+		memset(fs, 0, sizeof(fs_rgb_t) * n);
+#else
 		fs = (fs_rgb_t *)ecalloc(n, sizeof(fs_rgb_t));
+#endif
 		if (fs == NULL) {
 			gdImageDestroy(ws);
 			php_error_docref(NULL TSRMLS_CC, E_ERROR,
@@ -502,12 +558,19 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 				}
 
 				/* set pixel value */
+#if GDEXTRA_USE_SSE
+				vf = _mm_set_ps(0.0, (float)b, (float)g, (float)r);
+				vp = _mm_load_ps((float *)ptr);
+				vp = _mm_add_ps(vp, vf);
+				_mm_store_ps((float *)ptr, vp);
+#else
 				fr = (float)r;
 				fg = (float)g;
 				fb = (float)b;
 				ptr->r += fr;
 				ptr->g += fg;
 				ptr->b += fb;
+#endif
 				i = gdImageColorClosestAlpha(ws,
 				                             (int)ptr->r,
 				                             (int)ptr->g,
@@ -516,6 +579,47 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
 
 				/* do Floyd-Steinberg dithering */
+#if GDEXTRA_USE_SSE
+				ve = _mm_set_ps(0.0,
+				                (float)paletteB(ws, i),
+				                (float)paletteG(ws, i),
+				                (float)paletteR(ws, i));
+				ve = _mm_sub_ps(vf, ve);
+
+				if (x != eox) {
+					ptr++;
+					vp = _mm_load_ps((float *)ptr);
+					vd = _mm_mul_ps(ve, vd1);
+					vp = _mm_add_ps(vp, vd);
+					_mm_store_ps((float *)ptr, vp);
+					if (y != eoy) {
+						ptr += width;
+						vp = _mm_load_ps((float *)ptr);
+						vd = _mm_mul_ps(ve, vd4);
+						vp = _mm_add_ps(vp, vd);
+						_mm_store_ps((float *)ptr, vp);
+						ptr -= width;
+					}
+					ptr--;
+				}
+
+				if (y != eoy) {
+					ptr += width;
+					vp = _mm_load_ps((float *)ptr);
+					vd = _mm_mul_ps(ve, vd3);
+					vp = _mm_add_ps(vp, vd);
+					_mm_store_ps((float *)ptr, vp);
+					if (x != 0) {
+						ptr--;
+						vp = _mm_load_ps((float *)ptr);
+						vd = _mm_mul_ps(ve, vd2);
+						vp = _mm_add_ps(vp, vd);
+						_mm_store_ps((float *)ptr, vp);
+						ptr++;
+					}
+					ptr -= width;
+				}
+#else
 				er = fr - (float)paletteR(ws, i);
 				eg = fg - (float)paletteG(ws, i);
 				eb = fb - (float)paletteB(ws, i);
@@ -549,10 +653,15 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 					}
 					ptr -= width;
 				}
+#endif
 			}
 		}
 
+#if GDEXTRA_USE_SSE
+		_mm_free(fs);
+#else
 		efree(fs);
+#endif
 
 	/* decrease colors without dithering */
 	} else {
