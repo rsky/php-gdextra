@@ -324,7 +324,7 @@ gdex_palette_to_truecolor(gdImagePtr im TSRMLS_DC);
  * Convert an image to the web-safe palette.
  */
 GDEXTRA_LOCAL int
-gdex_image_to_web216(gdImagePtr im TSRMLS_DC);
+gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC);
 
 /*
  * Initialize callback functions for imagealphamask_ex().

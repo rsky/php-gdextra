@@ -120,6 +120,12 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_imageiconarray, ZEND_SEND_BY_VAL, ZEND_RETURN_VAL
 ZEND_END_ARG_INFO()
 
 ARG_INFO_STATIC
+ZEND_BEGIN_ARG_INFO_EX(arginfo_imagetowebsafepalette, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
+	ZEND_ARG_INFO(0, im)
+	ZEND_ARG_INFO(0, dither)
+ZEND_END_ARG_INFO()
+
+ARG_INFO_STATIC
 ZEND_BEGIN_ARG_INFO(arginfo_imagecolorallocatecss, ZEND_SEND_BY_VAL)
 	ZEND_ARG_INFO(0, im)
 	ZEND_ARG_INFO(0, color)
@@ -246,7 +252,7 @@ static zend_function_entry gdextra_functions[] = {
 	PHP_FALIAS(imageiconarray_ex,       imageicon_ex, arginfo_imageiconarray)
 #endif
 	PHP_FE(imagepalettetotruecolor_ex,  arginfo_image)
-	PHP_FE(imagetowebsafepalette_ex,    arginfo_image)
+	PHP_FE(imagetowebsafepalette_ex,    arginfo_imagetowebsafepalette)
 	PHP_FE(imagecolorallocatecss_ex,    arginfo_imagecolorallocatecss)
 	PHP_FE(imagecolorallocatecmyk_ex,   arginfo_imagecolorallocatecmyk)
 	PHP_FE(imagecolorallocatehsl_ex,    arginfo_imagecolorallocatehsl)

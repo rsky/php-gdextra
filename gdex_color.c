@@ -33,6 +33,13 @@
 
 ZEND_EXTERN_MODULE_GLOBALS(gdextra);
 
+
+typedef struct _fs_rgb_t {
+	float r;
+	float g;
+	float b;
+} fs_rgb_t;
+
 /* {{{ private function prototypes */
 
 static void
@@ -406,7 +413,7 @@ gdex_palette_to_truecolor(gdImagePtr im TSRMLS_DC)
  * Convert an image to the web-safe palette.
  */
 GDEXTRA_LOCAL int
-gdex_image_to_web216(gdImagePtr im TSRMLS_DC)
+gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 {
 	gdImagePtr ws;
 	gdImage tmp;
@@ -446,29 +453,133 @@ gdex_image_to_web216(gdImagePtr im TSRMLS_DC)
 		i++;
 	}
 
-	/* copy pixels */
-	if (gdImageTrueColor(im)) {
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
-				c = unsafeGetTrueColorPixel(im, x, y);
-				i = gdImageColorClosestAlpha(ws, getR(c), getG(c), getB(c), getA(c));
-				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
-			}
-		}
-	} else {
-		/* get the transparent color index */
-		transparent = gdImageGetTransparent(im);
+	/* decrease colors with Floyd-Steinberg dithering */
+	if (dither) {
+		static const float d1 = 5.0 / 16.0,
+		                   d2 = 3.0 / 16.0,
+		                   d3 = 5.0 / 16.0,
+		                   d4 = 3.0 / 16.0;
+		float fr, fg, fb, er, eg, eb;
+		int eox, eoy;
+		fs_rgb_t *fs, *ptr;
+		size_t n;
 
+		n = (size_t)width * (size_t)height;
+		fs = (fs_rgb_t *)ecalloc(n, sizeof(fs_rgb_t));
+		if (fs == NULL) {
+			gdImageDestroy(ws);
+			php_error_docref(NULL TSRMLS_CC, E_ERROR,
+					"Failed to allocate memory for %zu bytes", n);
+			return FAILURE;
+		}
+
+		eox = width - 1;
+		eoy = height - 1;
+		if (gdImageTrueColor(im)) {
+			transparent = -1;
+		} else {
+			transparent = gdImageGetTransparent(im);
+		}
+
+		/* do dithering  */
 		for (y = 0; y < height; y++) {
 			for (x = 0; x < width; x++) {
-				c = (int)unsafeGetPalettePixel(im, x, y);
-				a = (c == transparent) ? gdAlphaTransparent : paletteA(im, c);
+				ptr = fs + (y * width + x);
+
+				/* get pixel value */
+				if (gdImageTrueColor(im)) {
+					c = unsafeGetTrueColorPixel(im, x, y);
+					r = getR(c);
+					g = getG(c);
+					b = getB(c);
+					a = getA(c);
+				} else {
+					c = (int)unsafeGetPalettePixel(im, x, y);
+					r = paletteR(im, c);
+					g = paletteG(im, c);
+					b = paletteB(im, c);
+					a = (c == transparent) ? gdAlphaTransparent : paletteA(im, c);
+				}
+
+				/* set pixel value */
+				fr = (float)r;
+				fg = (float)g;
+				fb = (float)b;
+				ptr->r += fr;
+				ptr->g += fg;
+				ptr->b += fb;
 				i = gdImageColorClosestAlpha(ws,
-				                             paletteR(im, c),
-				                             paletteG(im, c),
-				                             paletteB(im, c),
+				                             (int)ptr->r,
+				                             (int)ptr->g,
+				                             (int)ptr->b,
 				                             a);
 				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
+
+				/* do Floyd-Steinberg dithering */
+				er = fr - (float)paletteR(ws, i);
+				eg = fg - (float)paletteG(ws, i);
+				eb = fb - (float)paletteB(ws, i);
+
+				if (x != eox) {
+					ptr++;
+					ptr->r += er * d1;
+					ptr->g += eg * d1;
+					ptr->b += eb * d1;
+					if (y != eoy) {
+						ptr += width;
+						ptr->r += er * d4;
+						ptr->g += eg * d4;
+						ptr->b += eb * d4;
+						ptr -= width;
+					}
+					ptr--;
+				}
+
+				if (y != eoy) {
+					ptr += width;
+					ptr->r += er * d3;
+					ptr->g += eg * d3;
+					ptr->b += eb * d3;
+					if (x != 0) {
+						ptr--;
+						ptr->r += er * d2;
+						ptr->g += eg * d2;
+						ptr->b += eb * d2;
+						ptr++;
+					}
+					ptr -= width;
+				}
+			}
+		}
+
+		efree(fs);
+
+	/* decrease colors without dithering */
+	} else {
+		/* copy pixels */
+		if (gdImageTrueColor(im)) {
+			for (y = 0; y < height; y++) {
+				for (x = 0; x < width; x++) {
+					c = unsafeGetTrueColorPixel(im, x, y);
+					i = gdImageColorClosestAlpha(ws, getR(c), getG(c), getB(c), getA(c));
+					unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
+				}
+			}
+		} else {
+			/* get the transparent color index */
+			transparent = gdImageGetTransparent(im);
+
+			for (y = 0; y < height; y++) {
+				for (x = 0; x < width; x++) {
+					c = (int)unsafeGetPalettePixel(im, x, y);
+					a = (c == transparent) ? gdAlphaTransparent : paletteA(im, c);
+					i = gdImageColorClosestAlpha(ws,
+					                             paletteR(im, c),
+					                             paletteG(im, c),
+					                             paletteB(im, c),
+					                             a);
+					unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
+				}
 			}
 		}
 	}
@@ -570,7 +681,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 }
 
 /* }}} */
-/* {{{ bool imagetowebsafepalette_ex(resource im) */
+/* {{{ bool imagetowebsafepalette_ex(resource im[, bool dither]) */
 
 /*
  * Convert an image to the web-safe palette.
@@ -579,14 +690,17 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagetowebsafepalette_ex)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;
+	zend_bool dither = 0;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zim) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|b",
+			&zim, &dither) == FAILURE)
+	{
 		return;
 	}
 	ZEND_FETCH_RESOURCE(im, gdImagePtr, &zim, -1, "Image", GDEXG(le_gd));
 
-	if (gdex_image_to_web216(im TSRMLS_CC) == SUCCESS) {
+	if (gdex_image_to_web216(im, dither TSRMLS_CC) == SUCCESS) {
 		RETURN_TRUE;
 	} else {
 		RETURN_FALSE;
