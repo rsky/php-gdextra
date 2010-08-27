@@ -181,7 +181,7 @@ ZEND_BEGIN_MODULE_GLOBALS(gdextra)
 	gdextra_fcall_info func_create;
 	gdextra_fcall_info func_createtruecolor;
 /*	gdextra_fcall_info func_destroy;*/
-	gdextra_fcall_info func_colorclosestalpha;
+/*	gdextra_fcall_info func_colorclosestalpha;*/
 	gdextra_fcall_info func_colorresolvealpha;
 	gdextra_fcall_info func_copy;
 	gdextra_fcall_info func_copyresampled;

@@ -422,7 +422,7 @@ static PHP_RINIT_FUNCTION(gdextra)
 	GDEX_FCALL_INFO_INIT(create);
 	GDEX_FCALL_INFO_INIT(createtruecolor);
 /*	GDEX_FCALL_INFO_INIT(destroy);*/
-	GDEX_FCALL_INFO_INIT(colorclosestalpha);
+/*	GDEX_FCALL_INFO_INIT(colorclosestalpha);*/
 	GDEX_FCALL_INFO_INIT(colorresolvealpha);
 	GDEX_FCALL_INFO_INIT(copy);
 	GDEX_FCALL_INFO_INIT(copyresampled);
@@ -443,7 +443,7 @@ static PHP_RSHUTDOWN_FUNCTION(gdextra)
 	GDEX_FCALL_INFO_DESTROY(create);
 	GDEX_FCALL_INFO_DESTROY(createtruecolor);
 /*	GDEX_FCALL_INFO_DESTROY(destroy);*/
-	GDEX_FCALL_INFO_DESTROY(colorclosestalpha);
+/*	GDEX_FCALL_INFO_DESTROY(colorclosestalpha);*/
 	GDEX_FCALL_INFO_DESTROY(colorresolvealpha);
 	GDEX_FCALL_INFO_DESTROY(copy);
 	GDEX_FCALL_INFO_DESTROY(copyresampled);
