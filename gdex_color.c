@@ -93,6 +93,33 @@ static void
 _color_convert(INTERNAL_FUNCTION_PARAMETERS, int c_from, int c_to);
 
 /* }}} */
+/* {{{ inline functions */
+/* {{{ _closest_web216_index() */
+
+static inline int
+_closest_web216_index(int r, int g, int b)
+{
+	int i, ri, gi, bi;
+
+	ri = (r + 0x19) / 0x33;
+	gi = (g + 0x19) / 0x33;
+	bi = (b + 0x19) / 0x33;
+
+	i = ri * 36 + gi * 6 + bi;
+#ifdef __GNUC__
+	if (__builtin_expect((i > 215 || i < 0), 0)) {
+		return 216;
+	}
+#else
+	if (i > 215 || i < 0) {
+		return 216;
+	}
+#endif
+	return i;
+}
+
+/* }}} */
+/* }}} */
 /* {{{ gdex_fetch_color() */
 
 /*
@@ -464,9 +491,9 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 
 	/* make web-safe 216 color palette */
 	i = 0;
-	for (b = 0; b <= 0xff; b += 0x33) {
+	for (r = 0; r <= 0xff; r += 0x33) {
 		for (g = 0; g <= 0xff; g += 0x33) {
-			for (r = 0; r <= 0xff; r += 0x33) {
+			for (b = 0; b <= 0xff; b += 0x33) {
 				ws->red[i] = r;
 				ws->green[i] = g;
 				ws->blue[i] = b;
@@ -476,20 +503,19 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 			}
 		}
 	}
+	ws->red[i] = 0x80;
+	ws->green[i] = 0x80;
+	ws->blue[i] = 0x80;
+	ws->alpha[i] = gdAlphaTransparent;
+	ws->open[i] = 0;
+	ws->transparent = i;
+	i++;
 	ws->colorsTotal = i;
-	while (i < gdMaxColors) {
-		ws->red[i] = 0;
-		ws->green[i] = 0;
-		ws->blue[i] = 0;
-		ws->alpha[i] = gdAlphaOpaque;
-		ws->open[i] = 1;
-		i++;
-	}
 
 	/* decrease colors with Floyd-Steinberg dithering */
 	if (dither) {
 #if GDEXTRA_USE_SSE
-		vfloat_t vp, vf, ve, vd, vd1, vd2, vd3, vd4;
+		register vfloat_t vp, vf, ve, vd, vd1, vd2, vd3, vd4;
 #else
 		static const float d1 = 5.0 / 16.0,
 		                   d2 = 3.0 / 16.0,
@@ -571,11 +597,11 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 				ptr->g += fg;
 				ptr->b += fb;
 #endif
-				i = gdImageColorClosestAlpha(ws,
-				                             (int)ptr->r,
-				                             (int)ptr->g,
-				                             (int)ptr->b,
-				                             a);
+				if (a == gdAlphaTransparent) {
+					i = ws->transparent;
+				} else {
+					i = _closest_web216_index((int)ptr->r, (int)ptr->g, (int)ptr->b);
+				}
 				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
 
 				/* do Floyd-Steinberg dithering */
@@ -670,7 +696,11 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 			for (y = 0; y < height; y++) {
 				for (x = 0; x < width; x++) {
 					c = unsafeGetTrueColorPixel(im, x, y);
-					i = gdImageColorClosestAlpha(ws, getR(c), getG(c), getB(c), getA(c));
+					if (getA(c) == gdAlphaTransparent) {
+						i = ws->transparent;
+					} else {
+						i = _closest_web216_index(getR(c), getG(c), getB(c));
+					}
 					unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
 				}
 			}
@@ -682,11 +712,13 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 				for (x = 0; x < width; x++) {
 					c = (int)unsafeGetPalettePixel(im, x, y);
 					a = (c == transparent) ? gdAlphaTransparent : paletteA(im, c);
-					i = gdImageColorClosestAlpha(ws,
-					                             paletteR(im, c),
-					                             paletteG(im, c),
-					                             paletteB(im, c),
-					                             a);
+					if (a == gdAlphaTransparent) {
+						i = ws->transparent;
+					} else {
+						i = _closest_web216_index(paletteR(im, c),
+						                          paletteG(im, c),
+						                          paletteB(im, c));
+					}
 					unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
 				}
 			}
