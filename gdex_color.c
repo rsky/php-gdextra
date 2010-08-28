@@ -584,6 +584,10 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 				}
 
 				/* set pixel value */
+				if (a == gdAlphaTransparent) {
+					unsafeSetPalettePixel(ws, x, y, (unsigned char)ws->transparent);
+					continue;
+				}
 #if GDEXTRA_USE_SSE
 				vf = _mm_set_ps(0.0, (float)b, (float)g, (float)r);
 				vp = _mm_load_ps((float *)ptr);
@@ -597,11 +601,7 @@ gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC)
 				ptr->g += fg;
 				ptr->b += fb;
 #endif
-				if (a == gdAlphaTransparent) {
-					i = ws->transparent;
-				} else {
-					i = _closest_web216_index((int)ptr->r, (int)ptr->g, (int)ptr->b);
-				}
+				i = _closest_web216_index((int)ptr->r, (int)ptr->g, (int)ptr->b);
 				unsafeSetPalettePixel(ws, x, y, (unsigned char)i);
 
 				/* do Floyd-Steinberg dithering */
