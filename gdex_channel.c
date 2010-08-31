@@ -1582,6 +1582,87 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 }
 
 /* }}} */
+/* {{{ array imagehistgram216_ex(resource im) */
+
+GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram216_ex)
+{
+	zval *cloned, *tmp;
+	gdImagePtr im;
+	char hex[7];
+	int count[216];
+	int width, height;
+	int x, y, i, r, g, b;
+	double pixels;
+
+	if (ZEND_NUM_ARGS() > 2) {
+		WRONG_PARAM_COUNT;
+	}
+
+	MAKE_STD_ZVAL(cloned);
+	tmp = return_value;
+	return_value = cloned;
+
+	PHP_FN(imageclone_ex)(INTERNAL_FUNCTION_PARAM_PASSTHRU);
+
+	cloned = return_value;
+	return_value = tmp;
+
+	if (Z_TYPE_P(cloned) != IS_RESOURCE) {
+		zval_ptr_dtor(&cloned);
+		RETURN_FALSE;
+	}
+
+	ZEND_FETCH_RESOURCE_NO_RETURN(im, gdImagePtr, &cloned, -1, "Image", GDEXG(le_gd));
+	if (im == NULL) {
+		zval_ptr_dtor(&cloned);
+		RETURN_FALSE;
+	}
+
+	if (gdex_image_to_web216(im, 0 TSRMLS_CC) == FAILURE) {
+		zval_ptr_dtor(&cloned);
+		RETURN_FALSE;
+	}
+
+	array_init_size(return_value, 256);
+
+	for (i = 0; i < 216; i++) {
+		count[i] = 0;
+	}
+
+	width = gdImageSX(im);
+	height = gdImageSY(im);
+	for (x = 0; x < width; x++) {
+		for (y = 0; y < height; y++) {
+			i = unsafeGetPalettePixel(im, x, y);
+#ifdef __GNUC__
+			if (__builtin_expect((i >= 0 && i < 216), 1)) {
+				count[i]++;
+			}
+#else
+			if (i >= 0 && i < 216) {
+				count[i]++;
+			}
+#endif
+		}
+	}
+
+	pixels = (double)width * (double)height;
+	i = 0;
+	for (r = 0; r <= 0xff; r += 0x33) {
+		for (g = 0; g <= 0xff; g += 0x33) {
+			for (b = 0; b <= 0xff; b += 0x33) {
+				snprintf(hex, sizeof(hex), "%02x%02x%02x", r, g, b);
+				gdex_add_assoc_double(return_value, hex, (double)count[i] / pixels);
+				/*gdex_add_assoc_long(return_value, hex, (long)count[i]);*/
+				i++;
+			}
+		}
+	}
+
+	zval_ptr_dtor(&cloned);
+}
+
+/* }}} */
 
 /*
  * Local variables:

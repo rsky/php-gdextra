@@ -241,6 +241,7 @@ static zend_function_entry gdextra_functions[] = {
 #endif
 	PHP_FE(imageclone_ex,               arginfo_image)
 	PHP_FE(imagehistgram_ex,            arginfo_imagehistgram)
+	PHP_FE(imagehistgram216_ex,         arginfo_image)
 	PHP_FE(imagechannelextract_ex,      arginfo_imagechannelextract)
 	PHP_FE(imagechannelmerge_ex,        arginfo_imagechannelmerge)
 	PHP_FE(imagealphamask_ex,           arginfo_imagealphamask)
