@@ -1623,14 +1623,12 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram216_ex)
 		RETURN_FALSE;
 	}
 
-	array_init_size(return_value, 256);
-
-	for (i = 0; i < 216; i++) {
-		count[i] = 0;
-	}
-
+	array_init_size(return_value, 216);
+	memset(count, 0, sizeof(count));
 	width = gdImageSX(im);
 	height = gdImageSY(im);
+	pixels = (double)width * (double)height;
+
 	for (x = 0; x < width; x++) {
 		for (y = 0; y < height; y++) {
 			i = unsafeGetPalettePixel(im, x, y);
@@ -1646,7 +1644,6 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram216_ex)
 		}
 	}
 
-	pixels = (double)width * (double)height;
 	i = 0;
 	for (r = 0; r <= 0xff; r += 0x33) {
 		for (g = 0; g <= 0xff; g += 0x33) {
