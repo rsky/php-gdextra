@@ -1,12 +1,16 @@
 --TEST--
-imagecreatefromstring_ex() function
+imagecreatebymagick() function with a blob
 --SKIPIF--
-<?php if(!extension_loaded('gdextra')) die('skip extension gdextra is not loaded'); ?>
+<?php
+if (!function_exists('imagecreatebymagick')) {
+    die('skip function imagecreatebymagick() is not enabled');
+}
+?>
 --FILE--
 <?php
 chdir(dirname(__FILE__));
 $file = '../examples/rgb-24bit.tif';
-$im = imagecreatefromstring_ex(file_get_contents($file));
+$im = imagecreatefromstring(file_get_contents($file));
 $info = getimagesize($file);
 if ($im && $info) {
     if ($info[0] == imagesx($im) && $info[1] == imagesy($im)) {

@@ -40,9 +40,6 @@ _pixelwand_to_gdtruecolor(const PixelWand *pixel);
 static void
 _magickwand_error(MagickWand *wand, int errcode, const char *errmsg TSRMLS_DC);
 
-static void
-_magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file);
-
 /* }}} */
 /* {{{ _pixelwand_to_gdtruecolor() */
 
@@ -101,27 +98,27 @@ _magickwand_error(MagickWand *wand, int errcode, const char *errmsg TSRMLS_DC)
 }
 
 /* }}} */
-/* {{{ _magickwand_to_gdimage() */
+/* {{{ resource imagecreatebymagick(string filename[, is_blob]) */
 
 /*
  * Create a new image from file, URL or the image stream in the string
  */
-static void
-_magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecreatebymagick)
 {
 	char *input = NULL;
 	int input_len = 0;
 	const char *errmsg = NULL;
 	php_stream *stream = NULL;
 	gdImagePtr im = NULL;
+	zend_bool is_blob = 0;
 	MagickWand *wand = NULL;
 	PixelWand *pixel = NULL;
 	MagickBooleanType status;
 	unsigned long width, height, x, y;
 
 	/* parse the arguments */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
-			&input, &input_len) == FAILURE)
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|b",
+			&input, &input_len, &is_blob) == FAILURE)
 	{
 		return;
 	}
@@ -130,7 +127,9 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 	wand = NewMagickWand();
 
 	/* read the image */
-	if (is_file) {
+	if (is_blob) {
+		status = MagickReadImageBlob(wand, (const void *)input, (const size_t)input_len);
+	} else {
 		FILE *fp;
 		stream = php_stream_open_wrapper(input, "rb",
 				ENFORCE_SAFE_MODE | REPORT_ERRORS | STREAM_WILL_CAST, NULL);
@@ -144,8 +143,6 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 			RETURN_FALSE;
 		}
 		status = MagickReadImageFile(wand, fp);
-	} else {
-		status = MagickReadImageBlob(wand, (const void *)input, (const size_t)input_len);
 	}
 	if (status == MagickFalse) {
 		goto error_return_false;
@@ -199,28 +196,6 @@ _magickwand_to_gdimage(INTERNAL_FUNCTION_PARAMETERS, zend_bool is_file)
 	}
 	(void)DestroyMagickWand(wand);
 	RETURN_FALSE;
-}
-
-/* }}} */
-/* {{{ resource imagecreatebymagick_ex(string filename) */
-
-/*
- * Create a new image from file or URL.
- */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecreatebymagick_ex)
-{
-	_magickwand_to_gdimage(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
-}
-
-/* }}} */
-/* {{{ resource imagecreatefromstring_ex(string data) */
-
-/*
- * Create a new image from the image stream in the string.
- */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecreatefromstring_ex)
-{
-	_magickwand_to_gdimage(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }
 
 /* }}} */

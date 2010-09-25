@@ -773,12 +773,12 @@ _output_image(const char *filename, const byte_t *buffer, size_t buffer_size TSR
 }
 
 /* }}} */
-/* {{{ bool imagebmp_ex(resource im[, string filename]) */
+/* {{{ bool imagebmp(resource im[, string filename]) */
 
 /*
  * Output a BMP image to either the browser or a file
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagebmp)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;
@@ -824,12 +824,12 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex)
 }
 
 /* }}} */
-/* {{{ bool imageicon_ex(resource im[, string filename]) */
+/* {{{ bool imageicon(resource im[, string filename]) */
 
 /*
  * Output an Icon image to either the browser or a file
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imageicon)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;

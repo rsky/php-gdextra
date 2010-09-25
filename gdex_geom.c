@@ -37,9 +37,9 @@ static void
 _tile_copy(gdImagePtr dst, gdImagePtr src, int position);
 
 /* }}} */
-/* {{{ void imageflip_ex(resource im, int mode) */
+/* {{{ void imageflip(resource im, int mode) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imageflip)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;
@@ -115,10 +115,10 @@ GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex)
 }
 
 /* }}} */
-/* {{{ resource imagescale_ex(resource im, int width, int height
-                              [, int mode[, array options]]) */
+/* {{{ resource imagescale(resource im, int width, int height
+                           [, int mode[, array options]]) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagescale)
 {
 	zval *zim = NULL;
 	gdImagePtr src = NULL;

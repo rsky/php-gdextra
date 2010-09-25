@@ -705,12 +705,12 @@ _color_correct_alpha(COLORCORRECT_PARAMETERS)
 }
 
 /* }}} */
-/* {{{ bool imagecolorcorrect_ex(resource im, array params[, int colorspace]) */
+/* {{{ bool imagecolorcorrect(resource im, array params[, int colorspace]) */
 
 /*
  * Correct color.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorcorrect_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorcorrect)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;

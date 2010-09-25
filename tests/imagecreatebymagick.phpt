@@ -1,12 +1,16 @@
 --TEST--
-imagecreatebymagick_ex() function
+imagecreatebymagick() function
 --SKIPIF--
-<?php if(!extension_loaded('gdextra')) die('skip extension gdextra is not loaded'); ?>
+<?php
+if (!function_exists('imagecreatebymagick')) {
+    die('skip function imagecreatebymagick() is not enabled');
+}
+?>
 --FILE--
 <?php
 chdir(dirname(__FILE__));
 $file = '../examples/rgb-24bit.tif';
-$im = imagecreatebymagick_ex($file);
+$im = imagecreatebymagick($file);
 $info = getimagesize($file);
 if ($im && $info) {
     if ($info[0] == imagesx($im) && $info[1] == imagesy($im) && $info[2] = IMAGETYPE_TIFF_MM) {

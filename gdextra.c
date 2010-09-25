@@ -70,13 +70,9 @@ ZEND_END_ARG_INFO()
 
 #if PHP_GDEXTRA_WITH_MAGICK
 ARG_INFO_STATIC
-ZEND_BEGIN_ARG_INFO(arginfo_imagecreatebymagick, ZEND_SEND_BY_VAL)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_imagecreatebymagick, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
 	ZEND_ARG_INFO(0, filename)
-ZEND_END_ARG_INFO()
-
-ARG_INFO_STATIC
-ZEND_BEGIN_ARG_INFO(arginfo_imagecreatefromstring, ZEND_SEND_BY_VAL)
-	ZEND_ARG_INFO(0, data)
+	ZEND_ARG_INFO(0, is_blob)
 ZEND_END_ARG_INFO()
 #endif /* PHP_GDEXTRA_WITH_MAGICK */
 
@@ -236,33 +232,27 @@ ZEND_END_ARG_INFO()
 
 static zend_function_entry gdextra_functions[] = {
 #if PHP_GDEXTRA_WITH_MAGICK
-	PHP_FE(imagecreatebymagick_ex,      arginfo_imagecreatebymagick)
-	PHP_FE(imagecreatefromstring_ex,    arginfo_imagecreatefromstring)
+	GDEX_FE(imagecreatebymagick,     arginfo_imagecreatebymagick)
 #endif
-	PHP_FE(imageclone_ex,               arginfo_image)
-	PHP_FE(imagehistgram_ex,            arginfo_imagehistgram)
-	PHP_FE(imagehistgram216_ex,         arginfo_image)
-	PHP_FE(imagechannelextract_ex,      arginfo_imagechannelextract)
-	PHP_FE(imagechannelmerge_ex,        arginfo_imagechannelmerge)
-	PHP_FE(imagealphamask_ex,           arginfo_imagealphamask)
-	PHP_FE(imagebmp_ex,                 arginfo_imagewrite)
-	PHP_FE(imageicon_ex,                arginfo_imagewrite)
-#ifdef PHP_DEP_FALIAS
-	PHP_DEP_FALIAS(imageiconarray_ex,   imageicon_ex, arginfo_imageiconarray)
-#else
-	PHP_FALIAS(imageiconarray_ex,       imageicon_ex, arginfo_imageiconarray)
-#endif
-	PHP_FE(imagepalettetotruecolor_ex,  arginfo_image)
-	PHP_FE(imagetowebsafepalette_ex,    arginfo_imagetowebsafepalette)
-	PHP_FE(imagecolorallocatecss_ex,    arginfo_imagecolorallocatecss)
-	PHP_FE(imagecolorallocatecmyk_ex,   arginfo_imagecolorallocatecmyk)
-	PHP_FE(imagecolorallocatehsl_ex,    arginfo_imagecolorallocatehsl)
-	PHP_FE(imagecolorallocatehsv_ex,    arginfo_imagecolorallocatehsv)
-	PHP_FE(imagecolorcorrect_ex,        arginfo_imagecolorcorrect)
-	PHP_FE(imageflip_ex,                arginfo_imageflip)
-	PHP_FE(imagescale_ex,               arginfo_imagescale)
+	GDEX_FE(imageclone,              arginfo_image)
+	GDEX_FE(imagehistgram,           arginfo_imagehistgram)
+	GDEX_FE(imagehistgram216,        arginfo_image)
+	GDEX_FE(imagechannelextract,     arginfo_imagechannelextract)
+	GDEX_FE(imagechannelmerge,       arginfo_imagechannelmerge)
+	GDEX_FE(imagealphamask,          arginfo_imagealphamask)
+	GDEX_FE(imagebmp,                arginfo_imagewrite)
+	GDEX_FE(imageicon,               arginfo_imagewrite)
+	GDEX_FE(imagepalettetotruecolor, arginfo_image)
+	GDEX_FE(imagetowebsafepalette,   arginfo_imagetowebsafepalette)
+	GDEX_FE(imagecolorallocatecss,   arginfo_imagecolorallocatecss)
+	GDEX_FE(imagecolorallocatecmyk,  arginfo_imagecolorallocatecmyk)
+	GDEX_FE(imagecolorallocatehsl,   arginfo_imagecolorallocatehsl)
+	GDEX_FE(imagecolorallocatehsv,   arginfo_imagecolorallocatehsv)
+	GDEX_FE(imagecolorcorrect,       arginfo_imagecolorcorrect)
+	GDEX_FE(imageflip,               arginfo_imageflip)
+	GDEX_FE(imagescale,              arginfo_imagescale)
 #if PHP_GDEXTRA_WITH_LQR
-	PHP_FE(imagecarve_ex,               arginfo_imagecarve)
+	GDEX_FE(imagecarve,              arginfo_imagecarve)
 #endif
 	{ NULL, NULL, NULL }
 };
@@ -678,12 +668,12 @@ gdex_get_colorspace_name(int colorspace)
 }
 
 /* }}} */
-/* {{{ resource imageclone_ex(resource im) */
+/* {{{ resource imageclone(resource im) */
 
 /*
  * Clone an image.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imageclone)
 {
 	zval *zim = NULL;
 	gdImagePtr src, dst;

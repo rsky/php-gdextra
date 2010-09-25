@@ -304,9 +304,9 @@ gdex_liquid_rescale(const gdImagePtr src, int width, int height,
 }
 
 /* }}} */
-/* {{{ resource imagecarve_ex(resource src, int width, int height[, array options]) */
+/* {{{ resource imagecarve(resource src, int width, int height[, array options]) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecarve)
 {
 	zval *zsrc;
 	gdImagePtr src, dst;

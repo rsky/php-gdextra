@@ -46,6 +46,10 @@
 #define PHP_GDEXTRA_EXPERIMENTAL 0
 #endif
 
+#ifndef PHP_GDEXTRA_ADD_FUNCTION_NAME_SUFFIX
+#define PHP_GDEXTRA_ADD_FUNCTION_NAME_SUFFIX 0
+#endif
+
 #include <math.h>
 #ifdef ZTS
 #include "TSRM.h"
@@ -210,7 +214,7 @@ typedef void (*gdex_4ch_to_rgb_func_t)(float w, float x, float y, float z, int *
 
 /*
  * Auto unicode (ascii) and size supported version of array_init()
- * and shorthand macros of add_assoc_{long,double}_ex().
+ * and shorthand macros of add_assoc_{long,double}().
  */
 #if ZEND_EXTENSION_API_NO < 220090626
 
@@ -326,7 +330,7 @@ GDEXTRA_LOCAL int
 gdex_image_to_web216(gdImagePtr im, zend_bool dither TSRMLS_DC);
 
 /*
- * Initialize callback functions for imagealphamask_ex().
+ * Initialize callback functions for imagealphamask().
  */
 GDEXTRA_LOCAL void
 gdex_mask_alpha_funcs_init(void);
@@ -343,29 +347,37 @@ gdex_liquid_rescale(const gdImagePtr src, int width, int height,
 /* }}} */
 /* {{{ PHP function prototypes */
 
-#if PHP_GDEXTRA_WITH_MAGICK
-GDEXTRA_LOCAL PHP_FUNCTION(imagecreatebymagick_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagecreatefromstring_ex);
+#if PHP_GDEXTRA_ADD_FUNCTION_NAME_SUFFIX
+#define GDEX_FUNCTION(fn) PHP_FUNCTION(fn##_ex)
+#define GDEX_FE(fn, ai) PHP_FE(fn##_ex, ai)
+#else
+#define GDEX_FUNCTION PHP_FUNCTION
+#define GDEX_FE PHP_FE
 #endif
-GDEXTRA_LOCAL PHP_FUNCTION(imageclone_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram216_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagebmp_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imageicon_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagetowebsafepalette_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecmyk_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsl_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsv_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorcorrect_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imageflip_ex);
-GDEXTRA_LOCAL PHP_FUNCTION(imagescale_ex);
+
+#if PHP_GDEXTRA_WITH_MAGICK
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecreatebymagick);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecreatefromstring);
+#endif
+GDEXTRA_LOCAL GDEX_FUNCTION(imageclone);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagehistgram);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagehistgram216);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagechannelextract);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagechannelmerge);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagealphamask);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagebmp);
+GDEXTRA_LOCAL GDEX_FUNCTION(imageicon);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagepalettetotruecolor);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagetowebsafepalette);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatecss);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatecmyk);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatehsl);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatehsv);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorcorrect);
+GDEXTRA_LOCAL GDEX_FUNCTION(imageflip);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagescale);
 #if PHP_GDEXTRA_WITH_LQR
-GDEXTRA_LOCAL PHP_FUNCTION(imagecarve_ex);
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecarve);
 #endif
 
 GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb);

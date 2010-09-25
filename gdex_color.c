@@ -796,12 +796,12 @@ _color_allocate(INTERNAL_FUNCTION_PARAMETERS, int colorspace)
 }
 
 /* }}} */
-/* {{{ bool imagepalettetotruecolor_ex(resource im) */
+/* {{{ bool imagepalettetotruecolor(resource im) */
 
 /*
  * Convert a palette image to a true color image.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagepalettetotruecolor)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;
@@ -822,12 +822,12 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagepalettetotruecolor_ex)
 }
 
 /* }}} */
-/* {{{ bool imagetowebsafepalette_ex(resource im[, bool dither]) */
+/* {{{ bool imagetowebsafepalette(resource im[, bool dither]) */
 
 /*
  * Convert an image to the web-safe palette.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagetowebsafepalette_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagetowebsafepalette)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;
@@ -849,12 +849,12 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagetowebsafepalette_ex)
 }
 
 /* }}} */
-/* {{{ int imagecolorallocatecss_ex(resource im, string color) */
+/* {{{ int imagecolorallocatecss(resource im, string color) */
 
 /*
  * Allocate a color from CSS3-style color strings.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatecss)
 {
 	zval *zim = NULL;
 	gdImagePtr im = NULL;
@@ -879,40 +879,40 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecss_ex)
 }
 
 /* }}} */
-/* {{{ int imagecolorallocatecmyk_ex(resource im,
-                                     float cyan, float magenta, float yellow,
-                                     float black[, int alpha])*/
+/* {{{ int imagecolorallocatecmyk(resource im,
+                                  float cyan, float magenta, float yellow,
+                                  float black[, int alpha])*/
 
 /*
  * Allocate a color from CMYK components.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatecmyk_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatecmyk)
 {
 	_color_allocate(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_CMYK);
 }
 
 /* }}} */
-/* {{{ int imagecolorallocatehsl_ex(resource im,
-                                    float hue, float saturation, float lightness
-                                    [, int alpha])*/
+/* {{{ int imagecolorallocatehsl(resource im,
+                                 float hue, float saturation, float lightness
+                                 [, int alpha])*/
 
 /*
  * Allocate a color from HSL/HSLA components.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsl_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatehsl)
 {
 	_color_allocate(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSL);
 }
 
 /* }}} */
-/* {{{ int imagecolorallocatehsv_ex(resource im,
-                                    float hue, float saturation, float value
-                                    [, int alpha])*/
+/* {{{ int imagecolorallocatehsv(resource im,
+                                 float hue, float saturation, float value
+                                 [, int alpha])*/
 
 /*
  * Allocate a color from HSV/HSVA components.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagecolorallocatehsv_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorallocatehsv)
 {
 	_color_allocate(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSV);
 }

@@ -171,7 +171,7 @@ _channel_extract_4ch(const gdImagePtr im,
 /* {{{ gdex_mask_alpha_funcs_init() */
 
 /*
- * Initialize callback functions for imagealphamask_ex().
+ * Initialize callback functions for imagealphamask().
  */
 GDEXTRA_LOCAL void
 gdex_mask_alpha_funcs_init(void)
@@ -1107,10 +1107,10 @@ _channel_extract_4ch(const gdImagePtr im,
 }
 
 /* }}} */
-/* {{{ resource imagechannelmerge_ex(array channels
-                                     [, int colorspace[, int position]]) */
+/* {{{ resource imagechannelmerge(array channels
+                                  [, int colorspace[, int position]]) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagechannelmerge)
 {
 	zval *zchannels = NULL;
 	HashTable *channels_ht;
@@ -1256,9 +1256,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelmerge_ex)
 }
 
 /* }}} */
-/* {{{ array imagechannelextract_ex(resource im[, int colorspace]) */
+/* {{{ array imagechannelextract(resource im[, int colorspace]) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagechannelextract)
 {
 	zval *zim, *zch;
 	gdImagePtr im, ch[MAX_CHANNELS];
@@ -1373,13 +1373,13 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagechannelextract_ex)
 }
 
 /* }}} */
-/* {{{ bool imagealphamask_ex(resource im, resource mask
-                              [, int mode[, int position]]) */
+/* {{{ bool imagealphamask(resource im, resource mask
+                           [, int mode[, int position]]) */
 
 /*
  * Apply the mask to the image's alpha channel.
  */
-GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagealphamask)
 {
 	zval *zim = NULL, *zmask = NULL;
 	gdImagePtr im, mask;
@@ -1509,9 +1509,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagealphamask_ex)
 }
 
 /* }}} */
-/* {{{ array imagehistgram_ex(resource im[, int colorspace]) */
+/* {{{ array imagehistgram(resource im[, int colorspace]) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagehistgram)
 {
 	zval *extracted, *tmp, **entry;
 	HashTable *channels;
@@ -1525,7 +1525,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 	tmp = return_value;
 	return_value = extracted;
 
-	PHP_FN(imagechannelextract_ex)(INTERNAL_FUNCTION_PARAM_PASSTHRU);
+	PHP_FN(imagechannelextract)(INTERNAL_FUNCTION_PARAM_PASSTHRU);
 
 	extracted = return_value;
 	return_value = tmp;
@@ -1582,9 +1582,9 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram_ex)
 }
 
 /* }}} */
-/* {{{ array imagehistgram216_ex(resource im) */
+/* {{{ array imagehistgram216(resource im) */
 
-GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram216_ex)
+GDEXTRA_LOCAL GDEX_FUNCTION(imagehistgram216)
 {
 	zval *cloned, *tmp;
 	gdImagePtr im;
@@ -1602,7 +1602,7 @@ GDEXTRA_LOCAL PHP_FUNCTION(imagehistgram216_ex)
 	tmp = return_value;
 	return_value = cloned;
 
-	PHP_FN(imageclone_ex)(INTERNAL_FUNCTION_PARAM_PASSTHRU);
+	PHP_FN(imageclone)(INTERNAL_FUNCTION_PARAM_PASSTHRU);
 
 	cloned = return_value;
 	return_value = tmp;
