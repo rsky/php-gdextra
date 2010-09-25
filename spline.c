@@ -1,7 +1,7 @@
 /*
  * Functions for 3D spline interpolation.
  *
- * Copyright (c) 2009 Ryusuke SEKIYAMA. All rights reserved.
+ * Copyright (c) 2009-2010 Ryusuke SEKIYAMA. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
  *
  * @package     php-gdextra
  * @author      Ryusuke SEKIYAMA <rsky0711@gmail.com>
- * @copyright   2009 Ryusuke SEKIYAMA
+ * @copyright   2009-2010 Ryusuke SEKIYAMA
  * @license     http://www.opensource.org/licenses/mit-license.php  MIT License
  */
 
