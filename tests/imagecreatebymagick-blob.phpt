@@ -9,8 +9,8 @@ if (!function_exists('imagecreatebymagick')) {
 --FILE--
 <?php
 chdir(dirname(__FILE__));
-$file = '../examples/rgb-24bit.tif';
-$im = imagecreatefromstring(file_get_contents($file));
+$file = '../examples/images/rgb-24bit.tif';
+$im = imagecreatebymagick(file_get_contents($file), true);
 $info = getimagesize($file);
 if ($im && $info) {
     if ($info[0] == imagesx($im) && $info[1] == imagesy($im)) {

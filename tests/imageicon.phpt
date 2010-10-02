@@ -5,7 +5,7 @@ imageicon() function
 --FILE--
 <?php
 chdir(dirname(__FILE__));
-$im = imagecreatefrompng('../examples/rgba-32x32.png');
+$im = imagecreatefrompng('../examples/images/rgba-32x32.png');
 if (!imageicon($im, 'icon.ico')) {
     exit;
 }

@@ -9,7 +9,7 @@ if (!function_exists('imagecreatebymagick')) {
 --FILE--
 <?php
 chdir(dirname(__FILE__));
-$file = '../examples/rgb-24bit.tif';
+$file = '../examples/images/rgb-24bit.tif';
 $im = imagecreatebymagick($file);
 $info = getimagesize($file);
 if ($im && $info) {

@@ -4,7 +4,7 @@ imagebmp() function
 --FILE--
 <?php
 chdir(dirname(__FILE__));
-$im = imagecreatefromgif('../examples/rgb-4bit.gif');
+$im = imagecreatefromgif('../examples/images/rgb-4bit.gif');
 if (!imagebmp($im, 'sample.bmp')) {
     exit;
 }
