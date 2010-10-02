@@ -12,7 +12,7 @@ imagejpeg($im, 'output/tonecurve-l1.jpg');
 $im = imagecreatefromjpeg('images/mutzig.jpg');
 imagecolorcorrect($im, array(
     'l' => array('tonecurve2' => array(
-        array(0.3, 0.2), array(0.5, 0.5), array(0.7, 0.8)
+        array(0.3, 0.2), array(0.5, 0.4), array(0.7, 0.8)
     )),
 ), IMAGE_EX_COLORSPACE_HSL);
 imagejpeg($im, 'output/tonecurve-l2.jpg');

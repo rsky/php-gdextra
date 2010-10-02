@@ -25,3 +25,23 @@ function generate_colorbar()
     }
     return $im;
 }
+
+function generate_graph($params)
+{
+    $in = generate_grayscale();
+    $out = imageclone($in);
+
+    imagecolorcorrect($out, $params);
+
+    $graph = imagecreate(256, 256);
+    imagecolorallocate($graph, 255, 255, 255);
+    $z = imagecolorallocate($graph, 0, 0, 0);
+
+    for ($i = 0; $i < 256; $i++) {
+        $x = 255 & imagecolorat($in, $i, 0);
+        $y = 255 & imagecolorat($out, $i, 0);
+        imagesetpixel($graph, $x, 255- $y, $z);
+    }
+
+    return $graph;
+}
