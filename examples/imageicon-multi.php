@@ -1,13 +1,13 @@
 <?php
-extension_loaded('gdextra') || dl('gdextra.so') || exit(1);
+include dirname(__FILE__) . '/_init.php';
 
 // Read 32-bit PNG images.
-$im16 = imagecreatefrompng('rgba-16x16.png');
-$im32 = imagecreatefrompng('rgba-32x32.png');
-$im48 = imagecreatefrompng('rgba-48x48.png');
+$im16 = imagecreatefrompng('images/rgba-16x16.png');
+$im32 = imagecreatefrompng('images/rgba-32x32.png');
+$im48 = imagecreatefrompng('images/rgba-48x48.png');
 
 // Create a 32-bit Icon.
-imageiconarray_ex(array($im16, $im32, $im48), 'rgba.ico');
+imageicon(array($im16, $im32, $im48), 'output/rgba.ico');
 
 // Convert to 8-bit image.
 imagesavealpha($im16, false);
@@ -18,4 +18,4 @@ imagetruecolortopalette($im32, true, 256);
 imagetruecolortopalette($im48, true, 256);
 
 // Create a 8-bit Icon.
-imageiconarray_ex(array($im16, $im32, $im48), 'rgb.ico');
+imageicon(array($im16, $im32, $im48), 'output/rgb.ico');
