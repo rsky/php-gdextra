@@ -56,7 +56,8 @@ $packagexml->addMaintainer('lead', 'rsk', 'Ryusuke SEKIYAMA,', 'rsky0711@gmail.c
 
 $packagexml->setPackageType('extsrc');
 $packagexml->setProvidesExtension($packagename);
-$packagexml->addConfigureOption('with-mecab', 'specify pathname to mecab-config', 'no');
+$packagexml->addConfigureOption('with-gdextra-lqr', 'Enable liquid rescaling support. Yes, no or liblqr install prefix.', 'no');
+$packagexml->addConfigureOption('with-gdextra-magick', 'Enable ImageMagick image loader support. Yes, no or pathname to Wand-config.', 'no');
 $packagexml->setPhpDep('5.2.0');
 $packagexml->setPearinstallerDep('1.4.1');
 
