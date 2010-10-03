@@ -1105,7 +1105,7 @@ GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToHsv)
 /* {{{ array ColorUtility::getSvgColorTable(string color) */
 
 /*
- * Get RGBA values of CSS3-style color strings.
+ * Get RGBA values of the CSS3-style color string.
  */
 GDEXTRA_LOCAL PHP_METHOD(ColorUtility, parseCssColor)
 {
@@ -1142,7 +1142,7 @@ GDEXTRA_LOCAL PHP_METHOD(ColorUtility, parseCssColor)
 /* {{{ array ColorUtility::getSvgColorTable(void) */
 
 /*
- * Get list of SVG color keywords and their RGB values.
+ * Get a mapping of the SVG color keywords and their RGB values.
  */
 GDEXTRA_LOCAL PHP_METHOD(ColorUtility, getSvgColorTable)
 {

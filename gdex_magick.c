@@ -101,7 +101,7 @@ _magickwand_error(MagickWand *wand, int errcode, const char *errmsg TSRMLS_DC)
 /* {{{ resource imagecreatebymagick(string filename[, is_blob]) */
 
 /*
- * Create a new image from file, URL or the image stream in the string
+ * Create a new image from a file, an URI or an image data
  */
 GDEXTRA_LOCAL GDEX_FUNCTION(imagecreatebymagick)
 {
