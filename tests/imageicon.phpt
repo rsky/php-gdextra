@@ -1,7 +1,6 @@
 --TEST--
 imageicon() function
 --SKIPIF--
-
 --FILE--
 <?php
 chdir(dirname(__FILE__));
