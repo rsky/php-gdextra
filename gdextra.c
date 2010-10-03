@@ -258,12 +258,12 @@ static zend_function_entry gdextra_functions[] = {
 };
 
 /* }}} */
-/* {{{ gdextra_util_methods[] */
+/* {{{ gdextra_colorutility_methods[] */
 
 #define GDEX_UTIL_ME(name, arginfo) \
-	PHP_ME(ImageExUtil, name, arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(ColorUtility, name, arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
 
-static zend_function_entry gdextra_util_methods[] = {
+static zend_function_entry gdextra_colorutility_methods[] = {
 	GDEX_UTIL_ME(cmykToRgb,         arginfo_util_conv_from_cmyk)
 	GDEX_UTIL_ME(hslToRgb,          arginfo_util_conv_from_hsl)
 	GDEX_UTIL_ME(hsvToRgb,          arginfo_util_conv_from_hsv)
@@ -379,9 +379,9 @@ static PHP_MINIT_FUNCTION(gdextra)
 	GDEX_REGISTER_CONSTANT(SCALE_CARVE);
 #endif
 
-	/* register class ImageExUtil */
+	/* register class ColorUtility */
 	memset(&ce, 0, sizeof(zend_class_entry));
-	INIT_CLASS_ENTRY(ce, "ImageExUtil", gdextra_util_methods);
+	INIT_CLASS_ENTRY(ce, "ColorUtility", gdextra_colorutility_methods);
 	if ((ce_util = zend_register_internal_class(&ce TSRMLS_CC)) == NULL) {
 		return FAILURE;
 	}

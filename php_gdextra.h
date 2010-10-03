@@ -380,14 +380,14 @@ GDEXTRA_LOCAL GDEX_FUNCTION(imagescale);
 GDEXTRA_LOCAL GDEX_FUNCTION(imagecarve);
 #endif
 
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hslToRgb);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hsvToRgb);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToCmyk);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsl);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsv);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor);
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, cmykToRgb);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, hslToRgb);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, hsvToRgb);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToCmyk);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToHsl);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToHsv);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, parseCssColor);
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, getSvgColorTable);
 
 /* }}} */
 

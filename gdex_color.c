@@ -1036,78 +1036,78 @@ _color_convert(INTERNAL_FUNCTION_PARAMETERS, int c_from, int c_to)
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::cmykToRgb(float cyan, float magenta, float yellow, float black) */
+/* {{{ array ColorUtility::cmykToRgb(float cyan, float magenta, float yellow, float black) */
 
 /*
  * Convert CMYK color components to RGB color components.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, cmykToRgb)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, cmykToRgb)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_CMYK, COLORSPACE_RGB);
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::hslToRgb(float hue, float saturation, float lightness) */
+/* {{{ array ColorUtility::hslToRgb(float hue, float saturation, float lightness) */
 
 /*
  * Convert HSL color components to RGB color components.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hslToRgb)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, hslToRgb)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSL, COLORSPACE_RGB);
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::hslToRgb(float hue, float saturation, float value) */
+/* {{{ array ColorUtility::hslToRgb(float hue, float saturation, float value) */
 
 /*
  * Convert HSV color components to RGB color components.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, hsvToRgb)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, hsvToRgb)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_HSV, COLORSPACE_RGB);
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::rgbToCmyk(float red, float green, float blue) */
+/* {{{ array ColorUtility::rgbToCmyk(float red, float green, float blue) */
 
 /*
  * Convert RGB color components to CMYK color components.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToCmyk)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToCmyk)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_RGB, COLORSPACE_CMYK);
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::rgbToHsl(float red, float green, float blue) */
+/* {{{ array ColorUtility::rgbToHsl(float red, float green, float blue) */
 
 /*
  * Convert RGB color components to HSL color components.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsl)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToHsl)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_RGB, COLORSPACE_HSL);
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::rgbToHsv(float red, float green, float blue) */
+/* {{{ array ColorUtility::rgbToHsv(float red, float green, float blue) */
 
 /*
  * Convert RGB color components to HSV color components.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, rgbToHsv)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, rgbToHsv)
 {
 	_color_convert(INTERNAL_FUNCTION_PARAM_PASSTHRU, COLORSPACE_RGB, COLORSPACE_HSV);
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::getSvgColorTable(string color) */
+/* {{{ array ColorUtility::getSvgColorTable(string color) */
 
 /*
  * Get RGBA values of CSS3-style color strings.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, parseCssColor)
 {
 	char *color = NULL;
 	int color_len = 0;
@@ -1139,12 +1139,12 @@ GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, parseCssColor)
 }
 
 /* }}} */
-/* {{{ array ImageExUtil::getSvgColorTable(void) */
+/* {{{ array ColorUtility::getSvgColorTable(void) */
 
 /*
  * Get list of SVG color keywords and their RGB values.
  */
-GDEXTRA_LOCAL PHP_METHOD(ImageExUtil, getSvgColorTable)
+GDEXTRA_LOCAL PHP_METHOD(ColorUtility, getSvgColorTable)
 {
 	HashTable *svg_colors;
 	HashPosition pos;
