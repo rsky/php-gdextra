@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- $Revision: 1.0 $ -->
-  <refentry id="function.imagebmp-ex">
+  <refentry id="function.imageicon">
    <refnamediv>
-    <refname>imagebmp_ex</refname>
-    <refpurpose>Output a BMP image to either the browser or a file</refpurpose>
+    <refname>imageicon</refname>
+    <refpurpose>Output an Icon image to either the browser or a file.</refpurpose>
    </refnamediv>
    <refsect1>
     <title>Description</title>
      <methodsynopsis>
-      <type>bool</type><methodname>imagebmp_ex</methodname>
-      <methodparam><type>resource</type><parameter>image</parameter></methodparam>
+      <type>bool</type><methodname>imageicon</methodname>
+      <methodparam><type>mixed</type><parameter>im</parameter></methodparam>
       <methodparam choice='opt'><type>string</type><parameter>filename</parameter></methodparam>
      </methodsynopsis>
      <para>

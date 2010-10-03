@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- $Revision: 1.0 $ -->
-  <refentry id="function.imageicon-ex">
+  <refentry id="function.imagecarve">
    <refnamediv>
-    <refname>imageicon_ex</refname>
-    <refpurpose>Output an Icon image to either the browser or a file</refpurpose>
+    <refname>imagecarve</refname>
+    <refpurpose>Get a content-aware rescaled image.</refpurpose>
    </refnamediv>
    <refsect1>
     <title>Description</title>
      <methodsynopsis>
-      <type>bool</type><methodname>imageicon_ex</methodname>
-      <methodparam><type>mixed</type><parameter>images</parameter></methodparam>
-      <methodparam choice='opt'><type>string</type><parameter>filename</parameter></methodparam>
+      <type>resource</type><methodname>imagecarve</methodname>
+      <methodparam><type>resource</type><parameter>src</parameter></methodparam>
+      <methodparam><type>int</type><parameter>width</parameter></methodparam>
+      <methodparam><type>int</type><parameter>height</parameter></methodparam>
+      <methodparam choice='opt'><type>array</type><parameter>options</parameter></methodparam>
      </methodsynopsis>
      <para>
      </para>

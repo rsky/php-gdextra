@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- $Revision: 1.0 $ -->
-  <refentry id="function.imagecreatefromstring-ex">
+  <refentry id="function.imagechannelextract">
    <refnamediv>
-    <refname>imagecreatefromstring_ex</refname>
-    <refpurpose>Create a new image from the image stream in the string</refpurpose>
+    <refname>imagechannelextract</refname>
+    <refpurpose>Extract the color channels.</refpurpose>
    </refnamediv>
    <refsect1>
     <title>Description</title>
      <methodsynopsis>
-      <type>resource</type><methodname>imagecreatefromstring_ex</methodname>
-      <methodparam><type>string</type><parameter>data</parameter></methodparam>
+      <type>array</type><methodname>imagechannelextract</methodname>
+      <methodparam><type>resource</type><parameter>im</parameter></methodparam>
+      <methodparam choice='opt'><type>int</type><parameter>colorspace</parameter></methodparam>
      </methodsynopsis>
      <para>
      </para>

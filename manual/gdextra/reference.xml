@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='iso-8859-1'?>
 <!-- $Revision: 1.1 $ -->
  <reference id='ref.gdextra'>
-  <title>Extra image functions</title>
+  <title>Extra image functions.</title>
   <titleabbrev>gdextra</titleabbrev>
 
   <partintro>
    <section id='gdextra.intro'>
     &reftitle.intro;
     <para>
-
+none
     </para>
    </section>
    
@@ -21,7 +21,344 @@
 
    <section id='gdextra.constants'>
     &reftitle.constants;
-    &no.constants;
+    <table>
+     <title>gdextra constants</title>
+      <tgroup cols='3'>
+       <thead>
+        <row>
+         <entry>name</entry>
+         <entry>type</entry>
+         <entry>descrpition</entry>
+        </row>
+       </thead>
+      <tbody>
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-colorspace-rgb'>IMAGE_EX_COLORSPACE_RGB</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-colorspace-hsv'>IMAGE_EX_COLORSPACE_HSV</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-colorspace-hsl'>IMAGE_EX_COLORSPACE_HSL</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-colorspace-cmyk'>IMAGE_EX_COLORSPACE_CMYK</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-colorspace-alpha'>IMAGE_EX_COLORSPACE_ALPHA</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-colorspace-raw-alpha'>IMAGE_EX_COLORSPACE_RAW_ALPHA</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-set'>IMAGE_EX_MASK_SET</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-merge'>IMAGE_EX_MASK_MERGE</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-screen'>IMAGE_EX_MASK_SCREEN</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-and'>IMAGE_EX_MASK_AND</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-or'>IMAGE_EX_MASK_OR</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-xor'>IMAGE_EX_MASK_XOR</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-not'>IMAGE_EX_MASK_NOT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-mask-tile'>IMAGE_EX_MASK_TILE</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-top-left'>IMAGE_EX_POSITION_TOP_LEFT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-top-center'>IMAGE_EX_POSITION_TOP_CENTER</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-top-right'>IMAGE_EX_POSITION_TOP_RIGHT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-middle-left'>IMAGE_EX_POSITION_MIDDLE_LEFT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-middle-center'>IMAGE_EX_POSITION_MIDDLE_CENTER</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-middle-right'>IMAGE_EX_POSITION_MIDDLE_RIGHT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-bottom-left'>IMAGE_EX_POSITION_BOTTOM_LEFT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-bottom-center'>IMAGE_EX_POSITION_BOTTOM_CENTER</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-position-bottom-right'>IMAGE_EX_POSITION_BOTTOM_RIGHT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-merge-crop'>IMAGE_EX_MERGE_CROP</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-flip-none'>IMAGE_EX_FLIP_NONE</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-flip-horizontal'>IMAGE_EX_FLIP_HORIZONTAL</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-flip-vertical'>IMAGE_EX_FLIP_VERTICAL</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-flip-both'>IMAGE_EX_FLIP_BOTH</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-none'>IMAGE_EX_SCALE_NONE</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-crop'>IMAGE_EX_SCALE_CROP</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-fit'>IMAGE_EX_SCALE_FIT</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-fill'>IMAGE_EX_SCALE_FILL</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-pad'>IMAGE_EX_SCALE_PAD</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-stretch'>IMAGE_EX_SCALE_STRETCH</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-tile'>IMAGE_EX_SCALE_TILE</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+
+        <row>
+         <entry>
+          <constant id='constantimage-ex-scale-carve'>IMAGE_EX_SCALE_CARVE</constant>
+         </entry>
+         <entry>int</entry>
+         <entry></entry>
+        </row>
+
+     </tbody>
+    </tgroup>
+   </table>
    </section>
    
   </partintro>

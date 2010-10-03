@@ -8,7 +8,8 @@
 
    <section id='gdextra.install'>
     &reftitle.install;
-    <para>Requires <literal>wand-config</literal></para>
+    <para>Requires <literal>gdextra-lqr</literal></para>
+    <para>Requires <literal>gdextra-magick</literal></para>
 
    </section>
 

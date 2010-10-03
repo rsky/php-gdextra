@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- $Revision: 1.0 $ -->
-  <refentry id="function.imageiconarray-ex">
+  <refentry id="function.imagepalettetotruecolor">
    <refnamediv>
-    <refname>imageiconarray_ex</refname>
-    <refpurpose>Output an Icon image to either the browser or a file</refpurpose>
+    <refname>imagepalettetotruecolor</refname>
+    <refpurpose>Convert a palette image to a true color image.</refpurpose>
    </refnamediv>
    <refsect1>
     <title>Description</title>
      <methodsynopsis>
-      <type>bool</type><methodname>imageiconarray_ex</methodname>
-      <methodparam><type>mixed</type><parameter>images</parameter></methodparam>
-      <methodparam choice='opt'><type>string</type><parameter>filename</parameter></methodparam>
+      <type>bool</type><methodname>imagepalettetotruecolor</methodname>
+      <methodparam><type>resource</type><parameter>im</parameter></methodparam>
      </methodsynopsis>
      <para>
      </para>
