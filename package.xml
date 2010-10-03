@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>gdextra</name>
+ <channel>pecl.opendogs.org</channel>
+ <summary>The PHP extension which extends GD image functions.</summary>
+ <description>The PHP extension which extends GD image functions.</description>
+ <lead>
+  <name>Ryusuke SEKIYAMA,</name>
+  <user>rsk</user>
+  <email>rsky0711@gmail.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2010-10-03</date>
+ <time>04:16:21</time>
+ <version>
+  <release>0.4.0</release>
+  <api>0.4.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
+ <notes>
+- Initial release on PEAR channel.
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="9e9de697b74dc3283c287eff2784549d" name="examples/graph-gamma.php" role="data" />
+   <file baseinstalldir="/" md5sum="934fc0d03bc0c4815653bdfa4535dc1b" name="examples/graph-levels.php" role="data" />
+   <file baseinstalldir="/" md5sum="6292f0611fbb6d99377cbda56e5b1bf6" name="examples/graph-tonecurve.php" role="data" />
+   <file baseinstalldir="/" md5sum="6c6a6cffec176775c3b7b82b4169643f" name="examples/imagealphamask.php" role="data" />
+   <file baseinstalldir="/" md5sum="37fbca257ee5e362e0061509491b4f6e" name="examples/imagebmp.php" role="data" />
+   <file baseinstalldir="/" md5sum="8cc6f3ec668e63f7904017cb429ecbb9" name="examples/imagechannelextract-cmyk.php" role="data" />
+   <file baseinstalldir="/" md5sum="8abe6969c6ac0bbac28d0b63a04e2979" name="examples/imagechannelextract-hsl.php" role="data" />
+   <file baseinstalldir="/" md5sum="9d1ff72f586b767e10f002ea2fc90b20" name="examples/imagechannelextract-hsv.php" role="data" />
+   <file baseinstalldir="/" md5sum="55b4e0af71944e54946bce6e3f7d4bc9" name="examples/imagechannelextract.php" role="data" />
+   <file baseinstalldir="/" md5sum="59d02a889dc1ed45697ea8829772c3b8" name="examples/imagechannelmerge-hsv.php" role="data" />
+   <file baseinstalldir="/" md5sum="22bb563d43639c79a5b52f0d3764ee56" name="examples/imagecolorcorrect-hsl-l-gamma.php" role="data" />
+   <file baseinstalldir="/" md5sum="c2df590a6b0edaa1f6c28b92babf365c" name="examples/imagecolorcorrect-hsl-l-levels.php" role="data" />
+   <file baseinstalldir="/" md5sum="297638bea10483bd06af3317e6e54298" name="examples/imagecolorcorrect-hsl-l-tonecurve.php" role="data" />
+   <file baseinstalldir="/" md5sum="321e3250d22b30be7f4f43ed5aa9ec7e" name="examples/imagecolorcorrect-hsv-s-gamma.php" role="data" />
+   <file baseinstalldir="/" md5sum="24cc20516b5f3242dcbbf7fcce70f39b" name="examples/imagecolorcorrect-hsv-s-levels.php" role="data" />
+   <file baseinstalldir="/" md5sum="ee0eaf07f995b0215d6ddb4ea57307de" name="examples/imagecolorcorrect-hsv-s-tonecurve.php" role="data" />
+   <file baseinstalldir="/" md5sum="1f32e0ee29f55cd72cc41e94b1857096" name="examples/imageicon-multi.php" role="data" />
+   <file baseinstalldir="/" md5sum="76fe048b0bc1c9ddf78b2b45922d6f57" name="examples/imageicon.php" role="data" />
+   <file baseinstalldir="/" md5sum="2d0948faaecd2ed5049a07004376279f" name="examples/imagescale-carve.php" role="data" />
+   <file baseinstalldir="/" md5sum="97c8806cde8980db6d28f6d5bda5d724" name="examples/imagescale-crop.php" role="data" />
+   <file baseinstalldir="/" md5sum="94808cc865fbb0e04a33bd87243f3eb3" name="examples/imagescale-fill.php" role="data" />
+   <file baseinstalldir="/" md5sum="1191604b83115983e9e07bed26771c4a" name="examples/imagescale-fit.php" role="data" />
+   <file baseinstalldir="/" md5sum="657b80d722342aab8ce503ba5f262e3c" name="examples/imagescale-none.php" role="data" />
+   <file baseinstalldir="/" md5sum="34a1b69597129c34b3aa1ccd5280dfcd" name="examples/imagescale-pad.php" role="data" />
+   <file baseinstalldir="/" md5sum="4fc08244fbbacc13ff23af4d04787cae" name="examples/imagescale-stretch.php" role="data" />
+   <file baseinstalldir="/" md5sum="9da825dd36a0e728d156d0cb82aa43e7" name="examples/imagescale-tile.php" role="data" />
+   <file baseinstalldir="/" md5sum="2f5998c1fd78aa8d369d082bb16fb894" name="examples/_functions.php" role="data" />
+   <file baseinstalldir="/" md5sum="1406bc5caf1e9696d62575316db976dd" name="examples/_init.php" role="data" />
+   <file baseinstalldir="/" md5sum="4a984aa5110a8a5cc96a452ae21a3bca" name="examples/images/alpha-star.png" role="data" />
+   <file baseinstalldir="/" md5sum="e134b0b939af4c25dddf5da4e719decc" name="examples/images/CREDITS" role="data" />
+   <file baseinstalldir="/" md5sum="0817930f23d6f4765f0e663da9fdf0f1" name="examples/images/mono.wbmp" role="data" />
+   <file baseinstalldir="/" md5sum="e244e120cf49eca3ca7edc6be40cf8d1" name="examples/images/mosaic.jpg" role="data" />
+   <file baseinstalldir="/" md5sum="3f9139f4331cbb4de8333f8725258292" name="examples/images/mutzig.jpg" role="data" />
+   <file baseinstalldir="/" md5sum="1c121b12beaa52d4212d96eb80806660" name="examples/images/rgb-4bit.gif" role="data" />
+   <file baseinstalldir="/" md5sum="a67f49d584bae298c33ed74a3e6c9685" name="examples/images/rgb-24bit.png" role="data" />
+   <file baseinstalldir="/" md5sum="6163bf7a212222804b55200876f1e9ff" name="examples/images/rgb-24bit.tif" role="data" />
+   <file baseinstalldir="/" md5sum="cbe711bdb975d3c52ee95e70242cb570" name="examples/images/rgba-8bit.gif" role="data" />
+   <file baseinstalldir="/" md5sum="cdd468800ef8635b9ccc2fea276e09a5" name="examples/images/rgba-16x16.png" role="data" />
+   <file baseinstalldir="/" md5sum="29d7beaf7c3a2d73d02351b60b7849d5" name="examples/images/rgba-32bit.png" role="data" />
+   <file baseinstalldir="/" md5sum="e4347e6b3dcf7bd4e0e24450f97ca5dd" name="examples/images/rgba-32bit.tif" role="data" />
+   <file baseinstalldir="/" md5sum="dc2846d95a081d0a4153546a798e85e4" name="examples/images/rgba-32x32.png" role="data" />
+   <file baseinstalldir="/" md5sum="62e7f7156d2c4c0d282d33bc4ae01ae4" name="examples/images/rgba-48x48.png" role="data" />
+   <file baseinstalldir="/" md5sum="efe5978e62bae15cdf890bb21c1b21b0" name="examples/images/rgba-256x256.png" role="data" />
+   <file baseinstalldir="/" md5sum="b3b91ea270511de05998f952d891b68a" name="manual/file-entities.ent" role="doc" />
+   <file baseinstalldir="/" md5sum="739866e1b39abff3ecdd1c6f04d6c17c" name="manual/functions.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="5ca05f19f9969a84185344f3b9eae1f8" name="manual/Makefile" role="doc" />
+   <file baseinstalldir="/" md5sum="ee892464e6b717f08ae1de5b6b050313" name="manual/manual.xml.in" role="doc" />
+   <file baseinstalldir="/" md5sum="b82c4bd1f1af18288a1dccc89c4744d1" name="manual/gdextra/configure.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="57b812c7c764dbd623f127f244c75d88" name="manual/gdextra/reference.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="c2e6dbc5ba13046a8dcbf7e2fc335bab" name="manual/gdextra/functions/imagealphamask.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="d1880a9a31dd841fa2ccbab04e441d34" name="manual/gdextra/functions/imagebmp.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="df4543b26dd0c485e497bee88bce393f" name="manual/gdextra/functions/imagecarve.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="1c2644425d5ec925468b4b8062783cfd" name="manual/gdextra/functions/imagechannelextract.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="6bfd3963ffb5510a8fb1b67ca1462717" name="manual/gdextra/functions/imagechannelmerge.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="8b2bdf3be94d543c019bff8ef04171c4" name="manual/gdextra/functions/imageclone.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="9d7965f414a93e47469579ea41f813ce" name="manual/gdextra/functions/imagecolorallocatecmyk.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="542eaed8632fe2bf3940ac30698ca521" name="manual/gdextra/functions/imagecolorallocatecss.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="63de2047c909bf7e82367c00f7b55be4" name="manual/gdextra/functions/imagecolorallocatehsl.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="4555fa38037ccdb5cf8bd6031f38b6a0" name="manual/gdextra/functions/imagecolorallocatehsv.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="6333936a4ffb21ea6181e82feb3a956b" name="manual/gdextra/functions/imagecolorcorrect.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="7f65e5cceaa9c4e236caa143092820ba" name="manual/gdextra/functions/imagecreatebymagick.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="816d0e01a27deac6a2d9a1c5680f0c3a" name="manual/gdextra/functions/imageflip.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="5875f8ee1134c6636ca8cc75612f3110" name="manual/gdextra/functions/imagehistgram.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="f808b52189a9c8c297b950d4de996a85" name="manual/gdextra/functions/imagehistgram216.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="320272d54188330cbcd1aa4bf819c2b5" name="manual/gdextra/functions/imageicon.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="4cc044d920a72774a416464ae1a7ffdb" name="manual/gdextra/functions/imagepalettetotruecolor.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="7703fa3ee38f3372abe08a7679224ab1" name="manual/gdextra/functions/imagescale.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="8099dbbc137f2963a2a1f51c5918c2dd" name="manual/gdextra/functions/imagetowebsafepalette.xml" role="doc" />
+   <file baseinstalldir="/" md5sum="7b360a669bd9832069994a4ecc090c58" name="tests/ColorUtility__cmykToRgb.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="fe6c908692fca78c36c865b6a7e32c7e" name="tests/ColorUtility__getSvgColorTable.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="4f8360ef800bb2ab90b75a93640c9dbf" name="tests/ColorUtility__hslToRgb.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="6fba91b59ddc357ce94613c944d1b603" name="tests/ColorUtility__hsvToRgb.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="f27a2634f409c89d9249ba3c46f4b69f" name="tests/ColorUtility__parseCssColor.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="85358a8a0bde5c4546b950dfa4788c44" name="tests/ColorUtility__rgbToCmyk.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="048a684d5bce87f22d68527e771ee5c5" name="tests/ColorUtility__rgbToHsl.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="7e329b13b7598538db44bf9a87a8e642" name="tests/ColorUtility__rgbToHsv.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="d98a87c32cdd6700471035685ad1cb7f" name="tests/imagealphamask.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="45536c2cbdb22dc5b0875c408aaae4d5" name="tests/imagebmp.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="82007fc16b45d5bf2f33d741e05136e2" name="tests/imagecarve.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="f4668ae630089cb5a8bde7e4a641f686" name="tests/imagechannelextract.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="ff8cdb62ffd11f19bd865e4eb7b2d64d" name="tests/imagechannelmerge.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="cee38cf2c5b83902cf84ddb01f3a4b83" name="tests/imageclone.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="24961a1244599522afb9013ca61dac75" name="tests/imagecolorallocatecmyk.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="ac4738b315777d047938603162d8a742" name="tests/imagecolorallocatecss.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="f6ebf8b1597832c37e8b6c9690dff965" name="tests/imagecolorallocatehsl.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="4fabdf63253c80f64920633a74507247" name="tests/imagecolorallocatehsv.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="f335bf0b1114d72c8c5567a460118f1f" name="tests/imagecolorcorrect.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="3d117ce7090ceb51c369bd76d8c5bca9" name="tests/imagecreatebymagick-blob.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="dc37bcd6854536f16579e79c3635e45c" name="tests/imagecreatebymagick.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="dbfcf0f07b8f87e9dbba1fc90fcf68a4" name="tests/imageflip.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="dfda31d0ecb4b006ac8ad7ef61fa1e2d" name="tests/imagehistgram.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="4537fde8e4c5949a3a887dcf53cb6303" name="tests/imagehistgram216.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="30c2c5c118380c4715007f92116da983" name="tests/imageicon-multi.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="c7a4032461264e9a6bd2d66c47bd66d2" name="tests/imageicon.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="4c7c250a4adeddba66d698e8a153a8d3" name="tests/imagepalettetotruecolor.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="914a94c32ede3971a826667de3ee76b0" name="tests/imagescale.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="0e16f0b91d601d77623f10e0092e4e04" name="tests/imagetowebsafepalette.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="599013820ded277fafc801cc51bc70bf" name="config.m4" role="src" />
+   <file baseinstalldir="/" md5sum="80cf661788a5eb7a9117b6e80db74959" name="config.w32" role="src" />
+   <file baseinstalldir="/" md5sum="f61d6b9d96656f3bb2309210de3f16a5" name="CREDITS" role="doc" />
+   <file baseinstalldir="/" md5sum="7291f1b05a4608bc9223993fd2bea6c2" name="EXPERIMENTAL" role="doc" />
+   <file baseinstalldir="/" md5sum="ebb1f5583c51335a0a4e06aea6337d3a" name="gdextra.c" role="src" />
+   <file baseinstalldir="/" md5sum="43d17aa6deb1aa4a1091b2ac8e0d8233" name="gdextra.dsp" role="src" />
+   <file baseinstalldir="/" md5sum="6ce2cc04712efaa06d88586354811d27" name="gdex_bmp.c" role="src" />
+   <file baseinstalldir="/" md5sum="1b4a8e7673d1701df7afce8f94318258" name="gdex_channel.c" role="src" />
+   <file baseinstalldir="/" md5sum="6e33b728ab089f61d5e222fcfc7ca8b8" name="gdex_color.c" role="src" />
+   <file baseinstalldir="/" md5sum="bb40d77238be8a9581bf7d35eb3f842d" name="gdex_correct.c" role="src" />
+   <file baseinstalldir="/" md5sum="71f36a77f35653c87c0b6083b10a0f12" name="gdex_geom.c" role="src" />
+   <file baseinstalldir="/" md5sum="39e705fea3c2019e1066b9cd9f6bfbea" name="gdex_lqr.c" role="src" />
+   <file baseinstalldir="/" md5sum="c149b900fed0d5d153838a453867527a" name="gdex_magick.c" role="src" />
+   <file baseinstalldir="/" md5sum="8a75d5a27621e3e7249f3c3867393791" name="gdex_wrappers.c" role="src" />
+   <file baseinstalldir="/" md5sum="ae313c9170ce41f63f1ac9bbe6d1a849" name="gdex_wrappers.h" role="src" />
+   <file baseinstalldir="/" md5sum="cb0304b38e383dff0b72dfa6509dea5f" name="inline.h" role="src" />
+   <file baseinstalldir="/" md5sum="cf40ac5fa27cc3ba0d44c44a455f9b64" name="LICENSE" role="doc" />
+   <file baseinstalldir="/" md5sum="7c98d7b90f20077b4dc06eb8c0084f5f" name="php_gdextra.h" role="src" />
+   <file baseinstalldir="/" md5sum="c4fee7b08fc3290a6bf4e1cff2b4a86c" name="README" role="doc" />
+   <file baseinstalldir="/" md5sum="f2012cb9290907857dfbd08f9e80f1cd" name="spline.c" role="src" />
+   <file baseinstalldir="/" md5sum="0d7e19307a4b22f43314554b787ab286" name="spline.h" role="src" />
+   <file baseinstalldir="/" md5sum="33d6a5d72a454fa38c7d80d0a2649a3a" name="svg_color.h" role="src" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>gdextra</providesextension>
+ <extsrcrelease>
+  <configureoption default="no" name="with-mecab" prompt="specify pathname to mecab-config" />
+ </extsrcrelease>
+ <changelog>
+  <release>
+   <version>
+    <release>0.4.0</release>
+    <api>0.4.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2010-10-03</date>
+   <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
+   <notes>
+- Initial release on PEAR channel.
+   </notes>
+  </release>
+ </changelog>
+</package>
