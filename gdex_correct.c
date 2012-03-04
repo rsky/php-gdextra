@@ -770,6 +770,9 @@ GDEXTRA_LOCAL GDEX_FUNCTION(imagecolorcorrect)
 				break;
 			case CORRECT_ERROR:
 				RETURN_FALSE;
+				break;
+			case CORRECT_NOTHING:
+				break;
 		}
 	}
 

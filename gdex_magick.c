@@ -41,6 +41,19 @@ static void
 _magickwand_error(MagickWand *wand, int errcode, const char *errmsg TSRMLS_DC);
 
 /* }}} */
+/* {{{ gdex_get_magick_version() */
+
+/*
+ * Get the version of ImageMagick
+ */
+GDEXTRA_LOCAL const char *
+gdex_get_magick_version(void)
+{
+	size_t versionNumber = 0;
+	return MagickGetVersion(&versionNumber);
+}
+
+/* }}} */
 /* {{{ _pixelwand_to_gdtruecolor() */
 
 /*

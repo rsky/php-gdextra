@@ -441,10 +441,6 @@ static PHP_RSHUTDOWN_FUNCTION(gdextra)
 
 static PHP_MINFO_FUNCTION(gdextra)
 {
-#if PHP_GDEXTRA_WITH_MAGICK
-	unsigned long versionNumber;
-#endif
-
 	php_info_print_table_start();
 	php_info_print_table_row(2, "Extra Image Functions Support", "enabled");
 	php_info_print_table_row(2, "Module Version", PHP_GDEXTRA_MODULE_VERSION);
@@ -456,7 +452,7 @@ static PHP_MINFO_FUNCTION(gdextra)
 #endif
 #if PHP_GDEXTRA_WITH_MAGICK
 	php_info_print_table_row(2, "ImageMagick Loader Support", "enabled");
-	php_info_print_table_row(2, "ImageMagick Version", MagickGetVersion(&versionNumber));
+	php_info_print_table_row(2, "ImageMagick Version", gdex_get_magick_version());
 #else
 	php_info_print_table_row(2, "ImageMagick Loader Support", "disabled");
 #endif

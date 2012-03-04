@@ -57,8 +57,10 @@
 #include <php.h>
 #include <php_ini.h>
 #include <SAPI.h>
+#include <ext/gd/php_gd.h>
 #include <ext/gd/libgd/gd.h>
 #include <ext/standard/info.h>
+#include <ext/standard/php_string.h>
 #include <Zend/zend_extensions.h>
 
 #if defined(__GNUC__) && __GNUC__ >= 4
@@ -337,11 +339,19 @@ gdex_mask_alpha_funcs_init(void);
 
 #if PHP_GDEXTRA_WITH_LQR
 /*
- *  Do liquid rescaling.
+ * Do liquid rescaling.
  */
 GDEXTRA_LOCAL gdImagePtr
 gdex_liquid_rescale(const gdImagePtr src, int width, int height,
                     HashTable *options TSRMLS_DC);
+#endif
+
+#if PHP_GDEXTRA_WITH_MAGICK
+/*
+ * Get the version of ImageMagick.
+ */
+GDEXTRA_LOCAL const char *
+gdex_get_magick_version(void);
 #endif
 
 /* }}} */
