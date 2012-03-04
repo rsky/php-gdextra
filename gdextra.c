@@ -582,6 +582,7 @@ gdex_get_strval(zval *zv, int *length, zend_bool *is_copy)
 GDEXTRA_LOCAL char *
 gdex_str_tolower_trim(const char *str, int length, int *new_length)
 {
+	TSRMLS_FETCH();
 	zval trimmed;
 
 	INIT_ZVAL(trimmed);
