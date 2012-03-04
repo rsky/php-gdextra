@@ -11,13 +11,15 @@ $summary        = 'The PHP extension which extends GD image functions.';
 $description    = $summary;
 
 // information of cureent version
-$version        = '0.4.0';
+$version        = '0.5.0';
 $apiversion     = '0.4.0';
 $stability      = 'beta';
 $apistability   = 'beta';
 
 $notes = <<<EOS
-- Initial release on PEAR channel.
+- Fix bug that cannot build against PHP 5.2.
+- Fix bug that cannot build against ZTS-enabled PHP.
+- Fix compiler wargings.
 EOS;
 
 // set parameters to the package

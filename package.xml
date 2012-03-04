@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.9.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
     http://pear.php.net/dtd/tasks-1.0.xsd
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
@@ -8,15 +8,15 @@
  <summary>The PHP extension which extends GD image functions.</summary>
  <description>The PHP extension which extends GD image functions.</description>
  <lead>
-  <name>Ryusuke SEKIYAMA,</name>
+  <name>Ryusuke SEKIYAMA</name>
   <user>rsk</user>
   <email>rsky0711@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2010-10-03</date>
- <time>04:25:26</time>
+ <date>2012-03-04</date>
+ <time>18:50:21</time>
  <version>
-  <release>0.4.0</release>
+  <release>0.5.0</release>
   <api>0.4.0</api>
  </version>
  <stability>
@@ -25,7 +25,9 @@
  </stability>
  <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
  <notes>
-- Initial release on PEAR channel.
+- Fix bug that cannot build against PHP 5.2.
+- Fix bug that cannot build against ZTS-enabled PHP.
+- Fix compiler wargings.
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -130,24 +132,24 @@
    <file baseinstalldir="/" md5sum="80cf661788a5eb7a9117b6e80db74959" name="config.w32" role="src" />
    <file baseinstalldir="/" md5sum="f61d6b9d96656f3bb2309210de3f16a5" name="CREDITS" role="doc" />
    <file baseinstalldir="/" md5sum="7291f1b05a4608bc9223993fd2bea6c2" name="EXPERIMENTAL" role="doc" />
-   <file baseinstalldir="/" md5sum="ebb1f5583c51335a0a4e06aea6337d3a" name="gdextra.c" role="src" />
+   <file baseinstalldir="/" md5sum="94f5af8f93a9d363ed74842ae646c9d7" name="gdextra.c" role="src" />
    <file baseinstalldir="/" md5sum="43d17aa6deb1aa4a1091b2ac8e0d8233" name="gdextra.dsp" role="src" />
-   <file baseinstalldir="/" md5sum="6ce2cc04712efaa06d88586354811d27" name="gdex_bmp.c" role="src" />
-   <file baseinstalldir="/" md5sum="1b4a8e7673d1701df7afce8f94318258" name="gdex_channel.c" role="src" />
-   <file baseinstalldir="/" md5sum="6e33b728ab089f61d5e222fcfc7ca8b8" name="gdex_color.c" role="src" />
-   <file baseinstalldir="/" md5sum="bb40d77238be8a9581bf7d35eb3f842d" name="gdex_correct.c" role="src" />
-   <file baseinstalldir="/" md5sum="71f36a77f35653c87c0b6083b10a0f12" name="gdex_geom.c" role="src" />
-   <file baseinstalldir="/" md5sum="39e705fea3c2019e1066b9cd9f6bfbea" name="gdex_lqr.c" role="src" />
-   <file baseinstalldir="/" md5sum="c149b900fed0d5d153838a453867527a" name="gdex_magick.c" role="src" />
-   <file baseinstalldir="/" md5sum="8a75d5a27621e3e7249f3c3867393791" name="gdex_wrappers.c" role="src" />
-   <file baseinstalldir="/" md5sum="ae313c9170ce41f63f1ac9bbe6d1a849" name="gdex_wrappers.h" role="src" />
-   <file baseinstalldir="/" md5sum="cb0304b38e383dff0b72dfa6509dea5f" name="inline.h" role="src" />
+   <file baseinstalldir="/" md5sum="ae43972284b68f9a69512f12d93e41e5" name="gdex_bmp.c" role="src" />
+   <file baseinstalldir="/" md5sum="995f1a7f02dc3dd73243a21b79eae534" name="gdex_channel.c" role="src" />
+   <file baseinstalldir="/" md5sum="57fe599f71e46a2a2d3f1a88a431dedc" name="gdex_color.c" role="src" />
+   <file baseinstalldir="/" md5sum="400412ec8017c89937a64637e180b4f3" name="gdex_correct.c" role="src" />
+   <file baseinstalldir="/" md5sum="19af8d150d5a8c3c25eb5cd8ce7e56ce" name="gdex_geom.c" role="src" />
+   <file baseinstalldir="/" md5sum="9a713953eee57c4712c99929c468763c" name="gdex_lqr.c" role="src" />
+   <file baseinstalldir="/" md5sum="e25953cf183815761cc155305759f077" name="gdex_magick.c" role="src" />
+   <file baseinstalldir="/" md5sum="702a69e92cf2c2a6de24f7975f2e70ac" name="gdex_wrappers.c" role="src" />
+   <file baseinstalldir="/" md5sum="c97992502bb6ff4d07c1c7c9e09627b1" name="gdex_wrappers.h" role="src" />
+   <file baseinstalldir="/" md5sum="b6fb3981a0053c96148620213bcb915c" name="inline.h" role="src" />
    <file baseinstalldir="/" md5sum="cf40ac5fa27cc3ba0d44c44a455f9b64" name="LICENSE" role="doc" />
-   <file baseinstalldir="/" md5sum="7c98d7b90f20077b4dc06eb8c0084f5f" name="php_gdextra.h" role="src" />
+   <file baseinstalldir="/" md5sum="cad440a8ad6727117c7a9a17c68df1d0" name="php_gdextra.h" role="src" />
    <file baseinstalldir="/" md5sum="c4fee7b08fc3290a6bf4e1cff2b4a86c" name="README" role="doc" />
-   <file baseinstalldir="/" md5sum="f2012cb9290907857dfbd08f9e80f1cd" name="spline.c" role="src" />
-   <file baseinstalldir="/" md5sum="0d7e19307a4b22f43314554b787ab286" name="spline.h" role="src" />
-   <file baseinstalldir="/" md5sum="33d6a5d72a454fa38c7d80d0a2649a3a" name="svg_color.h" role="src" />
+   <file baseinstalldir="/" md5sum="eb40ba65ee094958bb8bfb2bdbc15d29" name="spline.c" role="src" />
+   <file baseinstalldir="/" md5sum="1efa55eedd6b839a9c6c7eb283c6c261" name="spline.h" role="src" />
+   <file baseinstalldir="/" md5sum="319ecd13a4baf6a4985a412c0a5b059c" name="svg_color.h" role="src" />
   </dir>
  </contents>
  <dependencies>
@@ -179,6 +181,23 @@
    <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
    <notes>
 - Initial release on PEAR channel.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.5.0</release>
+    <api>0.4.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2012-03-04</date>
+   <license uri="http://www.opensource.org/licenses/mit-license.php">MIT License</license>
+   <notes>
+- Fix bug that cannot build against PHP 5.2.
+- Fix bug that cannot build against ZTS-enabled PHP.
+- Fix compiler wargings.
    </notes>
   </release>
  </changelog>
