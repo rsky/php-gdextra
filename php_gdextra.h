@@ -219,7 +219,7 @@ typedef void (*gdex_4ch_to_rgb_func_t)(float w, float x, float y, float z, int *
 #if ZEND_EXTENSION_API_NO < 220090626
 
 GDEXTRA_LOCAL int
-_gdex_array_init(argal *arg, uint size);
+_gdex_array_init(zval *arg, uint size);
 
 #define array_init_size(_arg, _size) _gdex_array_init((_arg), (_size))
 
